@@ -1,0 +1,8 @@
+@import "./assets/css/common.css";
+@import "./assets/css/output.css";
+
+
+html,body,#app{
+    height: 100%;
+}
+

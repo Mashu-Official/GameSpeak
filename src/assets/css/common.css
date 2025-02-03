@@ -1,0 +1,62 @@
+/*:root {*/
+/*    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;*/
+/*    background-color: #242424;*/
+/*    font-synthesis: none;*/
+/*    text-rendering: optimizeLegibility;*/
+/*    -webkit-font-smoothing: antialiased;*/
+/*    -moz-osx-font-smoothing: grayscale;*/
+/*}*/
+
+body {
+    margin: 0;
+    padding: 0;
+    --tw-bg-opacity: 1;
+    --tw-text-opacity: 1;
+    color: rgb(55 65 81 / var(--tw-text-opacity));
+    background-color: rgb(235, 238, 240);
+}
+
+:is(.dark body) {
+    --tw-bg-opacity: 1;
+    background-color: rgb(37 36 40 / var(--tw-bg-opacity));
+    --tw-text-opacity: 1;
+    color: rgb(240 244 246 / var(--tw-text-opacity))
+}
+
+body {
+    font-family: PingFang SC, Hiragino Sans GB, Microsoft YaHei, serif
+}
+
+
+.card {
+    display: flex;
+    flex-direction: column;
+    border-radius: .25rem;
+    --tw-bg-opacity: 1;
+    background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+    padding: 1rem
+}
+
+:is(.dark .card){
+    --tw-bg-opacity: 1;
+    background-color: rgb(48 48 48 / var(--tw-bg-opacity));
+}
+
+.roomName {
+    font-size: 14px;
+    line-height: 16px;
+    position: absolute;
+    white-space: nowrap;
+    padding: 0 12px 0 16px;
+    background-color: rgba(75, 0, 130, 0.8);
+    color: white;
+    border-top-left-radius: 16px;
+    border-bottom-left-radius: 16px;
+    pointer-events: none; /* 确保不会影响鼠标事件 */
+    opacity: 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* 垂直居中文本 */
+    justify-content: center; /* 水平居中文本 */
+}
