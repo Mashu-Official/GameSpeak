@@ -1,6 +1,6 @@
 <template>
 
-    <div class="header flex flex-row items-center justify-between px-4">
+    <div class="header flex flex-row items-center justify-between px-4 select-none">
         <a href="https://github.com/Mashu-Official/GameSpeak" class="font-bold">GameSpeak</a>
         <div class="flex flex-row justify-around">
 

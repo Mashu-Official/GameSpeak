@@ -12,21 +12,33 @@ electron + vue3 + ts + tailwind + arco-design 的游戏语音服务 开发中
 
 [Getting Started | Electron⚡️Vite](https://vite.electron.js.cn/guide/getting-started.html)
 
-# Vue 3 + TypeScript + Vite
+[NVIDIA语音降噪黑科技！即刻告别开黑时噪音困扰_其他相关_OBS直播推流软件中文站 OBS官网版本分流下载 OBS插件免费下载](https://www.obsproject.com.cn/other/148.html) 后面会集成这个
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
 
-## Recommended IDE Setup
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
 
-## Type Support For `.vue` Imports in TS
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+## TODO LIST
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+### 前端
 
-1. Disable the built-in TypeScript Extension
-   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+1. 基本布局 ing
+
+2. 右键菜单 X 后端做好后再做
+
+3. 骨架屏适配 X
+
+4. 更好的弹性布局 + 移动端Web布局适配 X
+
+5. 做个移动端？
+
+   
+
+### 后端
+
+**后端还没开工**
+
+1. express为基础 X 
+2. 大体架构是WebRTC  P2P + C/S  两种方式并用 X
+3. NVIDIA 降噪集成 X 后端做好后再做
+

@@ -8,6 +8,7 @@ export const useThemeStore = defineStore('useThemeStore', {
         themeTitle: '',
         themeMode: localStorage.getItem('dark-mode') || 'dark',
         html: document.querySelector('html'),
+        body: document.querySelector('body'),
         colorSchemes: {
             dark: {title: '黑夜模式：开启' },
             light: {title: '黑夜模式：关闭' },
@@ -20,6 +21,7 @@ export const useThemeStore = defineStore('useThemeStore', {
             this.html.classList.toggle('transition-effect', true);
             // 根据模式切换 CSS 类
             isDark ? this.html.classList.add('dark') : this.html.classList.remove('dark');
+            isDark ? document.body.setAttribute('arco-theme', 'dark') :  document.body.removeAttribute('arco-theme');
             // 移除过渡效果
             setTimeout(() => this.html.classList.toggle('transition-effect', false), 250);
         },

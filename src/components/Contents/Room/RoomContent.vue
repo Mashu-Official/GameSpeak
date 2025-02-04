@@ -1,10 +1,13 @@
 <template>
     <div class="flex flex-1 flex-row w-full pl-8 pt-8">
-<!--        房间列表-->
+<!--房间列表-->
         <RoomsList/>
-<!--        聊天窗口-->
-        <MessagesCard/>
-
+        <!--默认窗口-->
+        <HeroCard/>
+        <!--聊天窗口-->
+        <MessagesCard />
+        <!--语音窗口-->
+        <VoiceCard />
     </div>
 
 
@@ -12,8 +15,10 @@
 
 <script setup lang="ts">
 import {reactive} from "vue";
-import MessagesCard from "../../MessagesCard.vue";
+import MessagesCard from "../FuncCard/MessagesCard.vue";
 import RoomsList from "./RoomsList.vue";
+import VoiceCard from "../FuncCard/VoiceCard.vue";
+import HeroCard from "../FuncCard/HeroCard.vue";
 
 interface Messages {
     id: number

@@ -1,9 +1,9 @@
 <template>
-    <div class="flex flex-col min-w-[235px] max-w-[323px] pr-2" ref="parentContainerRef">
+    <div class="flex flex-col min-w-[235px] max-w-[323px] pr-2 select-none" ref="parentContainerRef">
 
-        <div class="flex flex-row justify-between items-center">
+        <div class="flex flex-row justify-between items-center px-2">
             <div class="text-xl">
-                {{  '服务器名字' }}
+                {{ '服务器名字' }}
             </div>
             <button class="" @click="" title="设置">
                 <svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -17,18 +17,36 @@
 
         </div>
 
-        <div>
+        <div class="px-2">
             <div class="divide"></div>
-            <div class="card ViewCard my-4">
-
+            <div class="card ViewCard mt-4 mb-2">
+            </div>
+            <div class="flex flex-row space-x-2">
+                <div class="flex flex-1 justify-evenly items-center  card ViewCard mt-1 mb-2 cursor-pointer py-1 box-border border-2 border-green-600" @click="isOpenModal = !isOpenModal">
+                    <svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="6" y="6" width="36" height="36" rx="3" fill="none" stroke="currentColor" stroke-width="4"
+                              stroke-linejoin="round"/>
+                        <path d="M24 16V32" stroke="currentColor" stroke-width="4" stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                        <path d="M16 24L32 24" stroke="currentColor" stroke-width="4" stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                    </svg>
+                    <span class=" font-bold">
+                       新增房间
+                   </span>
+                </div>
+                <div class="card flex flex-row justify-center items-center font-bold ViewCard mt-1 mb-2 cursor-pointer box-border border-2 border-red-600">
+                    删除
+                </div>
             </div>
             <div class="divide"></div>
         </div>
 
-        <div class="roomList text-sm pr-2" ref="roomListRef">
+        <div class="roomList text-sm" ref="roomListRef">
             <!--房间列表-->
-            <div class="px-1">
-                <div v-for="room in state.roomsList" :key="room.id" class="roomItem px-3 py-1.5 cursor-pointer" style="margin-bottom: 2px">
+            <div class="px-2">
+                <div v-for="room in state.roomsList" :key="room.id" class="roomItem px-3 py-1.5 cursor-pointer"
+                     style="margin-bottom: 2px">
                     <div class="flex flex-row items-center">
                         <!--文字-->
                         <svg v-if="room.type === 'Text'" width="22" height="22" viewBox="0 0 48 48" fill="none"
@@ -47,13 +65,15 @@
                             <path d="M24 6V42C17 42 11.7985 32.8391 11.7985 32.8391H6C4.89543 32.8391 4 31.9437 4 30.8391V17.0108C4 15.9062 4.89543 15.0108 6 15.0108H11.7985C11.7985 15.0108 17 6 24 6Z"
                                   fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/>
                             <path d="M32 15L32 15C32.6232 15.5565 33.1881 16.1797 33.6841 16.8588C35.1387 18.8504 36 21.3223 36 24C36 26.6545 35.1535 29.1067 33.7218 31.0893C33.2168 31.7885 32.6391 32.4293 32 33"
-                                  stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                                  stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                                  stroke-linejoin="round"/>
                         </svg>
                         <!--文字语音-->
                         <svg v-else-if="room.type === 'Both'" width="22" height="22" viewBox="0 0 48 48" fill="none"
                              xmlns="http://www.w3.org/2000/svg">
                             <path d="M4 30C4 36.6274 9.37258 42 16 42C22.6274 42 26 38 27 35L28.5385 30L35 9L44 42"
-                                  stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                                  stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                                  stroke-linejoin="round"/>
                             <path d="M40.7274 30H28.5386" stroke="currentColor" stroke-width="3" stroke-linecap="round"
                                   stroke-linejoin="round"/>
                             <path d="M22 15C22 11.6863 19.3137 9 16 9C12.6863 9 10 11.6863 10 15V30C10 33.3137 12.6863 36 16 36C19.3137 36 22 33.3137 22 30V15Z"
@@ -63,11 +83,13 @@
                         <span class="whitespace-nowrap ml-2 py-2 font-semibold">{{ room.name }}</span>
                     </div>
 
-                    <span class="text-xs">{{ room.curMemberNum }}/{{room.memberLimit}}</span>
+                    <span class="text-xs">{{ room.curMemberNum }}/{{ room.memberLimit }}</span>
                 </div>
             </div>
 
         </div>
+
+        <CreateRoom v-model="isOpenModal" @submit="handleSubmit" />
 
     </div>
 </template>
@@ -75,126 +97,27 @@
 <script setup lang="ts">
 import {nextTick, onMounted, onUnmounted, reactive, ref} from "vue";
 import {setRoomListHeightWithCalc} from '../../../assets/js/dynamticOverflow.js'
+import {useThemeStore} from "../../../pinia/themeStore.js";
+import AddRoom from "./components/CreateRoom.vue";
+import CreateRoom from "./components/CreateRoom.vue";
+
+const isOpenModal = ref(false);
 
 const roomListRef = ref(null);
 const parentContainerRef = ref(null);
 
 onMounted(async () => {
     await nextTick();
-     await setRoomListHeightWithCalc(roomListRef, parentContainerRef)
-         state.roomsList = [
-             {
-                 id: 1,
-                 name: "休闲聊33天室",
-                 type: RoomType.Text,
-                 curMemberNum: 15,
-                 memberLimit: 50
-             },
-             {
-                 id: 2,
-                 name: "语音讨5544论组",
-                 type: RoomType.Voice,
-                 curMemberNum: 8,
-                 memberLimit: 30
-             },
-             {
-                 id: 2,
-                 name: "语音讨论组",
-                 type: RoomType.Both,
-                 curMemberNum: 8,
-                 memberLimit: 30
-             },
-             {
-                 id: 1,
-                 name: "休闲聊天室",
-                 type: RoomType.Text,
-                 curMemberNum: 15,
-                 memberLimit: 50
-             },
-             {
-                 id: 2,
-                 name: "语音讨论组",
-                 type: RoomType.Voice,
-                 curMemberNum: 8,
-                 memberLimit: 30
-             },
-             {
-                 id: 1,
-                 name: "休闲聊天室",
-                 type: RoomType.Text,
-                 curMemberNum: 15,
-                 memberLimit: 50
-             },
-             {
-                 id: 2,
-                 name: "语音讨论组",
-                 type: RoomType.Voice,
-                 curMemberNum: 8,
-                 memberLimit: 30
-             },
-             {
-                 id: 2,
-                 name: "语音讨论组",
-                 type: RoomType.Both,
-                 curMemberNum: 8,
-                 memberLimit: 30
-             },
-             {
-                 id: 1,
-                 name: "休闲聊天室",
-                 type: RoomType.Text,
-                 curMemberNum: 15,
-                 memberLimit: 50
-             },
-             {
-                 id: 1,
-                 name: "休闲聊天室",
-                 type: RoomType.Text,
-                 curMemberNum: 15,
-                 memberLimit: 50
-             },
-             {
-                 id: 2,
-                 name: "语音讨论组",
-                 type: RoomType.Voice,
-                 curMemberNum: 8,
-                 memberLimit: 30
-             },
-             {
-                 id: 1,
-                 name: "休闲聊天室",
-                 type: RoomType.Text,
-                 curMemberNum: 15,
-                 memberLimit: 50
-             },
-             {
-                 id: 1,
-                 name: "休闲聊天室",
-                 type: RoomType.Text,
-                 curMemberNum: 15,
-                 memberLimit: 50
-             },
-             {
-                 id: 2,
-                 name: "语音讨论组",
-                 type: RoomType.Voice,
-                 curMemberNum: 8,
-                 memberLimit: 30
-             },  {
-                 id: 1,
-                 name: "休闲聊天室",
-                 type: RoomType.Text,
-                 curMemberNum: 15,
-                 memberLimit: 50
-             },  {
-                 id: 1,
-                 name: "休闲聊天室",
-                 type: RoomType.Text,
-                 curMemberNum: 15,
-                 memberLimit: 50
-             },
-         ]
-
+    await setRoomListHeightWithCalc(roomListRef, parentContainerRef)
+    state.roomsList = [
+        {
+            id: 1,
+            name: "休闲聊33天室",
+            type: RoomType.Text,
+            curMemberNum: 15,
+            memberLimit: 50
+        },
+    ]
 });
 
 enum RoomType {
@@ -211,10 +134,23 @@ interface RoomsList {
     memberLimit: number,
 }
 
-const state = reactive<{roomsList: RoomsList[]}>({
-    roomsList: [
-    ]
+const state = reactive<{ roomsList: RoomsList[] }>({
+    roomsList: []
 })
+
+const handleSubmit = (formData) =>{
+    console.log(formData)
+    const temp =  {
+            id: 1,
+            name: formData.roomName,
+            type: formData.type,
+            curMemberNum: 15,
+            memberLimit: 50
+        }
+    state.roomsList.push(temp)
+
+}
+
 
 </script>
 
@@ -230,23 +166,27 @@ const state = reactive<{roomsList: RoomsList[]}>({
     width: 3px;
 }
 
-.roomItem{
+.roomItem {
     display: flex;
     align-items: center;
     justify-content: space-between;
     border-radius: 0.75rem;
     transition: background-color ease-in-out 0.15s;
 }
-.roomItem:hover{
+
+.roomItem:hover {
     background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
-:is(.dark .roomItem:hover){
+
+:is(.dark .roomItem:hover) {
     background-color: rgb(28 28 32 / var(--tw-bg-opacity));
 }
-.roomItem_Active{
+
+.roomItem_Active {
     background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
-:is(.dark .roomItem_Active){
+
+:is(.dark .roomItem_Active) {
     background-color: rgb(28 28 32 / var(--tw-bg-opacity));
 }
 
@@ -267,7 +207,7 @@ const state = reactive<{roomsList: RoomsList[]}>({
 }
 
 :is(.dark .roomList)::-webkit-scrollbar-track {
-    background:  #a2a2a2;
+    background: #a2a2a2;
     border-radius: 10px;
 }
 
@@ -277,7 +217,8 @@ const state = reactive<{roomsList: RoomsList[]}>({
     border-radius: 10px;
     /*transition: background 0.3s ease-in-out;*/
 }
-:is(.dark .roomList)::-webkit-scrollbar-thumb{
+
+:is(.dark .roomList)::-webkit-scrollbar-thumb {
     background: #ffffff; /* 滚动条滑块的颜色 */
     border-radius: 10px;
     /*transition: background 0.3s ease-in-out;*/
