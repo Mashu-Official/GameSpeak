@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-1 flex-row w-full pl-8 pt-8">
+    <div class="flex flex-1 flex-row w-full pl-2 pt-6">
 <!--房间列表-->
         <RoomsList/>
         <!--默认窗口-->

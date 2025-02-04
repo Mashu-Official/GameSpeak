@@ -1,7 +1,7 @@
 <template>
-    <div class="flex flex-col min-w-[235px] max-w-[323px] pr-2 select-none" ref="parentContainerRef">
+    <div class="flex flex-col min-w-[255px] max-w-[345px]  select-none" ref="parentContainerRef">
 
-        <div class="flex flex-row justify-between items-center px-2">
+        <div class="flex flex-row justify-between items-center px-4">
             <div class="text-xl">
                 {{ '服务器名字' }}
             </div>
@@ -17,7 +17,7 @@
 
         </div>
 
-        <div class="px-2">
+        <div class="px-4">
             <div class="divide"></div>
             <div class="card ViewCard mt-4 mb-2">
             </div>
@@ -42,9 +42,9 @@
             <div class="divide"></div>
         </div>
 
-        <div class="roomList text-sm" ref="roomListRef">
+        <div class="roomList text-sm px-4" ref="roomListRef">
             <!--房间列表-->
-            <div class="px-2">
+            <div class="">
                 <div v-for="room in state.roomsList" :key="room.id" class="roomItem px-3 py-1.5 cursor-pointer"
                      style="margin-bottom: 2px">
                     <div class="flex flex-row items-center">
@@ -100,6 +100,7 @@ import {setRoomListHeightWithCalc} from '../../../assets/js/dynamticOverflow.js'
 import {useThemeStore} from "../../../pinia/themeStore.js";
 import AddRoom from "./components/CreateRoom.vue";
 import CreateRoom from "./components/CreateRoom.vue";
+import {RoomType} from "../../../interface/enum.ts";
 
 const isOpenModal = ref(false);
 
@@ -120,12 +121,6 @@ onMounted(async () => {
     ]
 });
 
-enum RoomType {
-    Voice = "Voice",
-    Text = "Text",
-    Both = "Both",
-}
-
 interface RoomsList {
     id: number,
     name: string,
@@ -139,7 +134,7 @@ const state = reactive<{ roomsList: RoomsList[] }>({
 })
 
 const handleSubmit = (formData) =>{
-    console.log(formData)
+    // console.log(formData)
     const temp =  {
             id: 1,
             name: formData.roomName,
