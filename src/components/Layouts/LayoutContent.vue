@@ -1,6 +1,6 @@
 <template>
     <div class="content card h-full flex flex-col items-center justify-center">
-        Content
+        <RouterView/>
     </div>
 </template>
 

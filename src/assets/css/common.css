@@ -14,12 +14,11 @@ body {
 
 .roomName {
     font-size: 14px;
+    font-weight: 600;
     line-height: 16px;
     position: absolute;
     white-space: nowrap;
     padding: 0 12px 0 16px;
-    background-color: rgba(75, 0, 130, 0.8);
-    color: white;
     border-top-left-radius: 16px;
     border-bottom-left-radius: 16px;
     pointer-events: none; /* 确保不会影响鼠标事件 */
@@ -27,6 +26,6 @@ body {
     z-index: 10;
     display: flex;
     flex-direction: row;
-    align-items: center; /* 垂直居中文本 */
-    justify-content: center; /* 水平居中文本 */
+    align-items: center;
+    justify-content: center;
 }

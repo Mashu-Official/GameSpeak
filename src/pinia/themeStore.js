@@ -1,8 +1,7 @@
 import {defineStore} from "pinia";
-import {onMounted} from 'vue';
 import {useToast} from "vue-toastification";
+
 const toast = useToast()
-import { Message } from '@arco-design/web-vue';
 
 export const useThemeStore = defineStore('useThemeStore', {
     state: () => ({

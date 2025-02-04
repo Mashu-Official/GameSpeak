@@ -15,7 +15,7 @@ const options = {
     position: POSITION.TOP_CENTER,
     transition: "Vue-Toastification__bounce",
     maxToasts: 3,
-    timeout: 3100,
+    timeout: 2500,
     newestOnTop: true,
     toastClassName: ["baseToastStyle","mainSchemeToast"], // 背景颜色
     bodyClassName: ["custom-class-1", "custom-class-2"]  // ??
