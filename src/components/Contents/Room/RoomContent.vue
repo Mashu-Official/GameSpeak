@@ -1,6 +1,8 @@
 <template>
-    <div class="flex flex-1 flex-row w-full p-8">
+    <div class="flex flex-1 flex-row w-full pl-8 pt-8">
+<!--        房间列表-->
         <RoomsList/>
+<!--        聊天窗口-->
         <MessagesCard/>
 
     </div>

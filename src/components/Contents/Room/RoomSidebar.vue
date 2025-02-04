@@ -1,5 +1,6 @@
 <template>
-    <div>RoomSidebar</div>
+    <div class="min-w-[189px] w-full">
+        RoomSidebar</div>
 </template>
 
 <script setup>

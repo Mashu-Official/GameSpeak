@@ -59,10 +59,11 @@ body {
 }
 
 .divide{
-    border-color: rgb(55 65 81 / var(--tw-text-opacity));
+    border-color: rgb(224 228 230 / var(--tw-text-opacity));
+
 }
 :is(.dark .divide){
-    border-color: rgb(240 244 246 / var(--tw-text-opacity));
+    border-color: rgb(58 65 72 / var(--tw-text-opacity));
 }
 
 .avatarContainer{
@@ -79,16 +80,29 @@ body {
     background-color: rgb(62 62 68 / var(--tw-bg-opacity));
 }
 
-.roomName {
+.serverName {
     --tw-text-opacity: 1;
     color: rgb(55 65 81 / var(--tw-text-opacity));
     --tw-bg-opacity: 1;
     background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
-:is(.dark .roomName){
+:is(.dark .serverName){
     --tw-text-opacity: 1;
     color: rgb(240 244 246 / var(--tw-text-opacity));
     --tw-bg-opacity: 1;
     background-color: rgb(28 28 32 / var(--tw-bg-opacity));
+}
+
+.ViewCard {
+    --tw-bg-opacity: 1;
+    background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+    --tw-text-opacity: 1;
+    color: rgb(55 65 81 / var(--tw-text-opacity));
+}
+:is(.dark .ViewCard) {
+    --tw-bg-opacity: 1;
+    background-color: rgb(28 28 32 / var(--tw-bg-opacity));
+    --tw-text-opacity: 1;
+    color: rgb(240 244 246 / var(--tw-text-opacity))
 }

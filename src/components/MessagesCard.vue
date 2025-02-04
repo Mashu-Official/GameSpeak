@@ -1,5 +1,7 @@
 <template>
-    <div class="flex flex-1 flex-col items-start h-full min-w-[387px] ">
+    <div class="flex flex-1 flex-col items-start h-full min-w-[287px] px-8">
+        <div class="text-xl">{{ '房间名字' }}</div>
+        <div class="divide mb-4" style="width: 100%"></div>
         <template v-for="message in state.messages" :key="message.id">
             <div class="flex flex-col items-start space-y-8">
                 <!-- message item ↓ -->

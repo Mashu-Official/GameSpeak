@@ -1,5 +1,5 @@
 <template>
-    <div class="sidebar flex flex-col items-center h-full relative py-2 overflow-hidden">
+    <div class="sidebar flex flex-col items-center h-full relative py-2 overflow-hidden select-none">
 
         <div class="avatar" @mouseenter="showServerName($event, '私信')" @mouseleave="hideServerName">
             <div class="avatarContainer flex justify-center items-center">
@@ -43,7 +43,7 @@
             </div>
         </div>
 
-        <div class="divide"></div>
+        <div class="divide" style="width: 60%;"></div>
 
         <div class="serverList flex flex-col overflow-y-scroll h-[372px]">
             <div class="avatar" v-for="server in state.servers" :key="server.id" @mouseenter="showServerName($event, server.name)"
@@ -109,9 +109,10 @@ const InitState: () => void = () => {
 
 }
 
-const enterserver: (serverHashID) => void = () => {
+const enterServer: (serverHashID) => void = () => {
 
 }
+
 let serverNameElement = ref<HTMLElement | null>(null);
 
 function showServerName(event: MouseEvent, serverName: string) {
@@ -185,7 +186,7 @@ function hideServerName() {
 .divide {
     margin: 6px 0;
     border-width: 1px;
-    width: 60%;
+
 }
 
 </style>
