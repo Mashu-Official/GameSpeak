@@ -29,3 +29,7 @@ body {
     align-items: center;
     justify-content: center;
 }
+
+.circle {
+     border-radius: 520px;
+ }

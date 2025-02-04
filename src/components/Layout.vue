@@ -33,10 +33,6 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /*color: var(--color-white);*/
-    font-size: 16px;
-    font-stretch: condensed;
-    text-align: center;
 }
 .layout :deep(.arco-layout-header),
 .layout :deep(.arco-layout-footer),

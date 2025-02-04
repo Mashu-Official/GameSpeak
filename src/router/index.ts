@@ -10,7 +10,6 @@ const routes: Array<RouteRecordRaw> = [
         component: Main,
         children: [
             ...ContentRoute  // Content功能路由
-
         ]
     }
 ];

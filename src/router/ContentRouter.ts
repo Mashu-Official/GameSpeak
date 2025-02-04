@@ -1,14 +1,28 @@
 import {RouteRecordRaw} from "vue-router";
 // @ts-ignore
 import LayoutContent from "../components/Layouts/LayoutContent.vue";
+import Room from "../components/Contents/Room/Room.vue";
 
 export const ContentRoute: Array<RouteRecordRaw> = [
     {
-        path: '/',
+        path: '',
         component: LayoutContent,
         children: [
-            // ContentRouter  // Content功能路由
-
+            {
+                path: '/room/:hashID',
+                name: 'room',
+                component:Room
+            },
+            {
+                path: '',
+                name: 'room',
+                component:Room
+            },
+            // {
+            //     path: '/message',
+            //     name: 'room',
+            //     component:Room
+            // },
         ]
     },
 ];

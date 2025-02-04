@@ -1,10 +1,11 @@
 <template>
-    <div class="content h-full rounded-tl-3xl">
-        <RouterView />
+    <div class="min-w-[283px]">
+        123
     </div>
 </template>
 
 <script setup>
+
 </script>
 
 <style scoped>

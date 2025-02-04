@@ -1,7 +1,7 @@
 <template>
     <div class="sidebar flex flex-col items-center h-full relative py-2 overflow-hidden">
 
-        <div class="avatar" @mouseenter="showRoomName($event, '私信')" @mouseleave="hideRoomName">
+        <div class="avatar" @mouseenter="showServerName($event, '私信')" @mouseleave="hideServerName">
             <div class="avatarContainer flex justify-center items-center">
                 <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M21 38C30.3888 38 38 30.3888 38 21C38 11.6112 30.3888 4 21 4C11.6112 4 4 11.6112 4 21C4 30.3888 11.6112 38 21 38Z"
@@ -14,7 +14,7 @@
                 </svg>
             </div>
         </div>
-        <div class="avatar" @mouseenter="showRoomName($event, '搜索')" @mouseleave="hideRoomName">
+        <div class="avatar" @mouseenter="showServerName($event, '搜索')" @mouseleave="hideServerName">
             <div class="avatarContainer flex justify-center items-center">
                 <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M44.0001 24C44.0001 35.0457 35.0458 44 24.0001 44C18.0266 44 4.00006 44 4.00006 44C4.00006 44 4.00006 29.0722 4.00006 24C4.00006 12.9543 12.9544 4 24.0001 4C35.0458 4 44.0001 12.9543 44.0001 24Z"
@@ -29,7 +29,7 @@
                 </svg>
             </div>
         </div>
-        <div class="avatar" @mouseenter="showRoomName($event, '施工中')" @mouseleave="hideRoomName">
+        <div class="avatar" @mouseenter="showServerName($event, '施工中')" @mouseleave="hideServerName">
             <div class="avatarContainer flex justify-center items-center">
 
                 <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -45,15 +45,15 @@
 
         <div class="divide"></div>
 
-        <div class="roomList flex flex-col overflow-y-scroll h-[372px]">
-            <div class="avatar" v-for="room in state.rooms" :key="room.id" @mouseenter="showRoomName($event, room.name)"
-                 @mouseleave="hideRoomName">
-                <div class="avatarContainer" v-if="room.avatarURL" @click="enterRoom(room.hashID)">
-                    <img class="object-cover w-full h-full " :src="room.avatarURL" :alt="room.avatarURL">
+        <div class="serverList flex flex-col overflow-y-scroll h-[372px]">
+            <div class="avatar" v-for="server in state.servers" :key="server.id" @mouseenter="showServerName($event, server.name)"
+                 @mouseleave="hideServerName">
+                <div class="avatarContainer" v-if="server.avatarURL" @click="enterserver(server.hashID)">
+                    <img class="object-cover w-full h-full " :src="server.avatarURL" :alt="server.avatarURL">
                 </div>
                 <div v-else class="avatarContainer flex flex-col justify-center items-center">
                     <div class="text-2xl font-bold">
-                        {{ room.name.slice(0, 1) }}
+                        {{ server.name.slice(0, 1) }}
                     </div>
                 </div>
             </div>
@@ -61,7 +61,7 @@
 
         <div class="overflow-hidden w-[52px] h-[52px] absolute bottom-4 circle" style="    --tw-bg-opacity: 1;
     background-color: rgb(255 255 255 / var(--tw-bg-opacity));">
-            <img class="object-cover w-full h-full" src="" alt="">
+            <img class="object-cover w-full h-full" src="https://img.kookapp.cn/avatars/2022-04/Rw4r5wP0Oi02s02s.jpg?x-oss-process=style/icon" alt="">
         </div>
     </div>
 </template>
@@ -69,17 +69,17 @@
 <script setup lang="ts">
 import {reactive, ref} from "vue";
 
-interface RoomAttribute {
+interface serverAttribute {
     id: number, // optional
     name: string,
     hashID: string,
     avatarURL: string,
 }
 
-const state = reactive<{ rooms: RoomAttribute[] }>({
-    rooms: [],
+const state = reactive<{ servers: serverAttribute[] }>({
+    servers: [],
 })
-state.rooms = [
+state.servers = [
     {
         id: 1,
         name: "豪华海景房",
@@ -109,36 +109,36 @@ const InitState: () => void = () => {
 
 }
 
-const enterRoom: (roomHashID) => void = () => {
+const enterserver: (serverHashID) => void = () => {
 
 }
-let roomNameElement = ref<HTMLElement | null>(null);
+let serverNameElement = ref<HTMLElement | null>(null);
 
-function showRoomName(event: MouseEvent, roomName: string) {
-    if (!roomNameElement.value) {
-        roomNameElement.value = document.createElement('div');
-        roomNameElement.value.classList.add('roomName');
-        document.body.appendChild(roomNameElement.value);
+function showServerName(event: MouseEvent, serverName: string) {
+    if (!serverNameElement.value) {
+        serverNameElement.value = document.createElement('div');
+        serverNameElement.value.classList.add('serverName');
+        document.body.appendChild(serverNameElement.value);
     }
-    roomNameElement.value.textContent = roomName;
+    serverNameElement.value.textContent = serverName;
     const avatarElement = event.currentTarget as HTMLElement;
     const avatarRect = avatarElement.getBoundingClientRect();
 
-    // 设置.roomName的高度
-    roomNameElement.value.style.height = `${avatarRect.height / 2}px`;
-    // 计算.roomName的位置，使其位于.avatar的右侧并垂直居中
-    roomNameElement.value.style.left = `${avatarRect.right + window.scrollX + 8}px`;
-    roomNameElement.value.style.top = `${avatarRect.top + window.scrollY + (avatarRect.height - parseInt(roomNameElement.value.style.height)) / 2}px`;
+    // 设置.serverName的高度
+    serverNameElement.value.style.height = `${avatarRect.height / 2}px`;
+    // 计算.serverName的位置，使其位于.avatar的右侧并垂直居中
+    serverNameElement.value.style.left = `${avatarRect.right + window.scrollX + 8}px`;
+    serverNameElement.value.style.top = `${avatarRect.top + window.scrollY + (avatarRect.height - parseInt(serverNameElement.value.style.height)) / 2}px`;
 
-    roomNameElement.value.style.opacity = '1';
+    serverNameElement.value.style.opacity = '1';
 }
 
-function hideRoomName() {
-    if (roomNameElement.value) {
-        roomNameElement.value.style.opacity = '0';
-        if (roomNameElement.value) {
-            roomNameElement.value.remove();
-            roomNameElement.value = null;
+function hideServerName() {
+    if (serverNameElement.value) {
+        serverNameElement.value.style.opacity = '0';
+        if (serverNameElement.value) {
+            serverNameElement.value.remove();
+            serverNameElement.value = null;
         }
     }
 }
@@ -146,13 +146,13 @@ function hideRoomName() {
 </script>
 
 <style scoped>
-.roomList {
+.serverList {
     overflow: auto;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE & Edge */
 }
 
-.roomList::webkit-scrollbar {
+.serverList::webkit-scrollbar {
     display: none; /* WebKit 浏览器 */
 }
 
@@ -182,13 +182,10 @@ function hideRoomName() {
     /*   selected 直接内联 */
 }
 
-.circle {
-    border-radius: 520px;
-}
-
 .divide {
     margin: 6px 0;
     border-width: 1px;
     width: 60%;
 }
+
 </style>

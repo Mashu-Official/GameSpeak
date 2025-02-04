@@ -1,33 +1,31 @@
-
-
 body {
     margin: 0;
     padding: 0;
-    --tw-bg-opacity: 1;
     --tw-text-opacity: 1;
     color: rgb(55 65 81 / var(--tw-text-opacity));
+    --tw-bg-opacity: 1;
     background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
 :is(.dark body) {
-    --tw-bg-opacity: 1;
-    background-color: rgb(37 36 40 / var(--tw-bg-opacity));
     --tw-text-opacity: 1;
-    color: rgb(240 244 246 / var(--tw-text-opacity))
+    color: rgb(240 244 246 / var(--tw-text-opacity));
+    --tw-bg-opacity: 1;
+    background-color: rgb(28 28 32 / var(--tw-bg-opacity));
 }
 
 .header{
-    --tw-bg-opacity: 1;
-    background-color: rgb(255 255 255 / var(--tw-bg-opacity));
     --tw-text-opacity: 1;
     color: rgb(55 65 81 / var(--tw-text-opacity));
+    --tw-bg-opacity: 1;
+    background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
 :is(.dark .header){
+    --tw-text-opacity: 1;
+    color: rgb(240 244 246 / var(--tw-text-opacity));
     --tw-bg-opacity: 1;
     background-color: rgb(28 28 32 / var(--tw-bg-opacity));
-    --tw-text-opacity: 1;
-    color: rgb(240 244 246 / var(--tw-text-opacity))
 }
 
 .sidebar{
