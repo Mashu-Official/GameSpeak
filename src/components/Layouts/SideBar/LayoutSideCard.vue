@@ -1,5 +1,5 @@
 <template>
-<div class="flex flex-col items-center h-full relative py-2 overflow-hidden">
+<div class="sidebar flex flex-col items-center h-full relative py-2 overflow-hidden">
 
     <div class="avatar" @mouseenter="showRoomName($event, '私信')" @mouseleave="hideRoomName">
         <div class="avatarContainer">
@@ -25,14 +25,12 @@
                 <img class="object-cover w-full h-full " :src="room.avatarURL" :alt="room.avatarURL">
             </div>
             <div v-else class="avatarContainer flex flex-col justify-center items-center">
-                <div class="text-2xl text-black">
+                <div class="text-2xl font-bold">
                     {{ room.name.slice(0,1) }}
                 </div>
             </div>
         </div>
     </div>
-
-
 
     <div class="overflow-hidden w-[52px] h-[52px] absolute bottom-4 circle" style="    --tw-bg-opacity: 1;
     background-color: rgb(255 255 255 / var(--tw-bg-opacity));">
@@ -95,14 +93,11 @@ function showRoomName(event: MouseEvent, roomName: string) {
         document.body.appendChild(roomNameElement.value);
     }
     roomNameElement.value.textContent = roomName;
-
     const avatarElement = event.currentTarget as HTMLElement;
     const avatarRect = avatarElement.getBoundingClientRect();
-    console.log(avatarRect.top)
 
     // 设置.roomName的高度
     roomNameElement.value.style.height = `${avatarRect.height / 2 }px`;
-
     // 计算.roomName的位置，使其位于.avatar的右侧并垂直居中
     roomNameElement.value.style.left = `${avatarRect.right + window.scrollX + 8}px`;
     roomNameElement.value.style.top = `${avatarRect.top + window.scrollY + (avatarRect.height - parseInt(roomNameElement.value.style.height)) / 2}px`;
@@ -139,44 +134,28 @@ function hideRoomName() {
     padding: 6px 12px;
     width: 100%;
 }
-:is (.dark .avatar){
-    --tw-bg-opacity: 1;
-    background-color: rgb(62 62 68 / var(--tw-bg-opacity))
-}
 
-.avatar > .avatarContainer {
+.avatar > .avatarContainer{
     width: 50px;
     height: 50px;
     border-radius: 16px;
     overflow: hidden;
     transition: scale ease-in 0.18s;
-    background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
 .avatar > .avatarContainer:hover {
     scale: 110%;
 }
-
 .selectedAvatar{
     border: solid blue 2px;
     /*   selected 直接内联 */
 }
-
 .circle{
     border-radius: 520px;
 }
-
 .divide{
     margin: 6px 0;
     border: solid blue 1px;
     width: 60%;
 }
-
-:is (.dark .divide){
-
-}
-
-
-
-
 </style>

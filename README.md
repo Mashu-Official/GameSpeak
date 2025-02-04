@@ -1,3 +1,17 @@
+
+
+
+
+# GameSpeak
+
+electron + vue3 + ts + tailwind + arco-design 的游戏语音服务 开发中
+
+
+
+开发环境是Electron⚡️Vite
+
+[Getting Started | Electron⚡️Vite](https://vite.electron.js.cn/guide/getting-started.html)
+
 # Vue 3 + TypeScript + Vite
 
 This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
