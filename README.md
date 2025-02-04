@@ -32,6 +32,8 @@ electron + vue3 + ts + tailwind + arco-design 的游戏语音服务 开发中
 
 5. 做个移动端？
 
+6. 服务器头像用字体的那个用文字转canvas同时转图片保持一致性 X
+
    
 
 ### 后端

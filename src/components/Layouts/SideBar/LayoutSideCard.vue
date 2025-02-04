@@ -62,7 +62,7 @@
             </div>
         </div>
 
-        <div class="overflow-hidden w-[52px] h-[52px] absolute bottom-4 circle" style="    --tw-bg-opacity: 1;
+        <div class="overflow-hidden w-[52px] h-[52px] absolute bottom-4 circle cursor-pointer" style="    --tw-bg-opacity: 1;
     background-color: rgb(255 255 255 / var(--tw-bg-opacity));">
             <img class="object-cover w-full h-full"
                  src="https://img.kookapp.cn/avatars/2022-04/Rw4r5wP0Oi02s02s.jpg?x-oss-process=style/icon" alt="">

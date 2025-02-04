@@ -29,18 +29,25 @@
                     <a-input v-model="form.password" placeholder="输入房间密码"/>
                 </a-form-item>
                     <a-form-item v-if="form.lock" field="type" label="权限组设置">
-                        <a-transfer
-                                show-search
-                                :data="data"
-                                :default-value="value"
-                                :source-input-search-props="{
-                                  placeholder:'source item search'
-                                }"
-                                :target-input-search-props="{
-                                  placeholder:'target item search'
-                                }"
-                        />
+
                     </a-form-item>
+                <a-transfer
+                        v-if="form.lock"
+                        :data="data"
+                        :default-value="value"
+                />
+<!--                ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓-->
+<!--                source-title="'权限组'"-->
+<!--                target-title="'允许进入的权限组'"-->
+<!--             ↑↑↑↑↑↑↑↑↑↑↑↑↑   slot ↑↑↑↑↑↑↑↑↑↑↑-->
+
+<!--                show-search-->
+<!--                :source-input-search-props="{-->
+<!--                placeholder:'source item search'-->
+<!--                }"-->
+<!--                :target-input-search-props="{-->
+<!--                placeholder:'target item search'-->
+<!--                }"-->
             </a-form>
             <div>
                 {{ form }}
@@ -70,11 +77,11 @@ const props = defineProps<{
     modelValue: boolean;
 }>();
 
-
 const data = Array(8).fill(undefined).map((_, index) => ({
     value: `option${index + 1}`,
     label: `Option ${index + 1}`
 }));
+
 const value = ref();
 const initialForm: newRoom = {
     roomName: '',
