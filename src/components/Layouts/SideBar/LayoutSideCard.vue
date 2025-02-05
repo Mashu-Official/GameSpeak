@@ -21,20 +21,22 @@
         </div>
     </transition>
     <transition name="slide">
-        <div v-show="isSidebarOpen"
+        <div v-show="isSidebarOpen" ref="parentContainerRef"
              class="sidebar flex flex-col items-center h-full relative py-2 overflow-hidden select-none">
-            <div class="avatar"
-                 @click="toggleSideBar"
-                 @mouseenter="showServerName($event, '收起侧栏')"
-                 @mouseleave="hideServerName">
-                <div class="avatarContainer flex justify-center items-center">
-                    <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="12" cy="24" r="3" fill="currentColor"/>
-                        <circle cx="24" cy="24" r="3" fill="currentColor"/>
-                        <circle cx="36" cy="24" r="3" fill="currentColor"/>
-                    </svg>
-                </div>
-            </div>
+
+<!--            <div class="avatar"-->
+<!--                 @click="toggleSideBar"-->
+<!--                 @mouseenter="showServerName($event, '收起侧栏')"-->
+<!--                 @mouseleave="hideServerName">-->
+<!--                <div class="avatarContainer flex justify-center items-center">-->
+<!--                    <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">-->
+<!--                        <circle cx="12" cy="24" r="3" fill="currentColor"/>-->
+<!--                        <circle cx="24" cy="24" r="3" fill="currentColor"/>-->
+<!--                        <circle cx="36" cy="24" r="3" fill="currentColor"/>-->
+<!--                    </svg>-->
+<!--                </div>-->
+<!--            </div>-->
+
             <div class="avatar" @mouseenter="showServerName($event, '搜索')" @mouseleave="hideServerName">
                 <div class="avatarContainer flex justify-center items-center">
                     <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -78,10 +80,10 @@
             <!--            </div>-->
             <!--        </div>-->
             <div class="divide" style="width: 60%;"></div>
-
-            <div class="serverList flex flex-col overflow-y-scroll h-[372px]">
+<!--            max-h-[372px]-->
+            <div class="serverList flex flex-col overflow-y-scroll" ref="serverListRef">
                 <div class="avatar" v-for="server in state.servers" :key="server.id"
-                     @click="enterServer(server)"
+                     @click="curSelectedState.enterServer(server)"
                      @mouseenter="showServerName($event, server.name)"
                      @mouseleave="hideServerName">
 
@@ -110,10 +112,12 @@
 </template>
 
 <script setup lang="ts">
-import {reactive, ref} from "vue";
-import router from "../../../router";
+import {nextTick, onMounted, onUnmounted, reactive, ref} from "vue";
 import {hideServerName, showServerName} from "../../../assets/js/serverName.ts";
 import {useCurSelectedState} from "../../../pinia/curSelectedState.js"
+import {serverAttribute} from "../../../interface/ServerAttribute.ts";
+import {setHeightWithCalc, setWidth} from "../../../assets/js/dynamticOverflow.js";
+import {RoomType} from "../../../interface/RoomTypeEnum.ts";
 
 // 控制侧边栏是否打开
 const isSidebarOpen = ref(true);
@@ -124,14 +128,6 @@ const curSelectedState = useCurSelectedState()
 const toggleSidebar = () => {
     isSidebarOpen.value = !isSidebarOpen.value;
 };
-
-interface serverAttribute {
-    id: number, // optional
-    name: string,
-    hashID: string,
-    avatarURL: string,
-}
-
 const state = reactive<{ servers: serverAttribute[] }>({
     servers: [],
 })
@@ -140,7 +136,7 @@ state.servers = [
         id: 1,
         name: "豪华海景房",
         hashID: "1234",
-        avatarURL: "https://ts3.cn.mm.bing.net/th?id=ORMS.d61fa58d01c4d56bd9e5bc4695579c84&pid=Wdp&w=268&h=140&qlt=90&c=1&rs=1&dpr=1&p=0"
+        avatarURL: "https://img.kookapp.cn/avatars/2022-04/Rw4r5wP0Oi02s02s.jpg?x-oss-process=style/icon"
     },
     {
         id: 2,
@@ -161,19 +157,29 @@ state.servers = [
         avatarURL: ""
     },
 ];
-
 const InitState: () => void = () => {
 
 }
-
-const enterServer: (server) => void = (server) => {
-    curSelectedState.server = server
-    router.push(`/server/${server.hashID}`)
-}
-
 const toggleSideBar = () => {
     isSidebarOpen.value = !isSidebarOpen.value;
 }
+
+const parentContainerRef = ref(null)
+const serverListRef = ref(null)
+
+onMounted(async () => {
+    await nextTick();
+    await setHeightWithCalc(serverListRef, parentContainerRef)
+    window.addEventListener('resize', ()=>{
+        setHeightWithCalc(serverListRef, parentContainerRef)
+    });
+});
+
+onUnmounted(()=>{
+    window.removeEventListener('resize', () => {
+        setHeightWithCalc(serverListRef, parentContainerRef);
+    });
+})
 
 </script>
 
@@ -201,16 +207,16 @@ const toggleSideBar = () => {
     height: 50px;
     border-radius: 16px;
     overflow: hidden;
-    box-sizing: content-box;
+    box-sizing: border-box;
     transition: transform 0.16s ease-in;
 }
 
 .avatar{
-    transition: transform 0.18s ease-in;
+    transition: transform 0.2s ease-in;
 }
 
 .avatar:active > .avatarContainer {
-  transform: scale(0.8);
+  transform: scale(0.85);
 }
 .avatar > .avatarContainer:hover {
     transform: scale(1.08);

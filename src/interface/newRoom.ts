@@ -1,4 +1,4 @@
-import {RoomType} from "./enum.ts";
+import {RoomType} from "./RoomTypeEnum.ts";
 
 export interface newRoom {
     roomName: string

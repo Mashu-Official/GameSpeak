@@ -3,7 +3,7 @@
 
         <div class="flex flex-row justify-between items-center px-4">
             <div class="text-xl">
-                {{ '服务器名字' }}
+                {{ curSelectedState.server.name || '找不到该服务器' }}
             </div>
             <button class="" @click="" title="设置">
                 <svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -47,7 +47,7 @@
             <div class="">
                 <div v-for="room in state.roomsList" :key="room.id" class="roomItem px-3 py-1.5 cursor-pointer"
                      style="margin-bottom: 2px">
-                    <div class="flex flex-row items-center">
+                    <div class="flex flex-row items-center" @click="enterRoom(room)">
                         <!--文字-->
                         <svg v-if="room.type === 'Text'" width="22" height="22" viewBox="0 0 48 48" fill="none"
                              xmlns="http://www.w3.org/2000/svg">
@@ -96,11 +96,13 @@
 
 <script setup lang="ts">
 import {nextTick, onMounted, onUnmounted, reactive, ref} from "vue";
-import {setRoomListHeightWithCalc} from '../../../assets/js/dynamticOverflow.js'
-import {useThemeStore} from "../../../pinia/themeStore.js";
-import AddRoom from "./components/CreateRoom.vue";
+import {setHeightWithCalc} from '../../../assets/js/dynamticOverflow.js'
 import CreateRoom from "./components/CreateRoom.vue";
-import {RoomType} from "../../../interface/enum.ts";
+import {RoomType} from "../../../interface/RoomTypeEnum.ts";
+import {useCurSelectedState} from "../../../pinia/curSelectedState.js";
+import RoomsList from "./RoomsList.vue";
+const curSelectedState = useCurSelectedState()
+
 
 const isOpenModal = ref(false);
 
@@ -109,7 +111,7 @@ const parentContainerRef = ref(null);
 
 onMounted(async () => {
     await nextTick();
-    await setRoomListHeightWithCalc(roomListRef, parentContainerRef)
+    await setHeightWithCalc(roomListRef, parentContainerRef)
     state.roomsList = [
         {
             id: 1,
@@ -121,13 +123,7 @@ onMounted(async () => {
     ]
 });
 
-interface RoomsList {
-    id: number,
-    name: string,
-    type: RoomType,
-    curMemberNum: number,
-    memberLimit: number,
-}
+
 
 const state = reactive<{ roomsList: RoomsList[] }>({
     roomsList: []
@@ -146,7 +142,9 @@ const handleSubmit = (formData) =>{
 
 }
 
-
+const enterRoom = (room)=>{
+    curSelectedState.room = room
+}
 </script>
 
 <style scoped>

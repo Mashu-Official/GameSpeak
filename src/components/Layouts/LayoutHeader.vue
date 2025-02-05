@@ -2,9 +2,9 @@
 
     <div class="header flex flex-row items-center justify-between px-4 select-none">
         <a href="https://github.com/Mashu-Official/GameSpeak" class="font-bold">GameSpeak</a>
-        <div class="flex flex-row justify-around">
+        <div class="btn-group flex flex-row justify-around">
 
-            <button class="p-2 mx-1 duration-200 btn" :title="`${themeStore.themeTitle}`"
+            <button class="p-2 mx-1 btn" :title="`${themeStore.themeTitle}`"
                     data-id="theme-btn">
                 <svg
                         v-show="themeStore.themeMode !== 'dark' "
@@ -44,22 +44,62 @@
                           fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
                 </svg>
             </button>
-
+            <button class="p-2 mx-1 btn">
+                <svg width="16" height="16" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10.5 24L38.5 24" stroke="currentColor" stroke-width="4" stroke-linecap="round"
+                          stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <button class="p-2 mx-1 btn">
+                <svg width="16" height="16" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M33 6V15H42" stroke="currentColor" stroke-width="4" stroke-linecap="round"
+                          stroke-linejoin="round"/>
+                    <path d="M15 6V15H6" stroke="currentColor" stroke-width="4" stroke-linecap="round"
+                          stroke-linejoin="round"/>
+                    <path d="M15 42V33H6" stroke="currentColor" stroke-width="4" stroke-linecap="round"
+                          stroke-linejoin="round"/>
+                    <path d="M33 42V33H41.8995" stroke="currentColor" stroke-width="4" stroke-linecap="round"
+                          stroke-linejoin="round"/>
+                </svg>
+                <svg width="16" height="16" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M33 6H42V15" stroke="currentColor" stroke-width="4" stroke-linecap="round"
+                          stroke-linejoin="round"/>
+                    <path d="M42 33V42H33" stroke="currentColor" stroke-width="4" stroke-linecap="round"
+                          stroke-linejoin="round"/>
+                    <path d="M15 42H6V33" stroke="currentColor" stroke-width="4" stroke-linecap="round"
+                          stroke-linejoin="round"/>
+                    <path d="M6 15V6H15" stroke="currentColor" stroke-width="4" stroke-linecap="round"
+                          stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <button class="p-2 mx-1 btn">
+                <svg width="16" height="16" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8 8L40 40" stroke="currentColor" stroke-width="4" stroke-linecap="round"
+                          stroke-linejoin="round"/>
+                    <path d="M8 40L40 8" stroke="currentColor" stroke-width="4" stroke-linecap="round"
+                          stroke-linejoin="round"/>
+                </svg>
+            </button>
 
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import {initThemeBtn, useThemeStore} from '../../pinia/themeStore.js'
+import {useThemeStore} from '../../pinia/themeStore.js'
 import {onMounted} from "vue";
+
 const themeStore = useThemeStore()
-// @click="$message.warning(msgList[8])
+
 
 </script>
 
 <style scoped>
-.btn{
- /*background-color: red;*/
+.btn-group, .btn-group *{
+    -webkit-app-region: no-drag;
+}
+
+.btn {
+    /*background-color: red;*/
 }
 </style>

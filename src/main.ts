@@ -14,7 +14,7 @@ import "./assets/css/toastStyle.css"
 const options = {
     position: POSITION.TOP_CENTER,
     transition: "Vue-Toastification__bounce",
-    maxToasts: 3,
+    maxToasts: 2,
     timeout: 2500,
     newestOnTop: true,
     toastClassName: ["baseToastStyle","mainSchemeToast"], // 背景颜色

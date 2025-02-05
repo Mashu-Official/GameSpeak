@@ -1,10 +1,10 @@
 <template>
-    <div class="flex flex-1 flex-col items-start h-full min-w-[287px] px-8">
-        <div class="text-xl">{{ '房间名字' }}</div>
+    <div class="flex flex-1 flex-col items-start h-full min-w-[287px] px-8 relative">
+        <div class="text-xl">{{ curSelectedState.room.name || "找不到该房间" }}</div>
 
         <div class="divide mb-4" style="width: 100%"></div>
 
-        <div class="flex flex-col space-y-3">
+        <div class="flex flex-col space-y-3" ref="parentContainerRef">
             <template v-for="message in state.messages" :key="message.timeStamp">
                 <div class="flex flex-col items-start">
                     <!-- message item ↓ -->
@@ -35,25 +35,46 @@
                         </div>
 
                     </div>
-
                 </div>
             </template>
+
+            <div class="absolute bottom-0" ref="textInputRef">
+                <form class="" action="" method="post" autocomplete="off">
+                    <div class="f-inp">
+                        <input :placeholder="`向 ${curSelectedState.room.name} 发送消息`">
+                    </div>
+                </form>
+            </div>
+
         </div>
+
     </div>
 </template>
 
 <script setup lang="ts">
+import {useCurSelectedState} from "../../../pinia/curSelectedState.js";
+import {Messages} from "../../../interface/Messages.ts";
+import {nextTick, onMounted, onUnmounted, reactive, ref} from "vue";
+import {setWidth} from "../../../assets/js/dynamticOverflow.js";
 
-import {reactive} from "vue";
+const curSelectedState = useCurSelectedState()
+const textInputRef = ref(null);
+const parentContainerRef = ref(null);
 
-interface Messages {
-    id: number
-    time: string
-    timeStamp: number
-    content: string | string[]  // 后端设计成这样
-    userName: string
-    userAvatar: string
-}
+onMounted(() => {
+    nextTick(async () => {    // 使用nextTick确保DOM已更新
+        await setWidth(textInputRef, parentContainerRef)
+    });
+    window.addEventListener('resize', ()=>{
+        setWidth(textInputRef, parentContainerRef)
+    });
+});
+
+onUnmounted(()=>{
+    window.removeEventListener('resize', () => {
+        setWidth(textInputRef, parentContainerRef);
+    });
+})
 
 const state = reactive<{ messages: Messages[] }>({
     messages: [
@@ -93,4 +114,40 @@ const state = reactive<{ messages: Messages[] }>({
     white-space: pre-wrap; /* 保留空白符序列，但是正常地进行换行 */
     overflow-wrap: break-word; /* 在长单词或 URL 地址内部进行换行 */
 }
+
+.f-inp {
+    padding: 10px 22px;
+    border: 2px solid #6e6d6d;
+    line-height: 1;
+    border-radius: 20px;
+    margin-bottom: 15px;
+}
+
+.f-inp input {
+    width: 100%;
+    font-size: 16px;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    color: rgb(35, 45, 65);
+    outline: none;
+    background-color: transparent;
+}
+:is(.dark .f-inp input) {
+    color: rgb(255, 255, 255);
+}
+
+input::placeholder {
+    color: rgb(55, 65, 81);
+    font-weight: 600;
+    background-color: transparent;
+}
+
+:is(.dark input)::placeholder {
+    color: rgb(127, 127, 127);
+    font-weight: 600;
+    background-color: transparent;
+}
+
+
 </style>
