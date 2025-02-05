@@ -121,6 +121,8 @@ const handleCancel = () => {
 const resetForm = () => {
     form.roomName = '';
     form.type = '';
+    form.lock = false;
+    form.password = ''
 }
 
 // 在关闭模态框时重置表单数据

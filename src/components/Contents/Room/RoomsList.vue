@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col min-w-[255px] max-w-[345px]  select-none" ref="parentContainerRef">
+    <div class="flex flex-col min-w-[255px] max-w-[345px] select-none" ref="parentContainerRef" >
 
         <div class="flex flex-row justify-between items-center px-4">
             <div class="text-xl">

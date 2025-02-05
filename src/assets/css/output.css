@@ -554,8 +554,8 @@ video {
   display: none;
 }
 
-.visible {
-  visibility: visible;
+.pointer-events-none {
+  pointer-events: none;
 }
 
 .absolute {
@@ -573,11 +573,6 @@ video {
 .mx-1 {
   margin-left: 0.25rem;
   margin-right: 0.25rem;
-}
-
-.mx-2 {
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
 }
 
 .mb-2 {
@@ -612,16 +607,16 @@ video {
   display: block;
 }
 
-.inline {
-  display: inline;
-}
-
 .flex {
   display: flex;
 }
 
 .hidden {
   display: none;
+}
+
+.h-16 {
+  height: 4rem;
 }
 
 .h-\[372px\] {
@@ -660,32 +655,16 @@ video {
   min-width: 189px;
 }
 
-.min-w-\[235px\] {
-  min-width: 235px;
+.min-w-\[255px\] {
+  min-width: 255px;
 }
 
 .min-w-\[287px\] {
   min-width: 287px;
 }
 
-.min-w-\[285px\] {
-  min-width: 285px;
-}
-
-.min-w-\[265px\] {
-  min-width: 265px;
-}
-
-.min-w-\[255px\] {
-  min-width: 255px;
-}
-
 .max-w-10 {
   max-width: 2.5rem;
-}
-
-.max-w-\[323px\] {
-  max-width: 323px;
 }
 
 .max-w-\[345px\] {
@@ -694,6 +673,10 @@ video {
 
 .flex-1 {
   flex: 1 1 0%;
+}
+
+.transform {
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
 .cursor-pointer {
@@ -786,18 +769,14 @@ video {
   border-width: 2px;
 }
 
-.border-4 {
-  border-width: 4px;
+.border-green-600 {
+  --tw-border-opacity: 1;
+  border-color: rgb(22 163 74 / var(--tw-border-opacity, 1));
 }
 
 .border-red-600 {
   --tw-border-opacity: 1;
   border-color: rgb(220 38 38 / var(--tw-border-opacity, 1));
-}
-
-.border-green-600 {
-  --tw-border-opacity: 1;
-  border-color: rgb(22 163 74 / var(--tw-border-opacity, 1));
 }
 
 .object-cover {
@@ -848,32 +827,8 @@ video {
   padding-bottom: 0.5rem;
 }
 
-.pl-8 {
-  padding-left: 2rem;
-}
-
-.pr-2 {
-  padding-right: 0.5rem;
-}
-
-.pt-8 {
-  padding-top: 2rem;
-}
-
-.pl-4 {
-  padding-left: 1rem;
-}
-
 .pl-2 {
   padding-left: 0.5rem;
-}
-
-.pt-2 {
-  padding-top: 0.5rem;
-}
-
-.pt-4 {
-  padding-top: 1rem;
 }
 
 .pt-6 {
@@ -883,6 +838,11 @@ video {
 .text-2xl {
   font-size: 1.5rem;
   line-height: 2rem;
+}
+
+.text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
 }
 
 .text-sm {
@@ -898,11 +858,6 @@ video {
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
-}
-
-.text-lg {
-  font-size: 1.125rem;
-  line-height: 1.75rem;
 }
 
 .font-bold {

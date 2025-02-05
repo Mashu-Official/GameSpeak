@@ -17,10 +17,10 @@
                         <!-- 用户名 + 时间 -->
                         <div class="flex flex-col">
 
-                            <div class="flex items-end space-x-2">
+                            <div class="flex items-end space-x-2 whitespace-nowrap">
                                 <div>{{ message.userName }}</div>
                                 <div class="messageTime" style="color: rgb(127,127,133)">
-                                    {{ message.time }} {{ message.timeStamp}}
+                                    {{ message.time }} {{ message.timeStamp }}
                                 </div>
                             </div>
 

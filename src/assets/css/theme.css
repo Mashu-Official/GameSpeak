@@ -71,6 +71,7 @@ body {
     color: rgb(55 65 81 / var(--tw-text-opacity));
     --tw-bg-opacity: 1;
     background-color: rgb(227 227 227 / var(--tw-bg-opacity));
+    border: solid rgb(255 255 255 / var(--tw-bg-opacity)) 2px;
 }
 
 :is(.dark .avatarContainer){
@@ -78,7 +79,10 @@ body {
     color: rgb(240 244 246 / var(--tw-text-opacity));
     --tw-bg-opacity: 1;
     background-color: rgb(62 62 68 / var(--tw-bg-opacity));
+    border: solid rgb(28 28 32 / var(--tw-bg-opacity)) 2px;
 }
+
+
 
 .serverName {
     --tw-text-opacity: 1;
