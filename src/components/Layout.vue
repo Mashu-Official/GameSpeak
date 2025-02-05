@@ -6,7 +6,7 @@
                 <LayoutHeader />
             </a-layout-header>
             <a-layout>
-                <a-layout-sider class="hidden sm:block overflow-visible"  style="width: inherit;">
+                <a-layout-sider class="hidden sm:block overflow-visible"  style="width: 74px">
                     <SideCard />
                 </a-layout-sider>
                 <a-layout-content>
@@ -39,6 +39,7 @@
 .layout :deep(.arco-layout-sider-children),
 .layout :deep(.arco-layout-content) {
     background-color: transparent;
+
 }
 
 .layout :deep(.arco-layout-header){
@@ -48,6 +49,8 @@
 }
 
 .layout :deep(.arco-layout-sider) {
+    box-shadow: none;
+    border: none;
 }
 
 .layout :deep(.arco-layout-content) {

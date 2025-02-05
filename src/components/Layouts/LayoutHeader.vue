@@ -44,14 +44,18 @@
                           fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
                 </svg>
             </button>
-            <button class="p-2 mx-1 btn">
+
+            <button class="p-2 mx-1 btn" @click="minimizeWindow">
                 <svg width="16" height="16" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M10.5 24L38.5 24" stroke="currentColor" stroke-width="4" stroke-linecap="round"
                           stroke-linejoin="round"/>
                 </svg>
             </button>
-            <button class="p-2 mx-1 btn">
-                <svg width="16" height="16" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+
+            <button class="p-2 mx-1 btn" @click="maximizeWindow">
+                <svg v-show="maxmizeFlag"
+                        width="16" height="16" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M33 6V15H42" stroke="currentColor" stroke-width="4" stroke-linecap="round"
                           stroke-linejoin="round"/>
                     <path d="M15 6V15H6" stroke="currentColor" stroke-width="4" stroke-linecap="round"
@@ -61,7 +65,8 @@
                     <path d="M33 42V33H41.8995" stroke="currentColor" stroke-width="4" stroke-linecap="round"
                           stroke-linejoin="round"/>
                 </svg>
-                <svg width="16" height="16" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg v-show="!maxmizeFlag"
+                        width="16" height="16" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M33 6H42V15" stroke="currentColor" stroke-width="4" stroke-linecap="round"
                           stroke-linejoin="round"/>
                     <path d="M42 33V42H33" stroke="currentColor" stroke-width="4" stroke-linecap="round"
@@ -72,7 +77,8 @@
                           stroke-linejoin="round"/>
                 </svg>
             </button>
-            <button class="p-2 mx-1 btn">
+
+            <button class="p-2 mx-1 btn" @click="closeWindow">
                 <svg width="16" height="16" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M8 8L40 40" stroke="currentColor" stroke-width="4" stroke-linecap="round"
                           stroke-linejoin="round"/>
@@ -87,11 +93,19 @@
 
 <script setup lang="ts">
 import {useThemeStore} from '../../pinia/themeStore.js'
-import {onMounted} from "vue";
-
+import {onMounted, ref} from "vue";
 const themeStore = useThemeStore()
-
-
+const maxmizeFlag = ref<boolean>(false)
+const closeWindow = () => {
+    window.ipcRenderer.send('window-action', 'close');
+}
+const minimizeWindow = () => {
+    window.ipcRenderer.send('window-action', 'minimize');
+}
+const maximizeWindow = () => {
+    maxmizeFlag.value = !maxmizeFlag.value
+    window.ipcRenderer.send('window-action', 'maximize');
+}
 </script>
 
 <style scoped>

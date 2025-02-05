@@ -1,7 +1,9 @@
 <template>
-    <div class="flex flex-col min-w-[255px] max-w-[345px] select-none" ref="parentContainerRef" >
+    <div class="flex flex-col overflow-x-auto overflow-y-hidden
+    justify-between min-w-[255px] max-w-[345px]
+     select-none" ref="parentContainerRef">
 
-        <div class="flex flex-row justify-between items-center px-4">
+        <div class="flex flex-row justify-between items-center px-4 relative">
             <div class="text-xl">
                 {{ curSelectedState.server.name || '找不到该服务器' }}
             </div>
@@ -22,9 +24,11 @@
             <div class="card ViewCard mt-4 mb-2">
             </div>
             <div class="flex flex-row space-x-2">
-                <div class="flex flex-1 justify-evenly items-center  card ViewCard mt-1 mb-2 cursor-pointer py-1 box-border border-2 border-green-600" @click="isOpenModal = !isOpenModal">
+                <div class="flex flex-1 justify-evenly items-center  card ViewCard mt-1 mb-2 cursor-pointer py-1 box-border border-2 border-green-600"
+                     @click="isOpenModal = !isOpenModal">
                     <svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="6" y="6" width="36" height="36" rx="3" fill="none" stroke="currentColor" stroke-width="4"
+                        <rect x="6" y="6" width="36" height="36" rx="3" fill="none" stroke="currentColor"
+                              stroke-width="4"
                               stroke-linejoin="round"/>
                         <path d="M24 16V32" stroke="currentColor" stroke-width="4" stroke-linecap="round"
                               stroke-linejoin="round"/>
@@ -42,10 +46,10 @@
             <div class="divide"></div>
         </div>
 
-        <div class="roomList text-sm px-4" ref="roomListRef">
+        <div class="roomList m-0 p-0 flex-1 h-full relative text-sm px-4 " ref="roomListRef">
             <!--房间列表-->
-            <div class="">
-                <div v-for="room in state.roomsList" :key="room.id" class="roomItem px-3 py-1.5 cursor-pointer"
+            <div class="overflow-y-scroll flex flex-col flex-1">
+                <div v-for="room in state.roomsList" :key="room.id" class="roomItem px-3 py-1.5 cursor-pointer "
                      style="margin-bottom: 2px">
                     <div class="flex flex-row items-center" @click="enterRoom(room)">
                         <!--文字-->
@@ -86,10 +90,10 @@
                     <span class="text-xs">{{ room.curMemberNum }}/{{ room.memberLimit }}</span>
                 </div>
             </div>
-
         </div>
 
-        <CreateRoom v-model="isOpenModal" @submit="handleSubmit" />
+        <div class="flex flex-row card">123</div>
+        <CreateRoom v-model="isOpenModal" @submit="handleSubmit"/>
 
     </div>
 </template>
@@ -101,6 +105,7 @@ import CreateRoom from "./components/CreateRoom.vue";
 import {RoomType} from "../../../interface/RoomTypeEnum.ts";
 import {useCurSelectedState} from "../../../pinia/curSelectedState.js";
 import RoomsList from "./RoomsList.vue";
+
 const curSelectedState = useCurSelectedState()
 
 
@@ -111,8 +116,80 @@ const parentContainerRef = ref(null);
 
 onMounted(async () => {
     await nextTick();
-    await setHeightWithCalc(roomListRef, parentContainerRef)
+    // await setHeightWithCalc(roomListRef, parentContainerRef)
     state.roomsList = [
+        {
+            id: 1,
+            name: "休闲聊33天室",
+            type: RoomType.Text,
+            curMemberNum: 15,
+            memberLimit: 50
+        },
+        {
+            id: 1,
+            name: "休闲聊33天室",
+            type: RoomType.Text,
+            curMemberNum: 15,
+            memberLimit: 50
+        },     {
+            id: 1,
+            name: "休闲聊33天室",
+            type: RoomType.Text,
+            curMemberNum: 15,
+            memberLimit: 50
+        },
+        {
+            id: 1,
+            name: "休闲聊33天室",
+            type: RoomType.Text,
+            curMemberNum: 15,
+            memberLimit: 50
+        },        {
+            id: 1,
+            name: "休闲聊33天室",
+            type: RoomType.Text,
+            curMemberNum: 15,
+            memberLimit: 50
+        },
+        {
+            id: 1,
+            name: "休闲聊33天室",
+            type: RoomType.Text,
+            curMemberNum: 15,
+            memberLimit: 50
+        }, {
+            id: 1,
+            name: "休闲聊33天室",
+            type: RoomType.Text,
+            curMemberNum: 15,
+            memberLimit: 50
+        },
+        {
+            id: 1,
+            name: "休闲聊33天室",
+            type: RoomType.Text,
+            curMemberNum: 15,
+            memberLimit: 50
+        },        {
+            id: 1,
+            name: "休闲聊33天室",
+            type: RoomType.Text,
+            curMemberNum: 15,
+            memberLimit: 50
+        },
+        {
+            id: 1,
+            name: "休闲聊33天室",
+            type: RoomType.Text,
+            curMemberNum: 15,
+            memberLimit: 50
+        },    {
+            id: 1,
+            name: "休闲聊33天室",
+            type: RoomType.Text,
+            curMemberNum: 15,
+            memberLimit: 50
+        },
         {
             id: 1,
             name: "休闲聊33天室",
@@ -124,32 +201,32 @@ onMounted(async () => {
 });
 
 
-
 const state = reactive<{ roomsList: RoomsList[] }>({
     roomsList: []
 })
 
-const handleSubmit = (formData) =>{
+const handleSubmit = (formData) => {
     // console.log(formData)
-    const temp =  {
-            id: 1,
-            name: formData.roomName,
-            type: formData.type,
-            curMemberNum: 15,
-            memberLimit: 50
-        }
+    const temp = {
+        id: 1,
+        name: formData.roomName,
+        type: formData.type,
+        curMemberNum: 15,
+        memberLimit: 50
+    }
     state.roomsList.push(temp)
 
 }
 
-const enterRoom = (room)=>{
+const enterRoom = (room) => {
     curSelectedState.room = room
 }
+
 </script>
 
 <style scoped>
 .roomList {
-    overflow-y: scroll;
+    /*overflow-y: scroll;*/
     /*scrollbar-width: 2px; !* Firefox *!*/
     /*-ms-overflow-style: 2px; !* IE & Edge *!*/
 }

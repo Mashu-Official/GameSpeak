@@ -38,13 +38,13 @@
                 </div>
             </template>
 
-            <div class="absolute bottom-0" ref="textInputRef">
-                <form class="" action="" method="post" autocomplete="off">
-                    <div class="f-inp">
-                        <input :placeholder="`向 ${curSelectedState.room.name} 发送消息`">
-                    </div>
-                </form>
-            </div>
+<!--            <div class="absolute bottom-0" ref="textInputRef">-->
+<!--                <form class="" action="" method="post" autocomplete="off">-->
+<!--                    <div class="f-inp">-->
+<!--                        <input :placeholder="`向 ${curSelectedState.room.name} 发送消息`">-->
+<!--                    </div>-->
+<!--                </form>-->
+<!--            </div>-->
 
         </div>
 
@@ -61,13 +61,12 @@ const curSelectedState = useCurSelectedState()
 const textInputRef = ref(null);
 const parentContainerRef = ref(null);
 
-onMounted(() => {
-    nextTick(async () => {    // 使用nextTick确保DOM已更新
-        await setWidth(textInputRef, parentContainerRef)
-    });
-    window.addEventListener('resize', ()=>{
-        setWidth(textInputRef, parentContainerRef)
-    });
+onMounted(async () => {
+    // await nextTick();
+    // await setWidth(textInputRef, parentContainerRef)
+    // window.addEventListener('resize', () => {
+    //     setWidth(textInputRef, parentContainerRef)
+    // });
 });
 
 onUnmounted(()=>{
@@ -104,6 +103,8 @@ const state = reactive<{ messages: Messages[] }>({
         }
     ]
 })
+
+
 </script>
 
 <style scoped>

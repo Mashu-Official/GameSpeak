@@ -1,42 +1,8 @@
 <template>
-    <transition name="slide">
-        <div v-show="!isSidebarOpen" class="flex flex-col justify-center items-center h-full relative sidebar" @mouseenter="showServerName($event, '收起侧栏')"
-             @mouseleave="hideServerName"
-             @click="toggleSideBar">
+    <div class="sidebar flex flex-col items-center h-full justify-center absolute bottom-0 left-0">
 
-            <!--TODO 动画待修改-->
-            <div class="flex flex-col justify-center items-center h-16 select-none px-2 py-auto">
-                <svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M8 11H40" stroke="currentColor" stroke-width="4" stroke-linecap="round"
-                          stroke-linejoin="round"/>
-                    <path d="M8 24H42" stroke="currentColor" stroke-width="4" stroke-linecap="round"
-                          stroke-linejoin="round"/>
-                    <path d="M8 37H40" stroke="currentColor" stroke-width="4" stroke-linecap="round"
-                          stroke-linejoin="round"/>
-                    <path d="M36.3433 29.6568L42.0001 23.9999L36.3433 18.343" stroke="currentColor" stroke-width="4"
-                          stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </div>
-
-        </div>
-    </transition>
-    <transition name="slide">
-        <div v-show="isSidebarOpen" ref="parentContainerRef"
-             class="sidebar flex flex-col items-center h-full relative py-2 overflow-hidden select-none">
-
-<!--            <div class="avatar"-->
-<!--                 @click="toggleSideBar"-->
-<!--                 @mouseenter="showServerName($event, '收起侧栏')"-->
-<!--                 @mouseleave="hideServerName">-->
-<!--                <div class="avatarContainer flex justify-center items-center">-->
-<!--                    <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">-->
-<!--                        <circle cx="12" cy="24" r="3" fill="currentColor"/>-->
-<!--                        <circle cx="24" cy="24" r="3" fill="currentColor"/>-->
-<!--                        <circle cx="36" cy="24" r="3" fill="currentColor"/>-->
-<!--                    </svg>-->
-<!--                </div>-->
-<!--            </div>-->
-
+        <div class="overflow-hidden">
+            <!--搜索-->
             <div class="avatar" @mouseenter="showServerName($event, '搜索')" @mouseleave="hideServerName">
                 <div class="avatarContainer flex justify-center items-center">
                     <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -50,6 +16,7 @@
                     </svg>
                 </div>
             </div>
+
             <div class="avatar" @mouseenter="showServerName($event, '私信')" @mouseleave="hideServerName">
                 <div class="avatarContainer flex justify-center items-center">
                     <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -65,22 +32,14 @@
                     </svg>
                 </div>
             </div>
-            <!--        <div class="avatar" @mouseenter="showServerName($event, '施工中')" @mouseleave="hideServerName">-->
-            <!--            <div class="avatarContainer flex justify-center items-center">-->
-            <!--                <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">-->
-            <!--                    <path d="M24 44C35.0457 44 44 35.0457 44 24C44 12.9543 35.0457 4 24 4C12.9543 4 4 12.9543 4 24C4 35.0457 12.9543 44 24 44Z"-->
-            <!--                          fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>-->
-            <!--                    <path d="M31 18V19" stroke="currentColor" stroke-width="4" stroke-linecap="round"-->
-            <!--                          stroke-linejoin="round"/>-->
-            <!--                    <path d="M17 18V19" stroke="currentColor" stroke-width="4" stroke-linecap="round"-->
-            <!--                          stroke-linejoin="round"/>-->
-            <!--                    <rect x="15" y="28" width="18" height="8" rx="4" fill="none" stroke="currentColor" stroke-width="4"-->
-            <!--                          stroke-linecap="round" stroke-linejoin="round"/>-->
-            <!--                </svg>-->
-            <!--            </div>-->
-            <!--        </div>-->
-            <div class="divide" style="width: 60%;"></div>
-<!--            max-h-[372px]-->
+        </div>
+
+        <div class="divide" style="width: 60%;"></div>
+
+
+        <div v-show="isSidebarOpen" ref="parentContainerRef"
+             class="sidebar flex flex-col items-center relative overflow-hidden select-none flex-1">
+
             <div class="serverList flex flex-col overflow-y-scroll" ref="serverListRef">
                 <div class="avatar" v-for="server in state.servers" :key="server.id"
                      @click="curSelectedState.enterServer(server)"
@@ -89,7 +48,7 @@
 
                     <div v-if="server.avatarURL"
                          :class="{selectedAvatar : server.id === curSelectedState.server.id}"
-                         class="avatarContainer avatarContainer_">
+                         class="avatarContainer">
                         <img class="object-cover w-full h-full " :src="server.avatarURL" :alt="server.avatarURL">
                     </div>
 
@@ -102,13 +61,17 @@
                     </div>
                 </div>
             </div>
-            <div class="overflow-hidden w-[52px] h-[52px] absolute bottom-4 circle cursor-pointer" style="    --tw-bg-opacity: 1;
-    background-color: rgb(255 255 255 / var(--tw-bg-opacity));">
-                <img class="object-cover w-full h-full"
-                     src="https://img.kookapp.cn/avatars/2022-04/Rw4r5wP0Oi02s02s.jpg?x-oss-process=style/icon" alt="">
-            </div>
+
         </div>
-    </transition>
+
+        <div class="divide" style="width: 60%;"></div>
+
+        <div class="relative flex justify-center items-center overflow-hidden w-[52px] h-[52px] mt-2 mb-4 circle cursor-pointer">
+            <img class="object-cover w-full h-full"
+                 src="https://img.kookapp.cn/avatars/2022-04/Rw4r5wP0Oi02s02s.jpg?x-oss-process=style/icon" alt="">
+        </div>
+    </div>
+
 </template>
 
 <script setup lang="ts">
@@ -170,12 +133,12 @@ const serverListRef = ref(null)
 onMounted(async () => {
     await nextTick();
     await setHeightWithCalc(serverListRef, parentContainerRef)
-    window.addEventListener('resize', ()=>{
+    window.addEventListener('resize', () => {
         setHeightWithCalc(serverListRef, parentContainerRef)
     });
 });
 
-onUnmounted(()=>{
+onUnmounted(() => {
     window.removeEventListener('resize', () => {
         setHeightWithCalc(serverListRef, parentContainerRef);
     });
@@ -211,25 +174,29 @@ onUnmounted(()=>{
     transition: transform 0.16s ease-in;
 }
 
-.avatar{
+.avatar {
     transition: transform 0.2s ease-in;
 }
 
 .avatar:active > .avatarContainer {
-  transform: scale(0.85);
+    transform: scale(0.85);
 }
+
 .avatar > .avatarContainer:hover {
     transform: scale(1.08);
     transition: transform 0.16s ease-in
     /*scale: 110%;*/
 }
+
 .selectedAvatar {
     border: solid rgb(62 62 68 / var(--tw-bg-opacity)) 2px;
 }
-:is(.dark .selectedAvatar){
+
+:is(.dark .selectedAvatar) {
     --tw-bg-opacity: 1;
     border: solid rgb(227 227 227 / var(--tw-bg-opacity)) 2px;
 }
+
 .divide {
     margin: 6px 0;
     border-width: 1px;
@@ -250,3 +217,30 @@ onUnmounted(()=>{
     transform: translateX(-100%);
 }
 </style>
+
+<!--            <div class="avatar"-->
+<!--                 @click="toggleSideBar"-->
+<!--                 @mouseenter="showServerName($event, '收起侧栏')"-->
+<!--                 @mouseleave="hideServerName">-->
+<!--                <div class="avatarContainer flex justify-center items-center">-->
+<!--                    <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">-->
+<!--                        <circle cx="12" cy="24" r="3" fill="currentColor"/>-->
+<!--                        <circle cx="24" cy="24" r="3" fill="currentColor"/>-->
+<!--                        <circle cx="36" cy="24" r="3" fill="currentColor"/>-->
+<!--                    </svg>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        <div class="avatar" @mouseenter="showServerName($event, '施工中')" @mouseleave="hideServerName">-->
+<!--            <div class="avatarContainer flex justify-center items-center">-->
+<!--                <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">-->
+<!--                    <path d="M24 44C35.0457 44 44 35.0457 44 24C44 12.9543 35.0457 4 24 4C12.9543 4 4 12.9543 4 24C4 35.0457 12.9543 44 24 44Z"-->
+<!--                          fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>-->
+<!--                    <path d="M31 18V19" stroke="currentColor" stroke-width="4" stroke-linecap="round"-->
+<!--                          stroke-linejoin="round"/>-->
+<!--                    <path d="M17 18V19" stroke="currentColor" stroke-width="4" stroke-linecap="round"-->
+<!--                          stroke-linejoin="round"/>-->
+<!--                    <rect x="15" y="28" width="18" height="8" rx="4" fill="none" stroke="currentColor" stroke-width="4"-->
+<!--                          stroke-linecap="round" stroke-linejoin="round"/>-->
+<!--                </svg>-->
+<!--            </div>-->
+<!--        </div>-->
