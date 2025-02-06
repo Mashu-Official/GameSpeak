@@ -4,11 +4,13 @@
         <RoomsList/>
 
         <!--默认窗口-->
-<!--        <HeroCard v-if="1"/>-->
-        <!--聊天窗口-->
-        <MessagesCard v-if="1" />
-        <!--语音窗口-->
-<!--        <VoiceCard v-if="2" />-->
+        <HeroCard v-if="!curUserState.room"/>
+        <div v-else>
+            <!--聊天窗口-->
+            <MessagesCard v-if="curUserState.room.type === 'Text'" />
+            <!--语音窗口-->
+            <VoiceCard v-if="curUserState.room.type === 'Voice' " />
+        </div>
     </div>
 
 
@@ -20,7 +22,8 @@ import MessagesCard from "../FuncCard/MessagesCard.vue";
 import RoomsList from "./RoomsList.vue";
 import VoiceCard from "../FuncCard/VoiceCard.vue";
 import HeroCard from "../FuncCard/HeroCard.vue";
-
+import {useCurUserState} from "../../../pinia/curUserState.js";
+const curUserState = useCurUserState()
 
 </script>
 

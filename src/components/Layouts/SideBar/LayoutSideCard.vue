@@ -77,7 +77,7 @@
 <script setup lang="ts">
 import {nextTick, onMounted, onUnmounted, reactive, ref} from "vue";
 import {hideServerName, showServerName} from "../../../assets/js/serverName.ts";
-import {useCurSelectedState} from "../../../pinia/curSelectedState.js"
+import {useCurUserState} from "../../../pinia/curUserState.js"
 import {serverAttribute} from "../../../interface/ServerAttribute.ts";
 import {setHeightWithCalc, setWidth} from "../../../assets/js/dynamticOverflow.js";
 import {RoomType} from "../../../interface/RoomTypeEnum.ts";
@@ -85,7 +85,7 @@ import {RoomType} from "../../../interface/RoomTypeEnum.ts";
 // 控制侧边栏是否打开
 const isSidebarOpen = ref(true);
 
-const curSelectedState = useCurSelectedState()
+const curSelectedState = useCurUserState()
 
 // 切换侧边栏状态的方法
 const toggleSidebar = () => {
@@ -127,21 +127,11 @@ const toggleSideBar = () => {
     isSidebarOpen.value = !isSidebarOpen.value;
 }
 
-const parentContainerRef = ref(null)
-const serverListRef = ref(null)
-
 onMounted(async () => {
-    await nextTick();
-    await setHeightWithCalc(serverListRef, parentContainerRef)
-    window.addEventListener('resize', () => {
-        setHeightWithCalc(serverListRef, parentContainerRef)
-    });
+
 });
 
 onUnmounted(() => {
-    window.removeEventListener('resize', () => {
-        setHeightWithCalc(serverListRef, parentContainerRef);
-    });
 })
 
 </script>

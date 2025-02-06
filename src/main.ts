@@ -7,7 +7,7 @@ import {createPinia} from "pinia";
 import ArcoVue from '@arco-design/web-vue';
 import '@arco-design/web-vue/dist/arco.css';
 import Toast, {POSITION} from "vue-toastification";
-
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 import "vue-toastification/dist/index.css";
 import "./assets/css/toastStyle.css"
 
@@ -22,9 +22,11 @@ const options = {
 };
 
 const app = createApp(App)
+const pinia = createPinia().use(piniaPluginPersistedstate)
+// app.use(createPinia())
 app.use(routes)
 app.use(ArcoVue);
-app.use(createPinia())
+app.use(pinia)
 app.use(Toast, options);  // 使用 vue-toastification
 
 app.mount('#app').$nextTick(() => {

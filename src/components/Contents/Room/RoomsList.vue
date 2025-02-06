@@ -1,57 +1,44 @@
 <template>
-    <div class="flex flex-col overflow-x-auto overflow-y-hidden
-    justify-between min-w-[255px] max-w-[345px]
-     select-none" ref="parentContainerRef">
 
-        <div class="flex flex-row justify-between items-center px-4 relative">
-            <div class="text-xl">
-                {{ curSelectedState.server.name || '找不到该服务器' }}
-            </div>
-            <button class="" @click="" title="设置">
-                <svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M34.0003 41L44 24L34.0003 7H14.0002L4 24L14.0002 41H34.0003Z" fill="none"
-                          stroke="currentColor"
-                          stroke-width="4" stroke-linejoin="round"/>
-                    <path d="M24 29C26.7614 29 29 26.7614 29 24C29 21.2386 26.7614 19 24 19C21.2386 19 19 21.2386 19 24C19 26.7614 21.2386 29 24 29Z"
-                          fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
-                </svg>
-            </button>
+    <div class="flex flex-col overflow-x-hidden overflow-y-hidden flex-shrink-0
+  min-w-[255px] max-w-[345px]
+     select-none" ref="parentContainerRef" style="">
 
-        </div>
-
-        <div class="px-4">
-            <div class="divide"></div>
-            <div class="card ViewCard mt-4 mb-2">
-            </div>
-            <div class="flex flex-row space-x-2">
-                <div class="flex flex-1 justify-evenly items-center  card ViewCard mt-1 mb-2 cursor-pointer py-1 box-border border-2 border-green-600"
-                     @click="isOpenModal = !isOpenModal">
+        <div>
+            <div class="flex flex-row justify-between items-center px-4 relative">
+                <div class="text-xl">
+                    {{ curUserState.server.name || '找不到该服务器' }}
+                </div>
+                <button class="" @click="" title="设置">
                     <svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="6" y="6" width="36" height="36" rx="3" fill="none" stroke="currentColor"
-                              stroke-width="4"
-                              stroke-linejoin="round"/>
-                        <path d="M24 16V32" stroke="currentColor" stroke-width="4" stroke-linecap="round"
-                              stroke-linejoin="round"/>
-                        <path d="M16 24L32 24" stroke="currentColor" stroke-width="4" stroke-linecap="round"
-                              stroke-linejoin="round"/>
+                        <path d="M34.0003 41L44 24L34.0003 7H14.0002L4 24L14.0002 41H34.0003Z" fill="none"
+                              stroke="currentColor"
+                              stroke-width="4" stroke-linejoin="round"/>
+                        <path d="M24 29C26.7614 29 29 26.7614 29 24C29 21.2386 26.7614 19 24 19C21.2386 19 19 21.2386 19 24C19 26.7614 21.2386 29 24 29Z"
+                              fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
                     </svg>
-                    <span class=" font-bold">
-                       新增房间
-                   </span>
-                </div>
-                <div class="card flex flex-row justify-center items-center font-bold ViewCard mt-1 mb-2 cursor-pointer box-border border-2 border-red-600">
-                    删除
-                </div>
+                </button>
+
             </div>
-            <div class="divide"></div>
+
+            <div class="px-4">
+                <div class="divide"></div>
+
+                <div class="card ViewCard mt-4 mb-2">
+                </div>
+
+<!--             <ListCard_behavior/>-->
+                <div class="divide"></div>
+            </div>
         </div>
 
-        <div class="roomList m-0 p-0 flex-1 h-full relative text-sm px-4 " ref="roomListRef">
-            <!--房间列表-->
-            <div class="overflow-y-scroll flex flex-col flex-1">
-                <div v-for="room in state.roomsList" :key="room.id" class="roomItem px-3 py-1.5 cursor-pointer "
-                     style="margin-bottom: 2px">
-                    <div class="flex flex-row items-center" @click="enterRoom(room)">
+        <div class="roomList">
+            <div class="m-0 p-0 relative text-sm px-4 h-0 flex-1">
+                <!--房间列表-->
+                <div v-for="room in state.roomsList" :key="room.id" class="roomItem px-3 py-1.5 cursor-pointer mb-[2px]"
+                     @dblclick="curUserState.enterRoom(room)">
+
+                    <div class="flex flex-row items-center">
                         <!--文字-->
                         <svg v-if="room.type === 'Text'" width="22" height="22" viewBox="0 0 48 48" fill="none"
                              xmlns="http://www.w3.org/2000/svg">
@@ -92,7 +79,8 @@
             </div>
         </div>
 
-        <div class="flex flex-row card">123</div>
+
+        <VoiceSetting/>
         <CreateRoom v-model="isOpenModal" @submit="handleSubmit"/>
 
     </div>
@@ -101,18 +89,19 @@
 <script setup lang="ts">
 import {nextTick, onMounted, onUnmounted, reactive, ref} from "vue";
 import {setHeightWithCalc} from '../../../assets/js/dynamticOverflow.js'
-import CreateRoom from "./components/CreateRoom.vue";
+import CreateRoom from "./ListComponets/CreateRoom.vue";
+
 import {RoomType} from "../../../interface/RoomTypeEnum.ts";
-import {useCurSelectedState} from "../../../pinia/curSelectedState.js";
-import RoomsList from "./RoomsList.vue";
+import {RoomsList} from "../../../interface/RoomsList.ts";
 
-const curSelectedState = useCurSelectedState()
+import {useCurUserState} from "../../../pinia/curUserState.js";
+
+import VoiceSetting from "./ListComponets/VoiceSetting.vue";
+import ListCard_behavior from "./ListComponets/ListCard_behavior.vue";
 
 
+const curUserState = useCurUserState()
 const isOpenModal = ref(false);
-
-const roomListRef = ref(null);
-const parentContainerRef = ref(null);
 
 onMounted(async () => {
     await nextTick();
@@ -120,86 +109,20 @@ onMounted(async () => {
     state.roomsList = [
         {
             id: 1,
-            name: "休闲聊33天室",
+            name: "文字聊天室",
             type: RoomType.Text,
             curMemberNum: 15,
             memberLimit: 50
         },
         {
             id: 1,
-            name: "休闲聊33天室",
-            type: RoomType.Text,
-            curMemberNum: 15,
-            memberLimit: 50
-        },     {
-            id: 1,
-            name: "休闲聊33天室",
-            type: RoomType.Text,
-            curMemberNum: 15,
-            memberLimit: 50
-        },
-        {
-            id: 1,
-            name: "休闲聊33天室",
-            type: RoomType.Text,
-            curMemberNum: 15,
-            memberLimit: 50
-        },        {
-            id: 1,
-            name: "休闲聊33天室",
-            type: RoomType.Text,
-            curMemberNum: 15,
-            memberLimit: 50
-        },
-        {
-            id: 1,
-            name: "休闲聊33天室",
-            type: RoomType.Text,
-            curMemberNum: 15,
-            memberLimit: 50
-        }, {
-            id: 1,
-            name: "休闲聊33天室",
-            type: RoomType.Text,
-            curMemberNum: 15,
-            memberLimit: 50
-        },
-        {
-            id: 1,
-            name: "休闲聊33天室",
-            type: RoomType.Text,
-            curMemberNum: 15,
-            memberLimit: 50
-        },        {
-            id: 1,
-            name: "休闲聊33天室",
-            type: RoomType.Text,
-            curMemberNum: 15,
-            memberLimit: 50
-        },
-        {
-            id: 1,
-            name: "休闲聊33天室",
-            type: RoomType.Text,
-            curMemberNum: 15,
-            memberLimit: 50
-        },    {
-            id: 1,
-            name: "休闲聊33天室",
-            type: RoomType.Text,
-            curMemberNum: 15,
-            memberLimit: 50
-        },
-        {
-            id: 1,
-            name: "休闲聊33天室",
-            type: RoomType.Text,
+            name: "语音",
+            type: RoomType.Voice,
             curMemberNum: 15,
             memberLimit: 50
         },
     ]
 });
-
 
 const state = reactive<{ roomsList: RoomsList[] }>({
     roomsList: []
@@ -226,9 +149,9 @@ const enterRoom = (room) => {
 
 <style scoped>
 .roomList {
-    /*overflow-y: scroll;*/
-    /*scrollbar-width: 2px; !* Firefox *!*/
-    /*-ms-overflow-style: 2px; !* IE & Edge *!*/
+    overflow-y: scroll;
+    flex: 1;
+    flex-shrink: 0;
 }
 
 .roomList::webkit-scrollbar {
@@ -258,11 +181,6 @@ const enterRoom = (room) => {
 
 :is(.dark .roomItem_Active) {
     background-color: rgb(28 28 32 / var(--tw-bg-opacity));
-}
-
-.ViewCard {
-    padding: 1rem;
-    border-radius: 12px;
 }
 
 /* 设置滚动条的宽度 */
@@ -303,4 +221,24 @@ const enterRoom = (room) => {
     background: #f1f1f1;
 }
 
+
+.bottom {
+    flex: 1;
+    flex-shrink: 0;
+    height: 0;
+    /*overflow: scroll;*/
+    width: 100%;
+    display: flex;
+}
+
+.bottom_right_bottom {
+    flex: 1;
+    overflow-y: scroll;
+}
+
+.app {
+
+    display: flex;
+    flex-direction: column;
+}
 </style>

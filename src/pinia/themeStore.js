@@ -18,6 +18,9 @@ export const useThemeStore = defineStore('useThemeStore', {
         switchColorSchemeTo(themeMode = 'dark') {
             const isDark = this.themeMode === 'dark';
             // 添加过渡效果
+            if(!!this.html){
+                this.html = document.querySelector('html')
+            }
             this.html.classList.toggle('transition-effect', true);
             // 根据模式切换 CSS 类
             isDark ? this.html.classList.add('dark') : this.html.classList.remove('dark');
@@ -56,7 +59,6 @@ export const useThemeStore = defineStore('useThemeStore', {
         strategies: [
             {
                 storage: localStorage, // 默认存储 localStorage
-                paths: ['theme']
             }
         ]
     }

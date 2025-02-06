@@ -1,12 +1,12 @@
 <template>
     <div class="flex flex-1 flex-col items-start h-full min-w-[287px] px-8 relative">
-        <div class="text-xl">{{ curSelectedState.room.name || "找不到该房间" }}</div>
+        <div class="text-xl">{{ curUserState.room.name || "找不到该房间" }}</div>
 
         <div class="divide mb-4" style="width: 100%"></div>
 
-        <div class="flex flex-col space-y-3" ref="parentContainerRef">
-            <template v-for="message in state.messages" :key="message.timeStamp">
-                <div class="flex flex-col items-start">
+        <div class="flex flex-col justify-between flex-1" ref="parentContainerRef">
+            <div class="flex flex-col space-y-3">
+                <div class="flex flex-col items-start"  v-for="message in state.messages" :key="message.timeStamp">
                     <!-- message item ↓ -->
                     <div class="flex flex-row space-x-2">
                         <!-- 头像区域 -->
@@ -36,30 +36,29 @@
 
                     </div>
                 </div>
-            </template>
+            </div>
 
-<!--            <div class="absolute bottom-0" ref="textInputRef">-->
-<!--                <form class="" action="" method="post" autocomplete="off">-->
-<!--                    <div class="f-inp">-->
-<!--                        <input :placeholder="`向 ${curSelectedState.room.name} 发送消息`">-->
-<!--                    </div>-->
-<!--                </form>-->
-<!--            </div>-->
+            <div class="">
+                <form class="" action="" method="post" autocomplete="off">
+                    <div class="f-inp flex flex-row items-center">
+                        <input :placeholder="`向 ${curUserState.room.name} 发送消息`">
+                        <button class="whitespace-nowrap">发送</button>
+                    </div>
+                </form>
+            </div>
 
         </div>
-
     </div>
 </template>
 
 <script setup lang="ts">
-import {useCurSelectedState} from "../../../pinia/curSelectedState.js";
+import {useCurUserState} from "../../../pinia/curUserState.js";
 import {Messages} from "../../../interface/Messages.ts";
 import {nextTick, onMounted, onUnmounted, reactive, ref} from "vue";
 import {setWidth} from "../../../assets/js/dynamticOverflow.js";
 
-const curSelectedState = useCurSelectedState()
-const textInputRef = ref(null);
-const parentContainerRef = ref(null);
+const curUserState = useCurUserState()
+
 
 onMounted(async () => {
     // await nextTick();
