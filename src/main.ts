@@ -10,6 +10,7 @@ import Toast, {POSITION} from "vue-toastification";
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 import "vue-toastification/dist/index.css";
 import "./assets/css/toastStyle.css"
+import {createRequire} from "node:module";
 
 const options = {
     position: POSITION.TOP_CENTER,
@@ -23,6 +24,10 @@ const options = {
 
 const app = createApp(App)
 const pinia = createPinia().use(piniaPluginPersistedstate)
+
+// 用于兼容 CommonJS 模块
+export const require = createRequire(import.meta.url)
+
 // app.use(createPinia())
 app.use(routes)
 app.use(ArcoVue);
