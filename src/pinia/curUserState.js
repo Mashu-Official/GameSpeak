@@ -7,7 +7,8 @@ const toast = useToast();
 export const useCurUserState = defineStore('useCurUserState', {
     state: () => ({
         server: {},
-        room: {},
+        room: {},  // 进入的 这个用于视图上
+        curConnectedRoom: {},   // 进入并且链接上服务器的 用于功能逻辑
         setting: {
             microphone: null,
             headphone: null,
@@ -37,12 +38,14 @@ export const useCurUserState = defineStore('useCurUserState', {
             }
         },
         enterServer(server) {
+            this.room = {}
             router.push(`/server/${server.hashID}`).then(() => {
                 this.server = server;
             });
         },
         enterRoom(room) {
             this.room = room;
+            this.curConnectedRoom = room;
         }
     },
 

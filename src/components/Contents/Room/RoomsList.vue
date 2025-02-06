@@ -24,10 +24,10 @@
             <div class="px-4">
                 <div class="divide"></div>
 
-                <div class="card ViewCard mt-4 mb-2">
+                <div class="card ViewCard my-4">
                 </div>
 
-<!--             <ListCard_behavior/>-->
+<!--             <ListCard_behavior/>--> cv
                 <div class="divide"></div>
             </div>
         </div>

@@ -12,6 +12,8 @@ const sequelize = new Sequelize({
     try {
         await sequelize.authenticate();
         console.log('数据库连接成功');
+        await  sequelize.sync()
+        console.log('数据库同步成功');
     } catch (error) {
         console.error('无法连接到数据库:', error);
     }

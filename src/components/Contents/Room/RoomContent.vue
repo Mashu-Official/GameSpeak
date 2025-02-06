@@ -1,16 +1,21 @@
 <template>
     <div class="flex flex-1 flex-row w-full pl-2 pt-6">
-<!--房间列表-->
-        <RoomsList/>
-
+        <!--房间列表-->
+        <KeepAlive>
+            <RoomsList/>
+        </KeepAlive>
         <!--默认窗口-->
         <HeroCard v-if="!curUserState.room"/>
-<!--        <div class="flex-1" v-else>-->
+
         <!--聊天窗口-->
-        <MessagesCard v-if="curUserState.room.type === 'Text'" />
+        <KeepAlive>
+            <MessagesCard v-if="curUserState.room.type === 'Text'"/>
+        </KeepAlive>
         <!--语音窗口-->
-        <VoiceCard v-if="curUserState.room.type === 'Voice' " />
-<!--        </div>-->
+        <KeepAlive>
+            <VoiceCard v-if="curUserState.room.type === 'Voice' "/>
+        </KeepAlive>
+        <!--        </div>-->
     </div>
 
 
@@ -23,12 +28,13 @@ import RoomsList from "./RoomsList.vue";
 import VoiceCard from "../FuncCard/VoiceCard.vue";
 import HeroCard from "../FuncCard/HeroCard.vue";
 import {useCurUserState} from "../../../pinia/curUserState.js";
+
 const curUserState = useCurUserState()
 
 </script>
 
 <style scoped>
-.messageTime{
+.messageTime {
     font-size: 12px;
 }
 

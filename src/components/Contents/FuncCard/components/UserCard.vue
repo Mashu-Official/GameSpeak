@@ -1,7 +1,7 @@
 <template>
 
     <div class="flex flex-col ViewCard p-0">
-        <div class="h-[132px] w-[246px] rounded-xl">
+        <div class="h-[148px] w-[246px] rounded-xl">
             <img class="rounded-xl h-full w-full inline-block object-cover"
                  :src="user.avatar"
                  :alt="`[${user.username || user.name}]${user.avatar}`">
@@ -10,7 +10,7 @@
         <div class="px-4 pb-4 pt-2">
             <span class="text-base">{{ user.username || user.name }}</span>
 
-            <div class="flex flex-row items-center justify-between mt-2">
+            <div class="flex flex-row items-center justify-between mt-1">
 
                 <button v-if="user.name" class="flex flex-row items-center whitespace-nowrap">
                     <svg v-show="1" width="20" height="20" viewBox="0 0 48 48" fill="none"

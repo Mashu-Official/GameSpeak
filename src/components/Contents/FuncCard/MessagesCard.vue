@@ -48,6 +48,7 @@
             </div>
 
         </div>
+
     </div>
 </template>
 
@@ -133,21 +134,11 @@ const state = reactive<{ messages: Messages[] }>({
     outline: none;
     background-color: transparent;
 }
+
 :is(.dark .f-inp input) {
     color: rgb(255, 255, 255);
 }
 
-input::placeholder {
-    color: rgb(55, 65, 81);
-    font-weight: 600;
-    background-color: transparent;
-}
-
-:is(.dark input)::placeholder {
-    color: rgb(127, 127, 127);
-    font-weight: 600;
-    background-color: transparent;
-}
 
 
 </style>

@@ -68,7 +68,7 @@
 
         <div class="flex justify-center items-center overflow-hidden w-[52px] h-[52px] mt-2 mb-4 circle cursor-pointer select-none">
             <img class="object-cover w-full h-full"
-                 src="https://img.kookapp.cn/avatars/2022-04/Rw4r5wP0Oi02s02s.jpg?x-oss-process=style/icon" alt="">
+                 src="https://cdn.jsdelivr.net/gh/Mashu-Official/Blog_IMG-Cabin/img2e632b0f1be954a022bc8549a941107f.png" alt="">
         </div>
     </div>
 
@@ -99,7 +99,7 @@ state.servers = [
         id: 1,
         name: "豪华海景房",
         hashID: "1234",
-        avatarURL: "https://img.kookapp.cn/avatars/2022-04/Rw4r5wP0Oi02s02s.jpg?x-oss-process=style/icon"
+        avatarURL: "https://cdn.jsdelivr.net/gh/Mashu-Official/Blog_IMG-Cabin/img/吧唧2.png"
     },
     {
         id: 2,
