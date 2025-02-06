@@ -33,6 +33,7 @@
         </div>
 
         <div class="roomList">
+
             <div class="m-0 p-0 relative text-sm px-4 h-0 flex-1">
                 <!--房间列表-->
                 <div v-for="room in state.roomsList" :key="room.id" class="roomItem px-3 py-1.5 cursor-pointer mb-[2px]"
@@ -154,11 +155,6 @@ const enterRoom = (room) => {
     flex-shrink: 0;
 }
 
-.roomList::webkit-scrollbar {
-    display: block;
-    width: 3px;
-}
-
 .roomItem {
     display: flex;
     align-items: center;
@@ -185,7 +181,8 @@ const enterRoom = (room) => {
 
 /* 设置滚动条的宽度 */
 .roomList::-webkit-scrollbar {
-    width: 3px; /* 纵向滚动条的宽度 */
+    width: 3px;
+    display: block;
 }
 
 /* 设置滚动条的背景 */
@@ -213,32 +210,10 @@ const enterRoom = (room) => {
 }
 
 .roomList::-webkit-scrollbar-thumb:hover {
-    /*background: var(--themeColorMain);*/
-    background: #999
+    background: #464646
 }
 
 .roomList::-webkit-scrollbar-corner {
     background: #f1f1f1;
-}
-
-
-.bottom {
-    flex: 1;
-    flex-shrink: 0;
-    height: 0;
-    /*overflow: scroll;*/
-    width: 100%;
-    display: flex;
-}
-
-.bottom_right_bottom {
-    flex: 1;
-    overflow-y: scroll;
-}
-
-.app {
-
-    display: flex;
-    flex-direction: column;
 }
 </style>

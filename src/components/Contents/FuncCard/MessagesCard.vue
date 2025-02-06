@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-1 flex-col items-start h-full min-w-[287px] px-8 relative">
+    <div class="flex flex-1 flex-col items-start h-full px-8 relative">
         <div class="text-xl">{{ curUserState.room.name || "找不到该房间" }}</div>
 
         <div class="divide mb-4" style="width: 100%"></div>

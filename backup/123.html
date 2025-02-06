@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    .app{
+        position: relative;
+        display: flex;
+        flex: 1;
+        height: 100%;
+        width: 100%;
+
+        overflow: hidden;
+    }
+    .roomList {
+        overflow-x: scroll;
+        flex: 1;
+        flex-shrink: 0;
+    }
+    .container{
+        margin: 0;
+        padding: 0;
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        flex: 1 1 0%;
+    }
+
+    .content{
+        padding: 0 120px;
+        border: solid chartreuse 2px;
+    }
+</style>
+<body>
+<div class="app flex flex-1 flex-col h-full w-full px-8 relative overflow-hidden">
+    <div class="roomList">
+
+        <div class="container">
+
+            <div class="content">
+                123123
+            </div>
+            <div class="content">
+                123123
+            </div>
+            <div class="content">
+                123123
+            </div>
+            <div class="content">
+                123123
+            </div>
+            <div class="content">
+                123123
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+</body>
+</html>

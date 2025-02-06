@@ -554,6 +554,44 @@ video {
   display: none;
 }
 
+.container {
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .container {
+    max-width: 640px;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 768px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1024px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1280px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .container {
+    max-width: 1536px;
+  }
+}
+
+.pointer-events-none {
+  pointer-events: none;
+}
+
 .absolute {
   position: absolute;
 }
@@ -616,12 +654,28 @@ video {
   margin-top: 1rem;
 }
 
+.mt-3 {
+  margin-top: 0.75rem;
+}
+
+.mb-\[1px\] {
+  margin-bottom: 1px;
+}
+
 .box-border {
   box-sizing: border-box;
 }
 
+.box-content {
+  box-sizing: content-box;
+}
+
 .block {
   display: block;
+}
+
+.inline-block {
+  display: inline-block;
 }
 
 .flex {
@@ -676,6 +730,18 @@ video {
   height: 140px;
 }
 
+.h-\[130px\] {
+  height: 130px;
+}
+
+.h-\[150px\] {
+  height: 150px;
+}
+
+.h-\[142px\] {
+  height: 142px;
+}
+
 .max-h-10 {
   max-height: 2.5rem;
 }
@@ -718,6 +784,26 @@ video {
 
 .w-\[250px\] {
   width: 250px;
+}
+
+.w-0 {
+  width: 0px;
+}
+
+.w-1\/2 {
+  width: 50%;
+}
+
+.w-\[100\%\] {
+  width: 100%;
+}
+
+.w-\[244px\] {
+  width: 244px;
+}
+
+.w-2 {
+  width: 0.5rem;
 }
 
 .min-w-10 {
@@ -782,6 +868,10 @@ video {
   flex-direction: column;
 }
 
+.flex-wrap-reverse {
+  flex-wrap: wrap-reverse;
+}
+
 .items-start {
   align-items: flex-start;
 }
@@ -822,6 +912,18 @@ video {
   margin-bottom: calc(0.75rem * var(--tw-space-y-reverse));
 }
 
+.space-x-4 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(1rem * var(--tw-space-x-reverse));
+  margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+.space-x-3 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(0.75rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.75rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
 .overflow-hidden {
   overflow: hidden;
 }
@@ -834,12 +936,24 @@ video {
   overflow: visible;
 }
 
+.overflow-x-auto {
+  overflow-x: auto;
+}
+
+.overflow-y-auto {
+  overflow-y: auto;
+}
+
 .overflow-x-hidden {
   overflow-x: hidden;
 }
 
 .overflow-y-hidden {
   overflow-y: hidden;
+}
+
+.overflow-x-scroll {
+  overflow-x: scroll;
 }
 
 .overflow-y-scroll {
@@ -960,6 +1074,18 @@ video {
 
 .pt-6 {
   padding-top: 1.5rem;
+}
+
+.pt-3 {
+  padding-top: 0.75rem;
+}
+
+.pb-4 {
+  padding-bottom: 1rem;
+}
+
+.pt-2 {
+  padding-top: 0.5rem;
 }
 
 .text-2xl {

@@ -5,12 +5,12 @@
 
         <!--默认窗口-->
         <HeroCard v-if="!curUserState.room"/>
-        <div v-else>
-            <!--聊天窗口-->
-            <MessagesCard v-if="curUserState.room.type === 'Text'" />
-            <!--语音窗口-->
-            <VoiceCard v-if="curUserState.room.type === 'Voice' " />
-        </div>
+<!--        <div class="flex-1" v-else>-->
+        <!--聊天窗口-->
+        <MessagesCard v-if="curUserState.room.type === 'Text'" />
+        <!--语音窗口-->
+        <VoiceCard v-if="curUserState.room.type === 'Voice' " />
+<!--        </div>-->
     </div>
 
 
