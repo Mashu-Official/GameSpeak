@@ -6,7 +6,7 @@ const toast = useToast()
 export const useThemeStore = defineStore('useThemeStore', {
     state: () => ({
         themeTitle: '',
-        themeMode: localStorage.getItem('dark-mode') || 'dark',
+        themeMode: 'dark',
         html: document.querySelector('html'),
         body: document.querySelector('body'),
         colorSchemes: {

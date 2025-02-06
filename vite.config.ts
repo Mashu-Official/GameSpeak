@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import path from 'node:path'
 import electron from 'vite-plugin-electron/simple'
 import vue from '@vitejs/plugin-vue'
+import fs from 'fs'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -26,4 +27,17 @@ export default defineConfig({
         : {},
     }),
   ],
+  server:{
+    host: '127.0.0.1',
+    https:{
+      key: fs.readFileSync('./localhost+3-key.pem'),
+      cert: fs.readFileSync('./localhost+3.pem')
+    }
+  },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src')
+    }
+  }
+
 })

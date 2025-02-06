@@ -12,6 +12,12 @@ export const useCurUserState = defineStore('useCurUserState', {
             microphone: null,
             headphone: null,
             microphoneSpeakType: null
+        },
+        userInfo:{
+            name: null,
+            avatar: null,
+            // name: '123',
+            // avatar: 'https://cdn.jsdelivr.net/gh/Mashu-Official/Blog_IMG-Cabin/img113945398_p0.png',
         }
     }),
     actions: {

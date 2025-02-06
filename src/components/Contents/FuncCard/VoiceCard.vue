@@ -7,7 +7,7 @@
         <div class=" overflow-y-hidden flex-shrink-0 select-none box-content">
             <div class="m-0 p-0 relative flex flex-row flex-1 space-x-3 text-sm overflow-x-auto VoiceRoomMembers"  ref="scrollRef">
 <!--        这个是当前用户        -->
-                <UserCard :user="null"/>
+                <UserCard :user="curUserState.userInfo" />
 
                 <template v-for="user in state.users" :key="user.uid">
                         <UserCard :user="user"/>

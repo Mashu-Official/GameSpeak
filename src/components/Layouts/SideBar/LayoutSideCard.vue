@@ -42,7 +42,7 @@
 
             <div class="serverList flex flex-col overflow-y-scroll" ref="serverListRef">
                 <div class="avatar" v-for="server in state.servers" :key="server.id"
-                     @click="curSelectedState.enterServer(server)"
+                     @dblclick="curSelectedState.enterServer(server)"
                      @mouseenter="showServerName($event, server.name)"
                      @mouseleave="hideServerName">
 
@@ -66,7 +66,7 @@
 
         <div class="divide" style="width: 60%;"></div>
 
-        <div class="relative flex justify-center items-center overflow-hidden w-[52px] h-[52px] mt-2 mb-4 circle cursor-pointer">
+        <div class="flex justify-center items-center overflow-hidden w-[52px] h-[52px] mt-2 mb-4 circle cursor-pointer select-none">
             <img class="object-cover w-full h-full"
                  src="https://img.kookapp.cn/avatars/2022-04/Rw4r5wP0Oi02s02s.jpg?x-oss-process=style/icon" alt="">
         </div>

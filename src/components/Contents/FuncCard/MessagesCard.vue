@@ -39,10 +39,10 @@
             </div>
 
             <div class="">
-                <form class="" action="" method="post" autocomplete="off">
+                <form class="" action="" method="post" autocomplete="off" novalidate>
                     <div class="f-inp flex flex-row items-center">
                         <input :placeholder="`向 ${curUserState.room.name} 发送消息`">
-                        <button class="whitespace-nowrap">发送</button>
+                        <button type="button" class="whitespace-nowrap">发送</button>
                     </div>
                 </form>
             </div>

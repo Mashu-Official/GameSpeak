@@ -21,7 +21,6 @@ export const useServerState = defineStore('useServerState', {
         strategies: [
             {
                 storage: localStorage, // 默认存储 localStorage
-                paths: ['theme']
             }
         ]
     }

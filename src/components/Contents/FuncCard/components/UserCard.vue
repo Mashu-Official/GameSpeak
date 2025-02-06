@@ -1,16 +1,46 @@
 <template>
 
     <div class="flex flex-col ViewCard p-0">
-        <div class="h-[142px] w-[250px] rounded-xl">
+        <div class="h-[132px] w-[246px] rounded-xl">
             <img class="rounded-xl h-full w-full inline-block object-cover"
                  :src="user.avatar"
-                 :alt="`[${user.username}]${user.avatar}`">
+                 :alt="`[${user.username || user.name}]${user.avatar}`">
         </div>
 
         <div class="px-4 pb-4 pt-2">
-            <span class="text-base">{{ user.username }}</span>
+            <span class="text-base">{{ user.username || user.name }}</span>
 
-            <div class="flex flex-row items-center justify-between mt-1">
+            <div class="flex flex-row items-center justify-between mt-2">
+
+                <button v-if="user.name" class="flex flex-row items-center whitespace-nowrap">
+                    <svg v-show="1" width="20" height="20" viewBox="0 0 48 48" fill="none"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <rect x="17" y="4" width="14" height="27" rx="7" fill="none" stroke="currentColor"
+                              stroke-width="4"
+                              stroke-linejoin="round"/>
+                        <path d="M9 23C9 31.2843 15.7157 38 24 38C32.2843 38 39 31.2843 39 23"
+                              stroke="currentColor"
+                              stroke-width="4"
+                              stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M24 38V44" stroke="currentColor" stroke-width="4" stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                    </svg>
+                    <svg v-show="" width="20" height="20" viewBox="0 0 48 48" fill="none"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <rect x="17" y="4" width="14" height="27" rx="7" fill="none" stroke="currentColor"
+                              stroke-width="4"
+                              stroke-linejoin="round"/>
+                        <path d="M9 23C9 31.2843 15.7157 38 24 38C32.2843 38 39 31.2843 39 23"
+                              stroke="currentColor"
+                              stroke-width="4"
+                              stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M24 38V44" stroke="currentColor" stroke-width="4" stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                        <line x1="0" y1="0" x2="48" y2="48" stroke="#ff0000ff" stroke-width="5"/>
+                    </svg>
+                    <span class="ml-2 text-sm">{{ true ? '按键发言' : '自由发言'}}</span>
+                </button>
+                <div v-else></div>
 
                 <div></div>
 
@@ -77,8 +107,9 @@
 import {UserInVoiceRoom} from "../../../../interface/userInVoiceRoom.ts";
 import {ref} from "vue";
 
-const user = ref<UserInVoiceRoom | null>()
+const user = ref<UserInVoiceRoom | any>()
 const props = defineProps<{ user: UserInVoiceRoom }>();
+console.log(props)
 if (props){
     user.value = props.user
 }
