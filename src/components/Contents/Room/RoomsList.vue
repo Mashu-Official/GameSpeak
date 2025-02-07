@@ -2,7 +2,7 @@
 
     <div class="flex flex-col overflow-x-hidden overflow-y-hidden flex-shrink-0
   min-w-[255px] max-w-[345px]
-     select-none" ref="parentContainerRef" style="">
+     select-none">
 
         <div>
             <div class="flex flex-row justify-between items-center px-4 relative">

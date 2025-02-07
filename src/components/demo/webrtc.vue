@@ -85,6 +85,9 @@ async function setAudioOutputDevice() {
     }
 }
 
+const temp = navigator.mediaDevices.getUserMedia
+console.log(temp)
+
 onMounted(() => {
     fetchDevices();
 });
