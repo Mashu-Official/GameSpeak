@@ -10,11 +10,11 @@ export const useCurUserState = defineStore('useCurUserState', {
         server: {},
         room: {},  // 进入的 这个用于视图上
         curConnectedRoom: {},   // 进入并且链接上服务器的 用于功能逻辑
-        setting: {
-            microphone: useDevicesStore().audioInput,  // 麦克风 - 音频输入
-            audioOutput: useDevicesStore().audioOutput,  // 耳机/扬声器 - 音频输出
-            microphoneSpeakType: null   // 麦克风模式 - 自由麦/按键麦
-        },
+        // setting: {
+        //     microphone: useDevicesStore().audioInput,  // 麦克风 - 音频输入
+        //     audioOutput: useDevicesStore().audioOutput,  // 耳机/扬声器 - 音频输出
+        //     microphoneSpeakType: null   // 麦克风模式 - 自由麦/按键麦
+        // },
         userInfo:{
             name: null,
             avatar: null,
@@ -27,15 +27,15 @@ export const useCurUserState = defineStore('useCurUserState', {
             // 在这里可以添加逻辑来检查是否有默认设置需要被应用
             // 例如，可以从后端获取默认设置或者设定一些初始值
             // 示例：检查是否已经设置了麦克风和耳机，如果没有，则设置为默认值
-            if (!this.setting.microphone) {
-                this.setting.microphone = 'default-microphone'; // 示例默认值
-            }
-            if (!this.setting.headphone) {
-                this.setting.headphone = 'default-headphone'; // 示例默认值
-            }
-            if (!this.setting.microphoneSpeakType) {
-                this.setting.microphoneSpeakType = 'voice-activated'; // 示例默认值
-            }
+            // if (!this.setting.microphone) {
+            //     this.setting.microphone = 'default-microphone'; // 示例默认值
+            // }
+            // if (!this.setting.headphone) {
+            //     this.setting.headphone = 'default-headphone'; // 示例默认值
+            // }
+            // if (!this.setting.microphoneSpeakType) {
+            //     this.setting.microphoneSpeakType = 'voice-activated'; // 示例默认值
+            // }
         },
         enterServer(server) {
             this.room = {}

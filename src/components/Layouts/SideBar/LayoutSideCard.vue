@@ -72,7 +72,7 @@
                  src="https://cdn.jsdelivr.net/gh/Mashu-Official/Blog_IMG-Cabin/img2e632b0f1be954a022bc8549a941107f.png" alt="">
 
         </div>
-        <SideSubMenu v-show="isOpenSubMenu" ref="subMenuElement"/>
+        <SideSubMenu v-if="isOpenSubMenu || 1" ref="subMenuElement" :isSidebarOpen="isSidebarOpen" @emit="handleToggle"/>
     </div>
 
 </template>
@@ -82,7 +82,6 @@ import {nextTick, onMounted, onUnmounted, reactive, ref} from "vue";
 import {hideServerName, showServerName} from "../../../assets/js/serverName.ts";
 import {useCurUserState} from "../../../pinia/curUserState.js"
 import {serverAttribute} from "../../../interface&enum/ServerAttribute.ts";
-import {setHeightWithCalc, setWidth} from "../../../assets/js/dynamticOverflow.js";
 import {RoomType} from "../../../interface&enum/RoomTypeEnum.ts";
 import SideSubMenu from "./SideSubMenu.vue";
 
@@ -90,31 +89,29 @@ import SideSubMenu from "./SideSubMenu.vue";
 const isSidebarOpen = ref<boolean>(true)
 // 打开头像处的子菜单
 const isOpenSubMenu = ref<boolean>(false)
-const subMenuElement = ref<HTMLDivElement>(null);
-const subMenuTrigger = ref<HTMLDivElement>(null)
+const subMenuElement = ref<HTMLDivElement>();
+const subMenuTrigger = ref<HTMLDivElement>()
+
 const curSelectedState = useCurUserState()
-
-
-// 切换侧边栏状态的方法
-// const toggleSidebar = () => {
-//     isSidebarOpen.value = !isSidebarOpen.value;
-// };
 
 const toggleSubMenu = () =>{
     isOpenSubMenu.value = !isOpenSubMenu.value
-    document.addEventListener('click', handleClickOutside);
+    // document.addEventListener('click', handleClickOutside);
 }
-const state = reactive<{ servers: serverAttribute[] }>({
-    servers: [],
-})
-const handleClickOutside = (event) => {
+const handleToggle = (toggleSign)=>{
+    isOpenSubMenu.value = toggleSign
+}
 
+const handleClickOutside = (event) => {
     if ((event.target !== subMenuTrigger.value) || (event.target !== subMenuElement.value)){
         isOpenSubMenu.value = false
-        document.removeEventListener('click', handleClickOutside);
+        // document.removeEventListener('click', handleClickOutside);
     }
 };
 
+const state = reactive<{ servers: serverAttribute[] }>({
+    servers: [],
+})
 state.servers = [
     {
         id: 1,
@@ -141,12 +138,6 @@ state.servers = [
         avatarURL: ""
     },
 ];
-const InitState: () => void = () => {
-
-}
-const toggleSideBar = () => {
-    isSidebarOpen.value = !isSidebarOpen.value;
-}
 
 onMounted(async () => {
 

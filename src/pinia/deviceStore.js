@@ -11,15 +11,25 @@ export const useDevicesStore = defineStore('useDevicesStore', {
         ////////////////////////////////////////////////
         audioInput: null,   // 当前音频输入设备  单个
         audioOutput: null,  // 当前音频输出设备  单个
+        ////////////////////////////////////////////////
+        defaultAudioInput: null,  // 默认输入
+        defaultAudioOutput: null,  // 默认输出
+        ////////////////////////////////////////////////
+        inputVolume: 100,   // 输入音量
+        outputVolume: 100,   // 输出音量
     }),
     actions: {
         async getDevices() {
             const deviceList = await navigator.mediaDevices.enumerateDevices();
-            console.log('设备列表:', deviceList);
+            // console.log('设备列表:', deviceList);
             this.inputDevices = deviceList.filter(device => device.kind === 'audioinput');
-            console.log("输入",this.inputDevices)
+            // console.log("输入",this.inputDevices)
             this.outputDevices = deviceList.filter(device => device.kind === 'audiooutput');
-            console.log("输出:",this.outputDevices)
+            // console.log("输出:",this.outputDevices)
+            this.defaultAudioInput = this.inputDevices.find(device => device.deviceId === "default")
+            this.defaultAudioOutput = this.outputDevices.find(device => device.deviceId === "default")
+            console.log(this.defaultAudioInput)
+            console.log(this.defaultAudioOutput)
         },
         selectDevice(device){
             const deviceKind = device.kind

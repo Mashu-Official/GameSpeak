@@ -34,7 +34,7 @@ import {useCurUserState} from "@/pinia/curUserState.js";
 import {useDevicesStore} from "@/pinia/deviceStore.js";
 
 const deviceStore = useDevicesStore()
-deviceStore.getDevices()
+// deviceStore.getDevices()
 // deviceStore.audioInputTest()
 
 
