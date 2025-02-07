@@ -1,9 +1,9 @@
 <template>
     <div class="flex flex-col w-full space-y-2">
         <div class="flex flex-col w-full space-y-1">
-            <span>输入设备</span>
+            <span class="text-base font-bold">输入设备</span>
             <a-select
-                    :style="{width:'380px'}"
+                    :style="{width:'420px'}"
                     :defaultValue="deviceStore.audioInput || deviceStore.defaultAudioInput"
                     :default-input-value="deviceStore.audioInput || deviceStore.defaultAudioInput"
                     v-model="deviceStore.audioInput"
@@ -23,9 +23,9 @@
         </div>
 
         <div class="flex flex-col w-full space-y-1">
-            <span>输出设备</span>
+            <span class="text-base font-bold">输出设备</span>
             <a-select
-                    :style="{width:'380px'}"
+                    :style="{width:'420px'}"
                     :default-value="deviceStore.audioOutput || deviceStore.defaultAudioOutput"
                     :default-input-value="deviceStore.audioOutput || deviceStore.defaultAudioOutput"
                     v-model="deviceStore.audioOutput"
@@ -42,9 +42,9 @@
 
         </div>
 
-        <div class="flex flex-col space-y-1 pt-2">
+        <div class="flex flex-col space-y-1 pt-4">
             <div class="flex flex-col">
-                <span>麦克风输入音量</span>
+                <span class="text-base font-bold">麦克风输入音量</span>
                 <a-space direction="vertical" size="large">
                     <a-slider :default-value="deviceStore.inputVolume"
                               v-model="deviceStore.inputVolume" :style="{ width: '420px' }"
@@ -53,11 +53,31 @@
             </div>
 
             <div class="flex flex-col">
-                <span>设备输出音量</span>
+                <span class="text-base font-bold">设备输出音量</span>
                 <a-space direction="vertical" size="large">
                     <a-slider :default-value="deviceStore.outputVolume"
                               v-model="deviceStore.outputVolume" :style="{ width: '420px' }" show-input/>
                 </a-space>
+            </div>
+
+            <div class="flex flex-row">
+                <span class="text-base font-bold">测试麦克风</span>
+
+            </div>
+
+            <div class="flex flex-row">
+                <span class="text-base font-bold">麦克风打开/关闭快捷键</span>
+
+            </div>
+
+            <div class="flex flex-row">
+                <span class="text-base font-bold">打开/关闭静音快捷键</span>
+
+            </div>
+
+            <div class="flex flex-row">
+                <span class="text-base font-bold">按键发言快捷键</span>
+
             </div>
         </div>
 
