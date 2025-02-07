@@ -6,7 +6,8 @@
                     :style="{width:'380px'}"
                     :defaultValue="deviceStore.audioInput || deviceStore.defaultAudioInput"
                     :default-input-value="deviceStore.audioInput || deviceStore.defaultAudioInput"
-                    v-model="curInput"
+                    v-model="deviceStore.audioInput"
+                    :change="logVal(deviceStore.audioInput)"
                     placeholder="选择输入设备"
                     value-key="deviceId"
             >
@@ -27,7 +28,8 @@
                     :style="{width:'380px'}"
                     :default-value="deviceStore.audioOutput || deviceStore.defaultAudioOutput"
                     :default-input-value="deviceStore.audioOutput || deviceStore.defaultAudioOutput"
-                    v-model="curOutput"
+                    v-model="deviceStore.audioOutput"
+                    :change="logVal(deviceStore.audioOutput)"
                     placeholder="选择输出设备"
                     value-key="deviceId"
             >
@@ -85,25 +87,14 @@ onMounted(async () => {
     // console.log(defaultInput.value)
     // console.log(defaultOutput.value)
     // console.log(defaultOutput.value, defaultInput.value)
-    console.log(curInput.value)
-    console.log(curOutput.value)
     console.log(deviceStore.audioInput)
     console.log(deviceStore.audioOutput)
 })
-const curInput = ref()
-const curOutput = ref()
-watch(curInput, () => {
-    console.log(curInput)
-    deviceStore.audioInput = curInput.value
-    console.log(deviceStore.audioInput)
-})
-watch(curOutput, () => {
-    console.log(curOutput)
-    deviceStore.audioOutput = curOutput.value
-    console.log(deviceStore.audioOutput)
-})
-// deviceStore.audioInput = ''
-// deviceStore.audioOutput = ''
+
+const logVal = (val) =>{
+    console.log(val)
+}
+
 </script>
 
 <style scoped>

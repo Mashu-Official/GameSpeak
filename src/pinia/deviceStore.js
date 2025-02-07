@@ -17,6 +17,8 @@ export const useDevicesStore = defineStore('useDevicesStore', {
         ////////////////////////////////////////////////
         inputVolume: 100,   // 输入音量
         outputVolume: 100,   // 输出音量
+        /////////////////////////////////////////////////
+        pressToSpeak: true,
     }),
     actions: {
         async getDevices() {
