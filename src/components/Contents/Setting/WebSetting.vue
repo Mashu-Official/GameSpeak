@@ -1,8 +1,8 @@
 <template>
-
+    WebSetting.vue
 </template>
 
-<script>
+<script setup lang="ts">
 </script>
 
 <style scoped>

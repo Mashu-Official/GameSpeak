@@ -66,10 +66,13 @@
 
         <div class="divide" style="width: 60%;"></div>
 
-        <div class="flex justify-center items-center overflow-hidden w-[52px] h-[52px] mt-2 mb-4 circle cursor-pointer select-none">
+        <div class="flex justify-center items-center overflow-hidden w-[52px] h-[52px] mt-2 mb-4 circle cursor-pointer select-none relative"
+        @click.stop="toggleSubMenu">
             <img class="object-cover w-full h-full"
                  src="https://cdn.jsdelivr.net/gh/Mashu-Official/Blog_IMG-Cabin/img2e632b0f1be954a022bc8549a941107f.png" alt="">
+
         </div>
+        <SideSubMenu v-show="isOpenSubMenu" ref="subMenuElement"/>
     </div>
 
 </template>
@@ -78,22 +81,40 @@
 import {nextTick, onMounted, onUnmounted, reactive, ref} from "vue";
 import {hideServerName, showServerName} from "../../../assets/js/serverName.ts";
 import {useCurUserState} from "../../../pinia/curUserState.js"
-import {serverAttribute} from "../../../interface/ServerAttribute.ts";
+import {serverAttribute} from "../../../interface&enum/ServerAttribute.ts";
 import {setHeightWithCalc, setWidth} from "../../../assets/js/dynamticOverflow.js";
-import {RoomType} from "../../../interface/RoomTypeEnum.ts";
+import {RoomType} from "../../../interface&enum/RoomTypeEnum.ts";
+import SideSubMenu from "./SideSubMenu.vue";
 
 // 控制侧边栏是否打开
-const isSidebarOpen = ref(true);
-
+const isSidebarOpen = ref<boolean>(true)
+// 打开头像处的子菜单
+const isOpenSubMenu = ref<boolean>(false)
+const subMenuElement = ref<HTMLDivElement>(null);
+const subMenuTrigger = ref<HTMLDivElement>(null)
 const curSelectedState = useCurUserState()
 
+
 // 切换侧边栏状态的方法
-const toggleSidebar = () => {
-    isSidebarOpen.value = !isSidebarOpen.value;
-};
+// const toggleSidebar = () => {
+//     isSidebarOpen.value = !isSidebarOpen.value;
+// };
+
+const toggleSubMenu = () =>{
+    isOpenSubMenu.value = !isOpenSubMenu.value
+    document.addEventListener('click', handleClickOutside);
+}
 const state = reactive<{ servers: serverAttribute[] }>({
     servers: [],
 })
+const handleClickOutside = (event) => {
+
+    if ((event.target !== subMenuTrigger.value) || (event.target !== subMenuElement.value)){
+        isOpenSubMenu.value = false
+        document.removeEventListener('click', handleClickOutside);
+    }
+};
+
 state.servers = [
     {
         id: 1,
@@ -132,6 +153,7 @@ onMounted(async () => {
 });
 
 onUnmounted(() => {
+
 })
 
 </script>
@@ -187,10 +209,6 @@ onUnmounted(() => {
     border: solid rgb(227 227 227 / var(--tw-bg-opacity)) 2px;
 }
 
-.divide {
-    margin: 6px 0;
-    border-width: 1px;
-}
 
 .sidebar {
     /*transition: transform 0.3s ease-out;*/

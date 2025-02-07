@@ -54,7 +54,7 @@
 
 <script setup lang="ts">
 import {useCurUserState} from "../../../pinia/curUserState.js";
-import {Messages} from "../../../interface/Messages.ts";
+import {Messages} from "../../../interface&enum/Messages.ts";
 import {nextTick, onMounted, onUnmounted, reactive, ref} from "vue";
 import {setWidth} from "../../../assets/js/dynamticOverflow.js";
 

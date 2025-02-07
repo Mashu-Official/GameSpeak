@@ -1,14 +1,14 @@
 <template>
     <div class="flex flex-col justify-center items-center w-full h-full flex-1">
-        <h2>音频输入设备</h2>
-        <ul>
-            <li v-for="device in audioInputDevices" :key="device.deviceId">{{ device.label || '未命名' }}</li>
-        </ul>
+<!--        <h2>音频输入设备</h2>-->
+<!--        <ul>-->
+<!--            <li v-for="device in audioInputDevices" :key="device.deviceId">{{ device.label || '未命名' }}</li>-->
+<!--        </ul>-->
 
-        <h2>音频输出设备</h2>
-        <ul>
-            <li v-for="device in audioOutputDevices" :key="device.deviceId">{{ device.label || '未命名' }}</li>
-        </ul>
+<!--        <h2>音频输出设备</h2>-->
+<!--        <ul>-->
+<!--            <li v-for="device in audioOutputDevices" :key="device.deviceId">{{ device.label || '未命名' }}</li>-->
+<!--        </ul>-->
 
             <h2>选择音频输入设备</h2>
             <select v-model="selectedAudioInput" @change="setAudioInputDevice">
@@ -30,6 +30,13 @@
 </template>
 <script setup>
 import { ref, onMounted } from 'vue';
+import {useCurUserState} from "@/pinia/curUserState.js";
+import {useDevicesStore} from "@/pinia/deviceStore.js";
+
+const deviceStore = useDevicesStore()
+deviceStore.getDevices()
+// deviceStore.audioInputTest()
+
 
 const devices = ref([]);
 const audioInputDevices = ref([]);

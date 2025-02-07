@@ -59,8 +59,8 @@
 
 <script setup lang="ts">
 import {computed, reactive, ref, watch} from 'vue';
-import {newRoom} from "../../../../interface/newRoom.ts";
-import {RoomType} from "../../../../interface/RoomTypeEnum.ts";
+import {newRoom} from "../../../../interface&enum/newRoom.ts";
+import {RoomType} from "../../../../interface&enum/RoomTypeEnum.ts";
 
 const status = ref('');
 

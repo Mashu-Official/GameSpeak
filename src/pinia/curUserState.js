@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { useToast } from "vue-toastification";
 import router from "../router";
+import { useDevicesStore } from "@/pinia/deviceStore.js";
 
 const toast = useToast();
 
@@ -10,9 +11,9 @@ export const useCurUserState = defineStore('useCurUserState', {
         room: {},  // 进入的 这个用于视图上
         curConnectedRoom: {},   // 进入并且链接上服务器的 用于功能逻辑
         setting: {
-            microphone: null,
-            headphone: null,
-            microphoneSpeakType: null
+            microphone: useDevicesStore().audioInput,  // 麦克风 - 音频输入
+            audioOutput: useDevicesStore().audioOutput,  // 耳机/扬声器 - 音频输出
+            microphoneSpeakType: null   // 麦克风模式 - 自由麦/按键麦
         },
         userInfo:{
             name: null,
@@ -25,7 +26,6 @@ export const useCurUserState = defineStore('useCurUserState', {
         initSetting() {
             // 在这里可以添加逻辑来检查是否有默认设置需要被应用
             // 例如，可以从后端获取默认设置或者设定一些初始值
-
             // 示例：检查是否已经设置了麦克风和耳机，如果没有，则设置为默认值
             if (!this.setting.microphone) {
                 this.setting.microphone = 'default-microphone'; // 示例默认值
@@ -46,7 +46,7 @@ export const useCurUserState = defineStore('useCurUserState', {
         enterRoom(room) {
             this.room = room;
             this.curConnectedRoom = room;
-        }
+        },
     },
 
     persist: {
@@ -58,5 +58,3 @@ export const useCurUserState = defineStore('useCurUserState', {
         ]
     }
 });
-
-// 确保在适当的地方调用 initSetting 方法，比如在应用启动的时候

@@ -92,8 +92,8 @@ import {nextTick, onMounted, onUnmounted, reactive, ref} from "vue";
 import {setHeightWithCalc} from '../../../assets/js/dynamticOverflow.js'
 import CreateRoom from "./ListComponets/CreateRoom.vue";
 
-import {RoomType} from "../../../interface/RoomTypeEnum.ts";
-import {RoomsList} from "../../../interface/RoomsList.ts";
+import {RoomType} from "../../../interface&enum/RoomTypeEnum.ts";
+import {RoomsList} from "../../../interface&enum/RoomsList.ts";
 
 import {useCurUserState} from "../../../pinia/curUserState.js";
 
