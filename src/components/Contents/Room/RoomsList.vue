@@ -1,5 +1,4 @@
 <template>
-
     <div class="flex flex-col overflow-x-hidden overflow-y-hidden flex-shrink-0
   min-w-[255px] max-w-[345px]
      select-none">
@@ -143,7 +142,7 @@ const handleSubmit = (formData) => {
 }
 
 const enterRoom = (room) => {
-    curSelectedState.room = room
+    curUserState.room = room
 }
 
 </script>

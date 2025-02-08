@@ -28,6 +28,7 @@ import Room from "./RoomsList.vue";
 import VoiceCard from "../FuncCard/VoiceCard.vue";
 import HeroCard from "../FuncCard/HeroCard.vue";
 import {useCurUserState} from "../../../pinia/curUserState.ts";
+import RoomsList from "./RoomsList.vue";
 
 const curUserState = useCurUserState()
 

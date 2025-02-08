@@ -1,8 +1,9 @@
 import {RouteRecordRaw} from "vue-router";
 // @ts-ignore
-import LayoutContent from "../components/Layouts/LayoutContent.vue";
-import Room from "../components/Contents/Room/ServerPage.vue";
-import webrtc from "../components/demo/webrtc.vue";
+import LayoutContent from "@/components/Layouts/LayoutContent.vue";
+import Room from "@/components/Contents/Room/ServerPage.vue";
+import webrtc from "@/components/demo/webrtc.vue";
+import LoginPage from "@/components/Login/LoginPage.vue";
 
 export const ContentRoute: Array<RouteRecordRaw> = [
     {
@@ -19,11 +20,11 @@ export const ContentRoute: Array<RouteRecordRaw> = [
                 name: 'demo',
                 component: webrtc,
             },
-            // {
-            //     path: '/message',
-            //     name: 'room',
-            //     component:Room
-            // },
+            {
+                path: '/login',
+                name: 'login',
+                component: LoginPage
+            },
         ]
     },
 ];

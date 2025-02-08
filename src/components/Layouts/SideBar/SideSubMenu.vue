@@ -54,9 +54,8 @@
     <a-drawer
             :width="540"
             :footer="false"
-            :visible="visible"
-            @ok="saveSetting"
-            @cancel="withoutSaveSetting"
+            :visible="isOpenDrawer"
+            @cancel="closeDrawer()"
             unmountOnClose
             ref="DrawerRef"
     >
@@ -74,14 +73,14 @@
 import {ref} from "vue";
 import VoiceSetting from "../../Contents/Setting/VoiceSetting.vue";
 import WebSetting from "../../Contents/Setting/WebSetting.vue";
-
+import {useToggleFlagStore} from "../../../pinia/toggleFlagStore.ts";
 
 const props = defineProps<{
     isOpenSubMenu: boolean;
 }>()
 const emit = defineEmits(['emit'])
 
-const visible = ref(false);
+const isOpenDrawer = ref(false);
 const custom = ref([])
 const toggleSubMenu = ()=>{
     emit('emit', props.isOpenSubMenu)
@@ -95,14 +94,17 @@ const targetSettingPage = ref<whichSettingPage | null>(null)
 const openDrawer = (targetPage) => {
     console.log(targetPage)
     targetSettingPage.value = whichSettingPage[targetPage]
-
-    visible.value = true;
+    useToggleFlagStore().subMenuLock = true
+    isOpenDrawer.value = true;
 };
 const saveSetting = () => {
-    visible.value = false;
+    isOpenDrawer.value = false;
 };
-const withoutSaveSetting = () => {
-    visible.value = false;
+const closeDrawer = () => {
+    isOpenDrawer.value = false;
+    setTimeout(()=>{
+        useToggleFlagStore().subMenuLock = false
+    },100)
 }
 </script>
 

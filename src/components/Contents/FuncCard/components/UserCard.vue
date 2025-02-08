@@ -109,7 +109,7 @@ import {ref} from "vue";
 
 const user = ref<UserInVoiceRoom | any>()
 const props = defineProps<{ user: UserInVoiceRoom }>();
-console.log(props)
+// console.log(props)
 if (props){
     user.value = props.user
 }

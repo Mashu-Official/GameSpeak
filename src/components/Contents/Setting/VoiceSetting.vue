@@ -2,7 +2,7 @@
     <div class="flex flex-col w-full">
         <div>
             <div class="flex flex-row text-lg font-semibold mb-2">
-                语音设备
+                设备与音量
             </div>
             <div class="flex flex-col w-full space-y-2 items-center py-8 ViewCard mb-4">
 
@@ -90,25 +90,34 @@
 
         <div>
             <div class="flex flex-row text-lg font-semibold mb-2">
-                语音输入模式与快捷键
+                输入模式与快捷键
             </div>
 
             <div class="flex flex-col w-full space-y-2 items-center px-11 py-8 ViewCard mb-4">
 
                 <div class="flex flex-col space-y-4 items-start w-full">
 
+                    <div class="flex flex-row space-x-2 justify-between w-full">
+                        <span class="text-base font-bold">语音输入模式: </span>
+                        <div class="flex flex-row justify-between">
+                           自由发言
+                        </div>
+                        <div class="flex flex-row justify-between">
+                            按键发言
+                        </div>
+                    </div>
                     <!-- 自定义快捷键 -->
                     <div class="flex flex-row space-x-2 justify-between w-full">
                         <span class="text-base font-bold">麦克风打开/关闭快捷键:</span>
-                        <input type="text" v-model="micToggleKey" placeholder="Ctrl + M">
+                        <input type="text" v-model="deviceStore.micToggleKey" placeholder="Ctrl + M">
                     </div>
                     <div class="flex flex-row space-x-2 justify-between w-full">
                         <span class="text-base font-bold">静音/取消静音快捷键:</span>
-                        <input type="text" v-model="muteToggleKey" placeholder="Ctrl + S">
+                        <input type="text" v-model="deviceStore.muteToggleKey" placeholder="Ctrl + S">
                     </div>
                     <div class="flex flex-row space-x-2 justify-between w-full">
                         <span class="text-base font-bold">按键发言快捷键:</span>
-                        <input type="text" v-model="pushToTalkKey" placeholder="Ctrl + P">
+                        <input type="text" v-model="deviceStore.pushToTalkKey" placeholder="Ctrl + P">
                     </div>
 
                     <audio ref="audioElement" autoplay></audio>
@@ -119,7 +128,7 @@
 
         <div>
             <div class="flex flex-row text-lg font-semibold mb-2">
-                降噪设置
+                语音质量
             </div>
 
             <div class="flex flex-col w-full space-y-2 items-center px-11 py-8 ViewCard mb-4">
@@ -222,5 +231,12 @@ onUnmounted(() => {
 input{
     background-color: transparent;
 }
-
+.ViewCard{
+    --tw-bg-opacity: 1;
+    background-color: rgb(243 243 243 / var(--tw-bg-opacity));
+}
+:is(.dark .ViewCard) {
+    --tw-bg-opacity: 1;
+    background-color: rgb(28 28 32 / var(--tw-bg-opacity));
+}
 </style>

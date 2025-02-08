@@ -7,7 +7,7 @@
             <button class="p-2 mx-1 btn" :title="`${themeStore.themeTitle}`"
                     data-id="theme-btn">
                 <svg
-                        v-show="themeStore.themeMode !== 'dark' "
+                        v-if="themeStore.themeMode !== 'dark' "
                         width="16"
                         height="16"
                         viewBox="0 0 48 48"
@@ -34,7 +34,7 @@
                           fill="currentColor"/>
                 </svg>
 
-                <svg v-show="themeStore.themeMode !== 'light' "
+                <svg v-if="themeStore.themeMode !== 'light' "
                      width="16"
                      height="16"
                      viewBox="0 0 48 48"

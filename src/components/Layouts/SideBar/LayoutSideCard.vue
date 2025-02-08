@@ -84,6 +84,7 @@ import {useCurUserState} from "../../../pinia/curUserState.ts"
 import {serverAttribute} from "../../../interface&enum/ServerAttribute.ts";
 import {RoomType} from "../../../interface&enum/RoomTypeEnum.ts";
 import SideSubMenu from "./SideSubMenu.vue";
+import {useToggleFlagStore} from "../../../pinia/toggleFlagStore.ts";
 
 // 控制侧边栏是否打开
 const isSidebarOpen = ref<boolean>(true)
@@ -96,16 +97,18 @@ const curSelectedState = useCurUserState()
 
 const toggleSubMenu = () =>{
     isOpenSubMenu.value = !isOpenSubMenu.value
-    // document.addEventListener('click', handleClickOutside);
+    document.addEventListener('click', handleClickOutside);
 }
 const handleToggle = (toggleSign)=>{
     isOpenSubMenu.value = toggleSign
 }
 
 const handleClickOutside = (event) => {
+    if (useToggleFlagStore().subMenuLock){
+        return
+    }
     if ((event.target !== subMenuTrigger.value) || (event.target !== subMenuElement.value)){
-        isOpenSubMenu.value = false
-        // document.removeEventListener('click', handleClickOutside);
+        isOpenSubMenu.value = false  // document.removeEventListener('click', handleClickOutside);
     }
 };
 

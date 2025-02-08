@@ -5,8 +5,8 @@
 
 html,body,#app{
     height: 100%;
-    /*overflow: auto;*/
-    overflow: hidden;
+    overflow: auto;
+    /*overflow: hidden;*/
 }
 
 .serverName {

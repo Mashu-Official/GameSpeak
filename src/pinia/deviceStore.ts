@@ -4,24 +4,29 @@ import { ref } from 'vue';
 // @ts-ignore
 export const useDevicesStore = defineStore('useDevicesStore', {
     state: () => ({
+        // 设备列表
         inputDevices: null as MediaDeviceInfo[] | null,   // 音频输入设备列表  多个
         outputDevices: null as MediaDeviceInfo[] | null,  // 音频输出设备列表  多个
-        ////////////////////////////////////////////////
+        // 当前设备
         audioInput: null as MediaDeviceInfo | null,   // 当前音频输入设备  单个
         audioOutput: null as MediaDeviceInfo | null,  // 当前音频输出设备  单个
-        ////////////////////////////////////////////////
+        // 系统默认设备
         defaultAudioInput: null as MediaDeviceInfo | null,  // 默认输入
         defaultAudioOutput: null as MediaDeviceInfo | null,  // 默认输出
-        ////////////////////////////////////////////////
+        // 音量
         inputVolume: 100 as number,   // 输入音量
         outputVolume: 100 as number,   // 输出音量
-        /////////////////////////////////////////////////
+        // 按键说话
         pressToSpeak: true,
-        /////////////////////////////////////////////////
+        // WebRTC相关
         mediaStream: null as MediaStream | null, // 当前音频流
         audioContext: null as AudioContext | null, // 当前音频上下文
         source: null as MediaStreamAudioSourceNode | null, // 当前音频源
         isTestingMic: false, // 是否正在测试麦克风
+        // 快捷键 ↓
+        micToggleKey: '' as string | null,  // 开闭麦快捷键
+        muteToggleKey:'' as string | null,  // 语音静音快捷键 就是听不见
+        pushToTalkKey:'' as string | null,  // 按键说话快捷键
     }),
     actions: {
         async getDevices() {
@@ -31,10 +36,12 @@ export const useDevicesStore = defineStore('useDevicesStore', {
             // console.log("输入",this.inputDevices)
             this.outputDevices = deviceList.filter(device => device.kind === 'audiooutput');
             // console.log("输出:",this.outputDevices)
+            // @ts-ignore
             this.defaultAudioInput = this.inputDevices.find(device => device.deviceId === "default")
+            // @ts-ignore
             this.defaultAudioOutput = this.outputDevices.find(device => device.deviceId === "default")
-            console.log(this.defaultAudioInput)
-            console.log(this.defaultAudioOutput)
+            // console.log(this.defaultAudioInput)
+            // console.log(this.defaultAudioOutput)
         },
         selectDevice(device: MediaDeviceInfo | null, kind?: string) {
             if (!device) return;

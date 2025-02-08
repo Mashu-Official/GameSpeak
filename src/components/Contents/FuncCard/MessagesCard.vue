@@ -117,19 +117,18 @@ const state = reactive<{ messages: Messages[] }>({
 }
 
 .f-inp {
-    padding: 10px 22px;
+    padding: 12px 22px;
     border: 2px solid #6e6d6d;
-    line-height: 1;
-    border-radius: 20px;
-    margin-bottom: 15px;
+    box-sizing: border-box;
+    line-height: 20px;
+    border-radius: 16px;
+    margin-bottom: 13.5px;
 }
 
 .f-inp input {
     width: 100%;
     font-size: 16px;
-    padding: 0;
-    margin: 0;
-    border: 0;
+
     color: rgb(35, 45, 65);
     outline: none;
     background-color: transparent;
