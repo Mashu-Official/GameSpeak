@@ -26,7 +26,7 @@
                 <div class="card ViewCard my-4">
                 </div>
 
-<!--             <ListCard_behavior/>--> cv
+<!--             <ListCard_behavior/>-->
                 <div class="divide"></div>
             </div>
         </div>

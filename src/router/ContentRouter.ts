@@ -4,6 +4,8 @@ import LayoutContent from "@/components/Layouts/LayoutContent.vue";
 import Room from "@/components/Contents/Room/ServerPage.vue";
 import webrtc from "@/components/demo/webrtc.vue";
 import LoginPage from "@/components/Login/LoginPage.vue";
+import LoginCard from "../components/Login/Components/LoginCard.vue";
+import SignUpCard from "../components/Login/Components/SignUpCard.vue";
 
 export const ContentRoute: Array<RouteRecordRaw> = [
     {
@@ -23,7 +25,26 @@ export const ContentRoute: Array<RouteRecordRaw> = [
             {
                 path: '/login',
                 name: 'login',
-                component: LoginPage
+                component: LoginPage,
+                children:[
+                    {
+                        path: '',
+                        name: 'loginCard',
+                        component: LoginCard,
+                    }
+                ]
+            },
+            {
+                path: '/signup',
+                name: 'signup',
+                component: LoginPage,
+                children:[
+                    {
+                        path: '',
+                        name: 'SignUpCard',
+                        component: SignUpCard,
+                    }
+                ]
             },
         ]
     },

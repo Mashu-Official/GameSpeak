@@ -2,7 +2,7 @@
     <div class="flex flex-col">
         <div class="ViewCard flex flex-col pt-8 px-8 pb-4">
             <div class="mb-2">
-                <div class="text-3xl font-bold">登录</div>
+                <div class="text-3xl font-bold">注册</div>
                 <div class="divide border-2"></div>
             </div>
             <a-form :model="form" :style="{ width: '450px' }" :layout="'vertical'" @submit="loginSubmit()">
@@ -22,19 +22,31 @@
                                       :error="!form.password && haveInput[1]"
                     />
                 </a-form-item>
+                <a-form-item field="password" label="再次输入密码">
+                    <a-input-password v-model="form.password"
+                                      placeholder="输入密码"
+                                      :size="'large'"
+                                      allow-clear
+                                      :error="!form.password && haveInput[1]"
+                    />
+                </a-form-item>
                 <a-form-item>
                     <div class="flex justify-start w-full">
-                        <a-button html-type="submit" :size="'large'">登录</a-button>
+                        <a-button  html-type="submit" :size="'large'">注册</a-button>
 
 
                         <div class="ml-12">
-                            <span class="mr-2">还没有账号？ 马上注册→ </span>
-                            <RouterLink to="signup">
-                                <a-button html-type="button" :size="'large'">注册</a-button>
+                            <span class="mr-2">已有账号？ 马上登录→ </span>
+                            <RouterLink to="login">
+                                <a-button  html-type="button" :size="'large'">登录</a-button>
+
                             </RouterLink>
                         </div>
                     </div>
                 </a-form-item>
+
+
+
             </a-form>
         </div>
 
@@ -44,16 +56,12 @@
     </div>
 </template>
 
-
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { useToast } from 'vue-toastification';
 
 // 初始化 Toast
 const toast = useToast();
-
-// 背景图片样式计算属性
-
 
 // 输入状态数组
 const haveInput = ref<boolean[]>([false, false]);
@@ -109,6 +117,7 @@ watch(() => form.value.password, (newVal, oldVal) => {
 });
 
 </script>
+
 
 <style scoped>
 

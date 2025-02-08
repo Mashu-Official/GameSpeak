@@ -66,12 +66,18 @@
 
         <div class="divide" style="width: 60%;"></div>
 
-        <div class="flex justify-center items-center overflow-hidden w-[52px] h-[52px] mt-2 mb-4 circle cursor-pointer select-none relative"
+        <div v-if="true" class="flex justify-center items-center overflow-hidden w-[52px] h-[52px] mt-2 mb-4 circle cursor-pointer select-none relative"
         @click.stop="toggleSubMenu">
             <img class="object-cover w-full h-full"
                  src="https://cdn.jsdelivr.net/gh/Mashu-Official/Blog_IMG-Cabin/img2e632b0f1be954a022bc8549a941107f.png" alt="">
 
         </div>
+
+        <div v-else class="flex justify-center items-center overflow-hidden w-[52px] h-[52px] mt-2 mb-4 circle cursor-pointer select-none relative userAvatar"
+             @click="router.push('/login')">
+           <span class="text-xl font-bold">登录</span>
+        </div>
+
         <SideSubMenu v-if="isOpenSubMenu" ref="subMenuElement" :isSidebarOpen="isSidebarOpen" @emit="handleToggle"/>
     </div>
 
@@ -85,6 +91,7 @@ import {serverAttribute} from "../../../interface&enum/ServerAttribute.ts";
 import {RoomType} from "../../../interface&enum/RoomTypeEnum.ts";
 import SideSubMenu from "./SideSubMenu.vue";
 import {useToggleFlagStore} from "../../../pinia/toggleFlagStore.ts";
+import router from "../../../router";
 
 // 控制侧边栏是否打开
 const isSidebarOpen = ref<boolean>(true)
@@ -203,20 +210,22 @@ onUnmounted(() => {
     border: solid rgb(227 227 227 / var(--tw-bg-opacity)) 2px;
 }
 
-
 .sidebar {
     /*transition: transform 0.3s ease-out;*/
 }
 
-/* 定义进入和离开时的过渡效果 */
-.slide-enter-active,
-.slide-leave-active {
-    transition: transform 0.3s ease-out;
+.userAvatar{
+    --tw-bg-opacity: 1;
+    background-color: rgb(28 28 32 / var(--tw-bg-opacity));
+    --tw-text-opacity: 1;
+    color: rgb(240 244 246 / var(--tw-text-opacity));
 }
 
-.slide-enter-from,
-.slide-leave-to {
-    transform: translateX(-100%);
+:is(.dark .userAvatar){
+    --tw-bg-opacity: 1;
+    background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+    --tw-text-opacity: 1;
+    color: rgb(55 65 81 / var(--tw-text-opacity));
 }
 </style>
 

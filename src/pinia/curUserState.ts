@@ -18,10 +18,8 @@ export const useCurUserState = defineStore('useCurUserState', {
         userInfo: {
             name: null as string | null,
             avatar: null as string | null,
-            // 示例数据：
-            // name: '123',
-            // avatar: 'https://cdn.jsdelivr.net/gh/Mashu-Official/Blog_IMG-Cabin/img113945398_p0.png',
         } as UserInfo,
+        token: null as string | null,
         isElectronEnv: !!window.ipcRenderer, // 判断是否在Electron环境中
     }),
     actions: {
