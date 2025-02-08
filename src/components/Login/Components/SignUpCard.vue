@@ -51,7 +51,7 @@
         </div>
 
         <div class="ViewCard flex flex-col w-full my-4 p-8 oauthGroup">
-            123
+
         </div>
     </div>
 </template>

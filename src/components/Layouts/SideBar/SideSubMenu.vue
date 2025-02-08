@@ -52,7 +52,7 @@
     </div>
 
     <a-drawer
-            :width="540"
+            :width="targetSettingPage === whichSettingPage['VoiceSetting'] ? 540 : 860 "
             :footer="false"
             :visible="isOpenDrawer"
             @cancel="closeDrawer()"
@@ -92,7 +92,7 @@ enum whichSettingPage {
 
 const targetSettingPage = ref<whichSettingPage | null>(null)
 const openDrawer = (targetPage) => {
-    console.log(targetPage)
+    // console.log(targetPage)
     targetSettingPage.value = whichSettingPage[targetPage]
     useToggleFlagStore().subMenuLock = true
     isOpenDrawer.value = true;

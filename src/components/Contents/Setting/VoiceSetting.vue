@@ -1,10 +1,11 @@
 <template>
-    <div class="flex flex-col w-full">
-        <div>
+    <div class="flex flex-col w-full space-y-4">
+
+        <div class="flex flex-col">
             <div class="flex flex-row text-lg font-semibold mb-2">
                 设备与音量
             </div>
-            <div class="flex flex-col w-full space-y-2 items-center py-8 ViewCard mb-4">
+            <div class="flex flex-col w-full space-y-2 items-center py-8 ViewCard">
 
                 <div class="flex flex-col w-full space-y-4 items-center">
                     <div class="flex flex-col space-y-1 ">
@@ -88,12 +89,12 @@
             </div>
         </div>
 
-        <div>
+        <div class="flex flex-col">
             <div class="flex flex-row text-lg font-semibold mb-2">
                 输入模式与快捷键
             </div>
 
-            <div class="flex flex-col w-full space-y-2 items-center px-11 py-8 ViewCard mb-4">
+            <div class="flex flex-col w-full space-y-2 items-center px-11 py-8 ViewCard">
 
                 <div class="flex flex-col space-y-4 items-start w-full">
 
@@ -126,8 +127,8 @@
             </div>
         </div>
 
-        <div>
-            <div class="flex flex-row text-lg font-semibold mb-2">
+        <div class="flex flex-col">
+            <div class="flex flex-row text-lg font-semibold ">
                 语音质量
             </div>
 

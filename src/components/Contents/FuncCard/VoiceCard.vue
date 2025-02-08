@@ -31,7 +31,7 @@ import {nextTick, onMounted, onUnmounted, reactive, ref} from "vue";
 import {setWidth} from "../../../assets/js/dynamticOverflow.js";
 import {useHorizontalScroll} from "../../../assets/js/HorizontalScroll.ts";
 import {UserInVoiceRoom} from "../../../interface&enum/userInVoiceRoom.ts";
-import UserCard from "./components/UserCard.vue";
+import UserCard from "./UserCard.vue";
 
 const curUserState = useCurUserState()
 
