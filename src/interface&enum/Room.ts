@@ -1,6 +1,6 @@
 import {RoomType} from "./RoomTypeEnum.ts";
 
-export interface RoomsList {
+export interface Room {
     id: number,
     name: string,
     type: RoomType,

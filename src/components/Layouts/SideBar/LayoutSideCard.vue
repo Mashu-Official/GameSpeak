@@ -72,7 +72,7 @@
                  src="https://cdn.jsdelivr.net/gh/Mashu-Official/Blog_IMG-Cabin/img2e632b0f1be954a022bc8549a941107f.png" alt="">
 
         </div>
-        <SideSubMenu v-if="isOpenSubMenu || 1" ref="subMenuElement" :isSidebarOpen="isSidebarOpen" @emit="handleToggle"/>
+        <SideSubMenu v-if="isOpenSubMenu" ref="subMenuElement" :isSidebarOpen="isSidebarOpen" @emit="handleToggle"/>
     </div>
 
 </template>
@@ -80,7 +80,7 @@
 <script setup lang="ts">
 import {nextTick, onMounted, onUnmounted, reactive, ref} from "vue";
 import {hideServerName, showServerName} from "../../../assets/js/serverName.ts";
-import {useCurUserState} from "../../../pinia/curUserState.js"
+import {useCurUserState} from "../../../pinia/curUserState.ts"
 import {serverAttribute} from "../../../interface&enum/ServerAttribute.ts";
 import {RoomType} from "../../../interface&enum/RoomTypeEnum.ts";
 import SideSubMenu from "./SideSubMenu.vue";

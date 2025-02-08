@@ -25,7 +25,7 @@
 
 <script setup>
 
-import {useCurUserState} from "@/pinia/curUserState.js";
+import {useCurUserState} from "@/pinia/curUserState.ts";
 
 const curUserState = useCurUserState()
 </script>

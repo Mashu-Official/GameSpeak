@@ -30,8 +30,8 @@
 </template>
 <script setup>
 import { ref, onMounted } from 'vue';
-import {useCurUserState} from "@/pinia/curUserState.js";
-import {useDevicesStore} from "@/pinia/deviceStore.js";
+import {useCurUserState} from "@/pinia/curUserState.ts";
+import {useDevicesStore} from "@/pinia/deviceStore.ts";
 
 const deviceStore = useDevicesStore()
 // deviceStore.getDevices()

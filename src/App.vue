@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import {useCurUserState} from "./pinia/curUserState.js";
-import {useDevicesStore} from "./pinia/deviceStore.js";
+import {useCurUserState} from "./pinia/curUserState.ts";
+import {useDevicesStore} from "./pinia/deviceStore.ts";
 
 </script>
 

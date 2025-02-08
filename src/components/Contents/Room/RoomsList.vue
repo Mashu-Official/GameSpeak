@@ -93,9 +93,9 @@ import {setHeightWithCalc} from '../../../assets/js/dynamticOverflow.js'
 import CreateRoom from "./ListComponets/CreateRoom.vue";
 
 import {RoomType} from "../../../interface&enum/RoomTypeEnum.ts";
-import {RoomsList} from "../../../interface&enum/RoomsList.ts";
+import {Room} from "../../../interface&enum/Room.ts";
 
-import {useCurUserState} from "../../../pinia/curUserState.js";
+import {useCurUserState} from "../../../pinia/curUserState.ts";
 
 import VoiceSetting from "./ListComponets/VoiceSetting.vue";
 import ListCard_behavior from "./ListComponets/ListCard_behavior.vue";
@@ -125,7 +125,7 @@ onMounted(async () => {
     ]
 });
 
-const state = reactive<{ roomsList: RoomsList[] }>({
+const state = reactive<{ roomsList: Room[] }>({
     roomsList: []
 })
 

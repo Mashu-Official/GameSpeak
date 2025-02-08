@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col items-start absolute ViewCard left-2 bottom-8 mb-16 z-50 w-[305px] select-none">
+    <div class="flex flex-col items-start absolute SubMenuCard ViewCard left-2 bottom-8 mb-16 z-50 w-[305px] select-none">
 
         <div class="flex flex-row justify-between items-start w-full">
             <div class="w-16 h-16 circle overflow-hidden ml-2">
@@ -52,27 +52,20 @@
     </div>
 
     <a-drawer
-            :width="840"
-            :header="false"
+            :width="540"
             :footer="false"
-            :visible="visible || 1"
+            :visible="visible"
             @ok="saveSetting"
             @cancel="withoutSaveSetting"
             unmountOnClose
             ref="DrawerRef"
     >
-
+        <VoiceSetting v-if="targetSettingPage == whichSettingPage['VoiceSetting']"/>
         <WebSetting v-if="targetSettingPage == whichSettingPage['WebSetting']"/>
-        <VoiceSetting v-if="targetSettingPage == whichSettingPage['VoiceSetting'] || true"/>
 
-<!--        <template #footer>-->
-<!--            <button class="px-2 py-1" @click="withoutSaveSetting">-->
-<!--                取消-->
-<!--            </button>-->
-<!--            <button class="px-2 py-1" @click="saveSetting">-->
-<!--                保存-->
-<!--            </button>-->
-<!--        </template>-->
+        <template #header>
+            <div class="text-xl font-bold">{{ targetSettingPage == whichSettingPage['VoiceSetting'] ? "语音设置" : "网页设置" }}</div>
+    </template>
 
     </a-drawer>
 </template>
@@ -114,11 +107,11 @@ const withoutSaveSetting = () => {
 </script>
 
 <style scoped>
-.ViewCard {
+.SubMenuCard {
     border: dashed rgb(28 28 32 / var(--tw-bg-opacity)) 2px;
 }
 
-:is(.dark .ViewCard) {
+:is(.dark .SubMenuCard) {
     border: dashed rgb(255 255 255 / var(--tw-bg-opacity)) 2px;
 }
 
@@ -134,5 +127,49 @@ const withoutSaveSetting = () => {
 :is(.dark .subMenuItem:hover) {
     --tw-bg-opacity: 1;
     background-color: rgb(48 48 48 / var(--tw-bg-opacity));
+}
+
+
+</style>
+<style>
+.arco-drawer-body{
+    overflow-y: auto;
+}
+/* 设置滚动条的宽度 */
+.arco-drawer-body::-webkit-scrollbar {
+    width: 4px;
+    display: block;
+}
+
+/* 设置滚动条的背景 */
+.arco-drawer-body::-webkit-scrollbar-track {
+    background: #ffffff;
+    border-radius: 10px;
+}
+
+:is(.dark .arco-drawer-body)::-webkit-scrollbar-track {
+    background: #a2a2a2;
+    border-radius: 10px;
+}
+
+/* 设置滚动条的滑块 */
+.arco-drawer-body::-webkit-scrollbar-thumb {
+    background: #323232;
+    border-radius: 10px;
+    /*transition: background 0.3s ease-in-out;*/
+}
+
+:is(.dark .arco-drawer-body)::-webkit-scrollbar-thumb {
+    background: #ffffff; /* 滚动条滑块的颜色 */
+    border-radius: 10px;
+    /*transition: background 0.3s ease-in-out;*/
+}
+
+.arco-drawer-body::-webkit-scrollbar-thumb:hover {
+    background: #464646
+}
+
+.ViewCard .arco-drawer-body::-webkit-scrollbar-corner {
+    background: #f1f1f1;
 }
 </style>

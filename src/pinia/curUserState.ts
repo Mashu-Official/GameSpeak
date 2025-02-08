@@ -1,26 +1,28 @@
 import { defineStore } from "pinia";
 import { useToast } from "vue-toastification";
 import router from "../router";
-import { useDevicesStore } from "@/pinia/deviceStore.js";
 
-const toast = useToast();
+import {serverAttribute} from "../interface&enum/ServerAttribute.ts";
+import {Room} from "../interface&enum/Room.ts";
+interface UserInfo {
+    name: string | null;
+    avatar: string | null;
+}
 
+// @ts-ignore
 export const useCurUserState = defineStore('useCurUserState', {
     state: () => ({
-        server: {},
-        room: {},  // 进入的 这个用于视图上
-        curConnectedRoom: {},   // 进入并且链接上服务器的 用于功能逻辑
-        // setting: {
-        //     microphone: useDevicesStore().audioInput,  // 麦克风 - 音频输入
-        //     audioOutput: useDevicesStore().audioOutput,  // 耳机/扬声器 - 音频输出
-        //     microphoneSpeakType: null   // 麦克风模式 - 自由麦/按键麦
-        // },
-        userInfo:{
-            name: null,
-            avatar: null,
+        server: {} as Record<string, any>, // 根据实际情况调整类型
+        room: {} as Record<string, any>,   // 进入的 这个用于视图上
+        curConnectedRoom: {} as Record<string, any>, // 进入并且链接上服务器的 用于功能逻辑
+        userInfo: {
+            name: null as string | null,
+            avatar: null as string | null,
+            // 示例数据：
             // name: '123',
             // avatar: 'https://cdn.jsdelivr.net/gh/Mashu-Official/Blog_IMG-Cabin/img113945398_p0.png',
-        }
+        } as UserInfo,
+        isElectronEnv: !!window.ipcRenderer, // 判断是否在Electron环境中
     }),
     actions: {
         initSetting() {
@@ -37,18 +39,17 @@ export const useCurUserState = defineStore('useCurUserState', {
             //     this.setting.microphoneSpeakType = 'voice-activated'; // 示例默认值
             // }
         },
-        enterServer(server) {
+        enterServer(server:serverAttribute) {
             this.room = {}
             router.push(`/server/${server.hashID}`).then(() => {
                 this.server = server;
             });
         },
-        enterRoom(room) {
+        enterRoom(room:Room) {
             this.room = room;
             this.curConnectedRoom = room;
         },
     },
-
     persist: {
         enabled: true,
         strategies: [
