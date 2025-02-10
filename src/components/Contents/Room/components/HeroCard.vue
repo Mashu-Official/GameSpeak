@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import {useCurUserState} from "../../../pinia/curUserState.ts";
+import {useCurUserState} from "../../../../pinia/curUserState.ts";
 
 const curUserState = useCurUserState()
 </script>

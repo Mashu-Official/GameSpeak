@@ -23,10 +23,10 @@
 
 <script setup lang="ts">
 import {reactive} from "vue";
-import MessagesCard from "../FuncCard/MessagesCard.vue";
+import MessagesCard from "./components/MessagesCard.vue";
 import Room from "./RoomsList.vue";
-import VoiceCard from "../FuncCard/VoiceCard.vue";
-import HeroCard from "../FuncCard/HeroCard.vue";
+import VoiceCard from "./components/VoiceCard.vue";
+import HeroCard from "./components/HeroCard.vue";
 import {useCurUserState} from "../../../pinia/curUserState.ts";
 import RoomsList from "./RoomsList.vue";
 

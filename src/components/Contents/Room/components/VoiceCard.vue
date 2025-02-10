@@ -25,12 +25,12 @@
 </template>
 
 <script setup lang="ts">
-import {useCurUserState} from "../../../pinia/curUserState.ts";
-import {Messages} from "../../../interface&enum/Messages.ts";
+import {useCurUserState} from "../../../../pinia/curUserState.ts";
+import {Messages} from "../../../../interface&enum/Messages.ts";
 import {nextTick, onMounted, onUnmounted, reactive, ref} from "vue";
-import {setWidth} from "../../../assets/js/dynamticOverflow.js";
-import {useHorizontalScroll} from "../../../assets/js/HorizontalScroll.ts";
-import {UserInVoiceRoom} from "../../../interface&enum/userInVoiceRoom.ts";
+import {setWidth} from "../../../../assets/js/dynamticOverflow.js";
+import {useHorizontalScroll} from "../../../../assets/js/HorizontalScroll.ts";
+import {UserInVoiceRoom} from "../../../../interface&enum/userInVoiceRoom.ts";
 import UserCard from "./UserCard.vue";
 
 const curUserState = useCurUserState()

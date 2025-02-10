@@ -104,7 +104,7 @@
 </template>
 
 <script setup lang="ts">
-import {UserInVoiceRoom} from "../../../interface&enum/userInVoiceRoom.ts";
+import {UserInVoiceRoom} from "../../../../interface&enum/userInVoiceRoom.ts";
 import {ref} from "vue";
 
 const user = ref<UserInVoiceRoom | any>()
