@@ -46,9 +46,12 @@
 
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
-import { useToast } from 'vue-toastification';
+import {ref, watch} from 'vue';
+import {useToast} from 'vue-toastification';
+import axiosReq from '../../../assets/js/axiosBase/axiosObject.js'
+import {useCurUserState} from "../../../pinia/curUserState.ts";
 
+const curUserState = useCurUserState()
 // 初始化 Toast
 const toast = useToast();
 
@@ -91,12 +94,42 @@ const verifyInput = () => {
 };
 
 // 登录提交函数
-const loginSubmit = () => {
+const loginSubmit = async () => {
     if (!verifyInput()) {
         return;
     }
     console.log(form.value);
-    toast.success("登录成功，正在跳转");
+    try {
+        const res = await axiosReq.post("/login", form.value)
+        curUserState.token = res.data.token
+        localStorage.setItem('token', res.data.token)
+        toast.warning("登录成功，正在跳转");
+    } catch (err) {
+        if (err.response) {
+            // 请求已发出，但服务器响应的状态码不在 2xx 范围内
+            console.log(err.response.data); // 服务器返回的数据
+            console.log(err.response.status); // HTTP 状态码
+            console.log(err.response.headers); // 响应头
+
+            // 根据状态码或响应数据提供不同的反馈
+            if (err.response.status === 404) {
+                toast.error(err.response.data.message)
+            } else if (err.response.status === 400) {
+                toast.error(err.response.data.message);
+            }
+
+        } else if (err.request) {
+            // 请求已发出，但没有收到响应
+            console.error('没有收到响应:', err.request);
+            toast.error("网络错误，请稍后再试");
+        } else {
+            // 一些设置请求时发生错误
+            console.error('Error', err.message);
+            toast.error("请求错误，请联系管理员");
+        }
+
+    }
+
 };
 
 

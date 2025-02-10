@@ -1,5 +1,5 @@
 
-export interface serverAttribute {
+export interface channelAttribute {
     id: number
     name: string,
     hashID: string,

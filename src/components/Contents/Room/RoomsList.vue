@@ -6,7 +6,7 @@
         <div>
             <div class="flex flex-row justify-between items-center px-4 relative">
                 <div class="text-xl">
-                    {{ curUserState.server.name || '找不到该服务器' }}
+                    {{ curUserState.channel.name || '找不到该服务器' }}
                 </div>
                 <button class="" @click="" title="设置">
                     <svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -74,7 +74,7 @@
                         <span class="whitespace-nowrap ml-2 py-2 font-semibold">{{ room.name }}</span>
                     </div>
 
-                    <span class="text-xs">{{ room.curMemberNum }}/{{ room.memberLimit }}</span>
+                    <span class="text-xs">{{ room.curMemberNum }}/{{ room.maximum }}</span>
                 </div>
             </div>
         </div>
@@ -87,8 +87,8 @@
 </template>
 
 <script setup lang="ts">
-import {nextTick, onMounted, onUnmounted, reactive, ref} from "vue";
-import {setHeightWithCalc} from '../../../assets/js/dynamticOverflow.js'
+import {nextTick, onMounted, onUnmounted, reactive, ref, watch} from "vue";
+
 import CreateRoom from "./ListComponets/CreateRoom.vue";
 
 import {RoomType} from "../../../interface&enum/RoomTypeEnum.ts";
@@ -97,36 +97,37 @@ import {Room} from "../../../interface&enum/Room.ts";
 import {useCurUserState} from "../../../pinia/curUserState.ts";
 
 import VoiceSetting from "./ListComponets/VoiceSetting.vue";
-import ListCard_behavior from "./ListComponets/ListCard_behavior.vue";
+import axiosReq from "../../../assets/js/axiosBase/axiosObject.js";
+import {useRoute} from "vue-router";
 
-
+const route = useRoute()
 const curUserState = useCurUserState()
 const isOpenModal = ref(false);
 
 onMounted(async () => {
-    await nextTick();
-    // await setHeightWithCalc(roomListRef, parentContainerRef)
-    state.roomsList = [
-        {
-            id: 1,
-            name: "文字聊天室",
-            type: RoomType.Text,
-            curMemberNum: 15,
-            memberLimit: 50
-        },
-        {
-            id: 1,
-            name: "语音",
-            type: RoomType.Voice,
-            curMemberNum: 15,
-            memberLimit: 50
-        },
-    ]
+    await getRoomList()
 });
 
 const state = reactive<{ roomsList: Room[] }>({
     roomsList: []
 })
+
+const getRoomList = async () => {
+    try {
+        const res = await axiosReq.get(`/api/channel/${route.params.hashID}`)
+        state.roomsList = res.data
+    }
+    catch (e) {
+
+    }
+}
+
+watch(() => route.params.hashID, async (newHashID) => {
+    if (newHashID) {
+        // console.log('hashID 变化:', newHashID);
+        await getRoomList();
+    }
+}, { immediate: true }); // 立即执行一次监听器
 
 const handleSubmit = (formData) => {
     // console.log(formData)
@@ -138,7 +139,6 @@ const handleSubmit = (formData) => {
         memberLimit: 50
     }
     state.roomsList.push(temp)
-
 }
 
 const enterRoom = (room) => {

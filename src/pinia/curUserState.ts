@@ -2,8 +2,9 @@ import { defineStore } from "pinia";
 import { useToast } from "vue-toastification";
 import router from "../router";
 
-import {serverAttribute} from "../interface&enum/ServerAttribute.ts";
+import {channelAttribute} from "../interface&enum/ChannelAttribute.ts";
 import {Room} from "../interface&enum/Room.ts";
+import {hideChannelName} from "../assets/js/channelName.ts";
 interface UserInfo {
     name: string | null;
     avatar: string | null;
@@ -12,7 +13,7 @@ interface UserInfo {
 // @ts-ignore
 export const useCurUserState = defineStore('useCurUserState', {
     state: () => ({
-        server: {} as Record<string, any>, // 根据实际情况调整类型
+        channel: {} as Record<string, any>, // 根据实际情况调整类型
         room: {} as Record<string, any>,   // 进入的 这个用于视图上
         curConnectedRoom: {} as Record<string, any>, // 进入并且链接上服务器的 用于功能逻辑
         userInfo: {
@@ -37,10 +38,10 @@ export const useCurUserState = defineStore('useCurUserState', {
             //     this.setting.microphoneSpeakType = 'voice-activated'; // 示例默认值
             // }
         },
-        enterServer(server:serverAttribute) {
+        enterChannel(channel:channelAttribute) {
             this.room = {}
-            router.push(`/server/${server.hashID}`).then(() => {
-                this.server = server;
+            router.push(`/channel/${channel.hashID}`).then(() => {
+                this.channel = channel;
             });
         },
         enterRoom(room:Room) {

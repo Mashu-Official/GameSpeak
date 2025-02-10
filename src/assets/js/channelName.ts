@@ -8,7 +8,7 @@ let serverNameElement = ref<HTMLElement | null>(null);
  * @param event 鼠标事件
  * @param serverName 服务器名称
  */
-export function showServerName(event: MouseEvent, serverName: string) {
+export function showChannelName(event: MouseEvent, serverName: string) {
     if (!serverNameElement.value) {
         serverNameElement.value = document.createElement('div');
         if (serverNameElement.value) {
@@ -35,7 +35,7 @@ export function showServerName(event: MouseEvent, serverName: string) {
 /**
  * 隐藏服务器名称提示
  */
-export function hideServerName() {
+export function hideChannelName() {
     if (serverNameElement.value) {
         serverNameElement.value.style.opacity = '0';
         // setTimeout(() => {

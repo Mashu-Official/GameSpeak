@@ -5,5 +5,6 @@ export interface Room {
     name: string,
     type: RoomType,
     curMemberNum: number,
-    memberLimit: number,
+    maximum: number,
+    havePassword: boolean,
 }

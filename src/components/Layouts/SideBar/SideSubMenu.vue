@@ -55,7 +55,9 @@
             :width="targetSettingPage === whichSettingPage['VoiceSetting'] ? 540 : 860 "
             :footer="false"
             :visible="isOpenDrawer"
+            popup-container="#parentNode"
             @cancel="closeDrawer()"
+            :esc-to-close="true"
             unmountOnClose
             ref="DrawerRef"
     >
@@ -63,8 +65,11 @@
         <WebSetting v-if="targetSettingPage == whichSettingPage['WebSetting']"/>
 
         <template #header>
-            <div class="text-xl font-bold">{{ targetSettingPage == whichSettingPage['VoiceSetting'] ? "语音设置" : "网页设置" }}</div>
-    </template>
+            <div class="flex flex-row justify-between items-center w-full">
+                <div class="text-xl font-bold">{{ targetSettingPage == whichSettingPage['VoiceSetting'] ? "语音设置" : "网页设置" }}</div>
+                <HeaderButton />
+            </div>
+        </template>
 
     </a-drawer>
 </template>
@@ -74,6 +79,7 @@ import {ref} from "vue";
 import VoiceSetting from "../../Contents/Setting/VoiceSetting.vue";
 import WebSetting from "../../Contents/Setting/WebSetting.vue";
 import {useToggleFlagStore} from "../../../pinia/toggleFlagStore.ts";
+import HeaderButton from "../../Contents/Setting/Components/HeaderButton.vue";
 
 const props = defineProps<{
     isOpenSubMenu: boolean;

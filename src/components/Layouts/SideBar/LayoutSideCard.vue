@@ -3,7 +3,7 @@
 
         <div class="overflow-hidden">
             <!--搜索-->
-            <div class="avatar" @mouseenter="showServerName($event, '搜索')" @mouseleave="hideServerName">
+            <div class="avatar" @mouseenter="showChannelName($event, '搜索')" @mouseleave="hideChannelName">
                 <div class="avatarContainer flex justify-center items-center">
                     <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M21 38C30.3888 38 38 30.3888 38 21C38 11.6112 30.3888 4 21 4C11.6112 4 4 11.6112 4 21C4 30.3888 11.6112 38 21 38Z"
@@ -17,7 +17,7 @@
                 </div>
             </div>
 
-            <div class="avatar" @mouseenter="showServerName($event, '私信')" @mouseleave="hideServerName">
+            <div class="avatar" @mouseenter="showChannelName($event, '私信')" @mouseleave="hideChannelName">
                 <div class="avatarContainer flex justify-center items-center">
                     <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M44.0001 24C44.0001 35.0457 35.0458 44 24.0001 44C18.0266 44 4.00006 44 4.00006 44C4.00006 44 4.00006 29.0722 4.00006 24C4.00006 12.9543 12.9544 4 24.0001 4C35.0458 4 44.0001 12.9543 44.0001 24Z"
@@ -40,23 +40,23 @@
         <div v-show="isSidebarOpen" ref="parentContainerRef"
              class="sidebar flex flex-col items-center relative overflow-hidden select-none flex-1">
 
-            <div class="serverList flex flex-col overflow-y-scroll" ref="serverListRef">
-                <div class="avatar" v-for="server in state.servers" :key="server.id"
-                     @dblclick="curSelectedState.enterServer(server)"
-                     @mouseenter="showServerName($event, server.name)"
-                     @mouseleave="hideServerName">
+            <div class="channelsList flex flex-col overflow-y-scroll" ref="channelsListRef">
+                <div class="avatar" v-for="channel in Channels" :key="channel.id"
+                     @dblclick="curUserState.enterChannel(channel)"
+                     @mouseenter="showChannelName($event, channel.name)"
+                     @mouseleave="hideChannelName">
 
-                    <div v-if="server.avatarURL"
-                         :class="{selectedAvatar : server.id === curSelectedState.server.id}"
+                    <div v-if="channel.avatarURL"
+                         :class="{selectedAvatar : channel.id === curUserState.channel.id}"
                          class="avatarContainer">
-                        <img class="object-cover w-full h-full " :src="server.avatarURL" :alt="server.avatarURL">
+                        <img class="object-cover w-full h-full " :src="channel.avatarURL" :alt="channel.avatarURL">
                     </div>
 
                     <div v-else
-                         :class="{selectedAvatar : server.id === curSelectedState.server.id}"
+                         :class="{selectedAvatar : channel.id === curUserState.channel.id}"
                          class="avatarContainer flex flex-col justify-center items-center">
                         <div class="text-2xl font-bold">
-                            {{ server.name.slice(0, 1) }}
+                            {{ channel.name.slice(0, 1) }}
                         </div>
                     </div>
                 </div>
@@ -85,14 +85,18 @@
 
 <script setup lang="ts">
 import {nextTick, onMounted, onUnmounted, reactive, ref} from "vue";
-import {hideServerName, showServerName} from "../../../assets/js/serverName.ts";
+import {hideChannelName, showChannelName} from "../../../assets/js/channelName.ts";
 import {useCurUserState} from "../../../pinia/curUserState.ts"
-import {serverAttribute} from "../../../interface&enum/ServerAttribute.ts";
-import {RoomType} from "../../../interface&enum/RoomTypeEnum.ts";
+import { channelAttribute } from "../../../interface&enum/ChannelAttribute.ts";
+import { RoomType } from "../../../interface&enum/RoomTypeEnum.ts";
 import SideSubMenu from "./SideSubMenu.vue";
 import {useToggleFlagStore} from "../../../pinia/toggleFlagStore.ts";
 import router from "../../../router";
+import { useToast } from 'vue-toastification';
+import axiosReq from '../../../assets/js/axiosBase/axiosObject.js'
 
+// 初始化 Toast
+const toast = useToast();
 // 控制侧边栏是否打开
 const isSidebarOpen = ref<boolean>(true)
 // 打开头像处的子菜单
@@ -100,7 +104,7 @@ const isOpenSubMenu = ref<boolean>(false)
 const subMenuElement = ref<HTMLDivElement>();
 const subMenuTrigger = ref<HTMLDivElement>()
 
-const curSelectedState = useCurUserState()
+const curUserState = useCurUserState()
 
 const toggleSubMenu = () =>{
     isOpenSubMenu.value = !isOpenSubMenu.value
@@ -119,37 +123,36 @@ const handleClickOutside = (event) => {
     }
 };
 
-const state = reactive<{ servers: serverAttribute[] }>({
-    servers: [],
-})
-state.servers = [
-    {
-        id: 1,
-        name: "豪华海景房",
-        hashID: "1234",
-        avatarURL: "https://cdn.jsdelivr.net/gh/Mashu-Official/Blog_IMG-Cabin/img/吧唧2.png"
-    },
-    {
-        id: 2,
-        name: "标准双人房",
-        hashID: "1263",
-        avatarURL: "https://ts3.cn.mm.bing.net/th?id=ORMS.d61fa58d01c4d56bd9e5bc4695579c84&pid=Wdp&w=268&h=140&qlt=90&c=1&rs=1&dpr=1&p=0"
-    },
-    {
-        id: 3,
-        name: "总统套房",
-        hashID: "123",
-        avatarURL: "https://ts3.cn.mm.bing.net/th?id=ORMS.d61fa58d01c4d56bd9e5bc4695579c84&pid=Wdp&w=268&h=140&qlt=90&c=1&rs=1&dpr=1&p=0"
-    },
-    {
-        id: 4,
-        name: "总统套房",
-        hashID: "123",
-        avatarURL: ""
-    },
-];
+const Channels = reactive<channelAttribute[]>([])
 
-onMounted(async () => {
+const getChannel = async () => {
+    try {
+        const res = await axiosReq.get("/api/channels")
+        Object.assign(Channels, res.data);
+    } catch (err) {
+        if (err.response) {
+            // 请求已发出，但服务器响应的状态码不在 2xx 范围内
+            console.log(err.response.data); // 服务器返回的数据
+            console.log(err.response.status); // HTTP 状态码
+            console.log(err.response.headers); // 响应头
+
+            if (err.response.status === 400){
+                toast.error(err.response.data.message)
+            }
+        } else if (err.request) {
+            // 请求已发出，但没有收到响应
+            console.error('没有收到响应:', err.request);
+            toast.error("网络错误，请稍后再试");
+        } else {
+            // 一些设置请求时发生错误
+            console.error('Error', err.message);
+            toast.error("请求错误，请联系管理员");
+        }
+
+    }
+}
+onMounted(async () =>{
+    await getChannel()
 
 });
 
@@ -160,13 +163,13 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-.serverList {
+.channelsList {
     overflow: auto;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE & Edge */
 }
 
-.serverList::webkit-scrollbar {
+.channelsList::webkit-scrollbar {
     display: none; /* WebKit 浏览器 */
 }
 
