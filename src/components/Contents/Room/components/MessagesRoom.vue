@@ -8,11 +8,13 @@
            <MessageCard/>
        </KeepAlive>
     </div>
+    <RoomSidebar class=""/>
 </template>
 
 <script setup lang="ts">
 import MessageCard from "./MessageCard.vue";
 import {useCurUserState} from "../../../../pinia/curUserState.ts";
+import RoomSidebar from "../RoomSidebar.vue";
 
 
 const curUserState = useCurUserState();

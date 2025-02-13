@@ -7,9 +7,9 @@
             </a-layout-content>
 
             <!--        <a-layout-sider :resize-directions="['left']" style="width: inherit;background-color: transparent;overflow: hidden">-->
-            <a-layout-sider style="width: inherit;background-color: transparent;overflow: hidden">
-                <RoomSidebar/>
-            </a-layout-sider>
+<!--            <a-layout-sider style="width: inherit;background-color: transparent;overflow: hidden">-->
+<!--                <RoomSidebar/>-->
+<!--            </a-layout-sider>-->
         </a-layout>
     </KeepAlive>
 </template>

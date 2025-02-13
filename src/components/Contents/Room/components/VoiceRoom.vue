@@ -1,13 +1,20 @@
 <template>
 
-    <div class="flex flex-col h-full w-full px-8 relative overflow-hidden">
-        <div class="text-xl">{{ curUserState.room.name || "找不到该房间" }}</div>
-        <div class="divide mb-4" style="width: 100%"></div>
+    <div class="flex flex-1 flex-col items-start h-full px-8 relative overflow-hidden">
 
         <VoiceCard class="h-1/3"/>
-        <div class="divide my-4"></div>
-        <MessageCard class="flex-1 h-full" :key="curUserState.room.id"/>
+
+        <div class="flex w-full h-full justify-start flex-1">
+            <div class="flex flex-col flex-1 mt-4">
+                <div class="text-xl ">{{ curUserState.room.name || "找不到该房间" }}</div>
+                <div class="divide mb-4" style="width: 100%"></div>
+                <MessageCard class="flex-1 h-full" :key="curUserState.room.id"/>
+            </div>
+
+            <RoomSidebar class="mt-4"/>
+        </div>
     </div>
+
 </template>
 
 <script setup lang="ts">
@@ -20,6 +27,7 @@ import {UserInVoiceRoom} from "../../../../interface&enum/userInVoiceRoom.ts";
 import UserCard from "./UserCard.vue";
 import VoiceCard from "./VoiceCard.vue";
 import MessageCard from "./MessageCard.vue";
+import RoomSidebar from "../RoomSidebar.vue";
 
 const curUserState = useCurUserState()
 

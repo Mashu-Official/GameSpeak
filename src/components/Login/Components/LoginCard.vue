@@ -82,7 +82,7 @@ const verifyInput = () => {
     for (let key in form.value) {
         if (form.value.hasOwnProperty(key)) {
             const value = form.value[key];
-            console.log([key, value]);
+            // console.log([key, value]);
             if (!value) {
                 const fieldName = fieldNames[key] || key;
                 toast.warning(`${fieldName} 不能为空`);
@@ -98,11 +98,16 @@ const loginSubmit = async () => {
     if (!verifyInput()) {
         return;
     }
-    console.log(form.value);
+    // console.log(form.value);
     try {
         const res = await axiosReq.post("/login", form.value)
         curUserState.token = res.data.token
         localStorage.setItem('token', res.data.token)
+        console.log(res)
+        curUserState.userInfo.id = res.data.userID
+        curUserState.userInfo.name = res.data.userName
+        curUserState.userInfo.avatar = res.data.userAvatar
+
         toast.warning("登录成功，正在跳转");
     } catch (err) {
         if (err.response) {
@@ -127,9 +132,7 @@ const loginSubmit = async () => {
             console.error('Error', err.message);
             toast.error("请求错误，请联系管理员");
         }
-
     }
-
 };
 
 

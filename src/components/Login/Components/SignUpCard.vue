@@ -110,6 +110,11 @@ const signupSubmit = async () => {
         const res = await axiosReq.post("/signup", form.value);
         curUserState.token = res.data.token
         localStorage.setItem('token', res.data.token)
+
+        curUserState.userInfo.id = res.data.userID
+        curUserState.userInfo.name = res.data.userName
+        curUserState.userInfo.avatar = res.data.userAvatar
+
         toast.success("注册成功，正在跳转");
     } catch (err) {
         if (err.response) {

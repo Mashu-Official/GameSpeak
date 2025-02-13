@@ -1,11 +1,11 @@
 <template>
-    <div class="flex flex-col items-start h-full min-w-[252px] pl-4 pr-4 relative pt-6">
-        <template v-if="curUserState.channel">
+    <div class="flex flex-col items-start h-full min-w-[252px] pl-4 relative ">
+        <template v-if="curUserState.channel"> 
 
             <div class="text-xl">在线成员</div>
             <div class="divide mb-4" style="width: 100%"></div>
 
-            <div class="memberList w-full pr-2">
+            <div class="memberList w-full pr-2 flex-1">
                 <!--房间列表-->
                 <div class="m-0 p-0 relative text-sm h-0 flex-1">
                     <div class="memberItem py-2 px-2 cursor-pointer mb-[2px]">

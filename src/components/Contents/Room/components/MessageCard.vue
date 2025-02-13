@@ -38,7 +38,7 @@
 
         <div class="flex mt-2 w-full pr-4">
             <div class="f-inp flex flex-row items-center w-full">
-                <input v-model="message" :placeholder="`向 ${curUserState.room.name} 发送消息`"
+                <input v-model="message" :placeholder="`向 ${ curUserState.room.name } 发送消息`"
                        @keyup.enter="sendMessage">
                 <button class="whitespace-nowrap" @click="sendMessage">发送</button>
             </div>

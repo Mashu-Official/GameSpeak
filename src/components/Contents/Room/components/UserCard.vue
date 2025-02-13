@@ -1,12 +1,12 @@
 <template>
 
-    <div class="box-border w-1/4 mb-2">
-        <div class="flex flex-col ViewCard p-0 mx-1 h-full ">
-            <div class="rounded-xl">
-                <img class="rounded-xl inline-block object-cover"
+    <div class="box-border xl:w-1/4 w-1/2 mb-2">
+        <div class="flex flex-col ViewCard p-0 mx-1">
+
+            <div class="rounded-lg w-full min-h-[128px] max-h-[128px] h-[128px] overflow-hidden object-center">
+                <img class="rounded-lg inline-block object-cover object-center w-full h-full"
                      :src="user.avatar"
                      :alt="`[${user.username || user.name}]${user.avatar}`">
-
             </div>
 
             <div class="px-4 pb-4 pt-2 ">

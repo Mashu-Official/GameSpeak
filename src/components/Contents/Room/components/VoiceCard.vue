@@ -1,10 +1,9 @@
 <template>
 
-    <div class="overflow-y-auto flex-shrink-0 select-none box-content">
+    <div class="overflow-y-auto flex-shrink-0 select-none box-content VoiceRoomMembers">
 
-        <div class="relative flex flex-wrap text-sm overflow-y-auto overflow-x-hidden flex-shrink-0 h-full VoiceRoomMembers"  ref="scrollRef">
+        <div class="relative flex flex-wrap text-sm overflow-x-hidden flex-shrink-0"  ref="scrollRef">
             <!--        这个是当前用户        -->
-
             <UserCard v-if="curUserState.userInfo.name" :user="curUserState.userInfo" />
 
             <template v-for="user in state.users" :key="user.uid">

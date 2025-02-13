@@ -6,6 +6,7 @@ import {channelAttribute} from "../interface&enum/ChannelAttribute.ts";
 import {Room} from "../interface&enum/Room.ts";
 import {hideChannelName} from "../assets/js/channelName.ts";
 interface UserInfo {
+    id: string | null
     name: string | null;
     avatar: string | null;
 }
@@ -17,6 +18,7 @@ export const useCurUserState = defineStore('useCurUserState', {
         room: {} as Record<string, any>,   // 进入的 这个用于视图上
         curConnectedRoom: {} as Record<string, any>, // 进入并且链接上服务器的 用于功能逻辑
         userInfo: {
+            id: null as string | null,
             name: null as string | null,
             avatar: null as string | null,
         } as UserInfo,
