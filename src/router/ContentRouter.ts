@@ -12,6 +12,7 @@ export const ContentRoute: Array<RouteRecordRaw> = [
         path: '',
         component: LayoutContent,
         children: [
+
             {
                 path: '/channel/:hashID',
                 name: 'room',

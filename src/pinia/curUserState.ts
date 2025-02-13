@@ -24,6 +24,10 @@ export const useCurUserState = defineStore('useCurUserState', {
         isElectronEnv: !!window.ipcRenderer, // 判断是否在Electron环境中
     }),
     actions: {
+        initSelect(){
+            this.channel = {}
+            this.room = {}
+        },
         initSetting() {
             // 在这里可以添加逻辑来检查是否有默认设置需要被应用
             // 例如，可以从后端获取默认设置或者设定一些初始值

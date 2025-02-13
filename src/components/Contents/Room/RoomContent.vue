@@ -7,15 +7,20 @@
         <!--默认窗口-->
         <HeroCard v-if="!curUserState.room"/>
 
-        <!--聊天窗口-->
         <KeepAlive>
-            <MessagesCard v-if="curUserState.room.type === 'Text'"/>
+            <template  v-if="curUserState.room.type === 'Text'">
+                <!--聊天窗口-->
+                <MessagesCard :key="curUserState.room.id"/>
+            </template>
         </KeepAlive>
-        <!--语音窗口-->
+
+
         <KeepAlive>
-            <VoiceCard v-if="curUserState.room.type === 'Voice' "/>
+            <template v-if="curUserState.room.type === 'Voice' ">
+                <!--语音窗口-->
+                <VoiceCard :key="curUserState.room.id"/>
+            </template>
         </KeepAlive>
-        <!--        </div>-->
     </div>
 
 
@@ -23,9 +28,9 @@
 
 <script setup lang="ts">
 import {reactive} from "vue";
-import MessagesCard from "./components/MessagesCard.vue";
+import MessagesCard from "./components/MessagesRoom.vue";
 import Room from "./RoomsList.vue";
-import VoiceCard from "./components/VoiceCard.vue";
+import VoiceCard from "./components/VoiceRoom.vue";
 import HeroCard from "./components/HeroCard.vue";
 import {useCurUserState} from "../../../pinia/curUserState.ts";
 import RoomsList from "./RoomsList.vue";
@@ -35,8 +40,5 @@ const curUserState = useCurUserState()
 </script>
 
 <style scoped>
-.messageTime {
-    font-size: 12px;
-}
 
 </style>

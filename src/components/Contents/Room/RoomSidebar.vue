@@ -1,6 +1,6 @@
 <template>
-    <div class="flex flex-col items-start h-full min-w-[262px] pl-8 pr-4 relative pt-6">
-        <template v-if="curUserState.server">
+    <div class="flex flex-col items-start h-full min-w-[252px] pl-4 pr-4 relative pt-6">
+        <template v-if="curUserState.channel">
 
             <div class="text-xl">在线成员</div>
             <div class="divide mb-4" style="width: 100%"></div>

@@ -3,6 +3,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 // @ts-ignore
 import Main from "../components/Layout.vue";
 import {ContentRoute} from "./ContentRouter.ts";
+// import { useCurUserState } from "../pinia/curUserState.ts";
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -10,7 +11,7 @@ const routes: Array<RouteRecordRaw> = [
         component: Main,
         children: [
             ...ContentRoute  // Content功能路由
-        ]
+        ],
     }
 ];
 
