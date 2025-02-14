@@ -4,7 +4,7 @@
         <div class="flex flex-row justify-between items-start w-full">
             <div class="w-16 h-16 circle overflow-hidden ml-2">
                 <img class="object-cover w-full h-full circle"
-                     src="https://cdn.jsdelivr.net/gh/Mashu-Official/Blog_IMG-Cabin/img2e632b0f1be954a022bc8549a941107f.png"
+                     :src="curUserState.userInfo.avatar"
                      alt="">
             </div>
 
@@ -16,7 +16,7 @@
 
         </div>
         <div class="flex flex-col w-full whitespace-nowrap my-1 mb-2 ml-2">
-            <span class="text-lg font-semibold">{{ "yuw" }}</span>
+            <span class="text-lg font-semibold">{{ curUserState.userInfo.name }}</span>
         </div>
 
         <div class="flex flex-col w-full space-y-1">
@@ -80,11 +80,13 @@ import VoiceSetting from "../../Contents/Setting/VoiceSetting.vue";
 import WebSetting from "../../Contents/Setting/WebSetting.vue";
 import {useToggleFlagStore} from "../../../pinia/toggleFlagStore.ts";
 import HeaderButton from "../../Contents/Setting/Components/HeaderButton.vue";
+import {useCurUserState} from "../../../pinia/curUserState.ts";
 
 const props = defineProps<{
     isOpenSubMenu: boolean;
 }>()
 const emit = defineEmits(['emit'])
+const curUserState = useCurUserState()
 
 const isOpenDrawer = ref(false);
 const custom = ref([])

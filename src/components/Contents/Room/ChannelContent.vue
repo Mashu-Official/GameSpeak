@@ -27,16 +27,46 @@
 </template>
 
 <script setup lang="ts">
-import {reactive} from "vue";
-import MessagesRoom from "./components/MessagesRoom.vue";
+import {onMounted, reactive, watch} from "vue";
+import MessagesRoom from "./components/Message/MessagesRoom.vue";
 import Room from "./RoomsList.vue";
-import VoiceRoom from "./components/VoiceRoom.vue";
+import VoiceRoom from "./components/Voice/VoiceRoom.vue";
 import HeroCard from "./components/HeroCard.vue";
 import {useCurUserState} from "../../../pinia/curUserState.ts";
 import RoomsList from "./RoomsList.vue";
+import io from "socket.io-client";
+import {useChannelState} from "../../../pinia/ChannelState.ts";
+import {useRoute} from "vue-router";
 
 const curUserState = useCurUserState()
+const channelState = useChannelState()
+const route = useRoute()
+onMounted(()=>{
+    // curUserState.room = {}
+})
 
+const socket = io('http://127.0.0.1:42224/ws', {
+    path: '/ws/'
+});
+
+watch(() => channelState.memberChangeFlag,()=>{
+    if (channelState.memberChangeFlag){
+        socket.emit('refresh')
+        channelState.memberChangeFlag = !channelState.memberChangeFlag
+    }
+},{
+    immediate:true,
+    deep:true
+})
+socket.emit('joinChannel',curUserState.channel.hashID)
+socket.on('joinedChannel',(r)=>{
+    console.log(r)
+})
+onMounted(()=>{
+    socket.on('refreshed',()=>{
+        channelState.getRoomList(`/api/channel/${route.params.hashID}`)
+    })
+})
 </script>
 
 <style scoped>

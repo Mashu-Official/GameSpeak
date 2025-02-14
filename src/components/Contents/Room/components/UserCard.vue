@@ -1,9 +1,9 @@
 <template>
 
-    <div class="box-border xl:w-1/4 w-1/2 mb-2">
+    <div class="box-border mb-2 ">
         <div class="flex flex-col ViewCard p-0 mx-1">
 
-            <div class="rounded-lg w-full min-h-[128px] max-h-[128px] h-[128px] overflow-hidden object-center">
+            <div class="rounded-lg  min-h-[128px] max-h-[128px] h-[128px] w-[242px] overflow-hidden object-center">
                 <img class="rounded-lg inline-block object-cover object-center w-full h-full"
                      :src="user.avatar"
                      :alt="`[${user.username || user.name}]${user.avatar}`">
@@ -40,7 +40,7 @@
                                   stroke-linejoin="round"/>
                             <line x1="0" y1="0" x2="48" y2="48" stroke="#ff0000ff" stroke-width="5"/>
                         </svg>
-                        <span class="ml-2 text-sm">{{ true ? '按键发言' : '自由发言'}}</span>
+                        <span class="ml-2 text-sm">{{ true ? '按键发言' : '自由发言' }}</span>
                     </button>
                     <div v-else></div>
 
@@ -113,10 +113,9 @@ import {ref} from "vue";
 const user = ref<UserInVoiceRoom | any>()
 const props = defineProps<{ user: UserInVoiceRoom }>();
 // console.log(props)
-if (props){
+if (props) {
     user.value = props.user
-}
-else {
+} else {
     user.value = null
 }
 

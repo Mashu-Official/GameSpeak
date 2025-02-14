@@ -6,17 +6,13 @@
                 <RoomContent/>
             </a-layout-content>
 
-            <!--        <a-layout-sider :resize-directions="['left']" style="width: inherit;background-color: transparent;overflow: hidden">-->
-<!--            <a-layout-sider style="width: inherit;background-color: transparent;overflow: hidden">-->
-<!--                <RoomSidebar/>-->
-<!--            </a-layout-sider>-->
         </a-layout>
     </KeepAlive>
 </template>
 
 <script setup lang="ts">
 import RoomSidebar from "./RoomSidebar.vue";
-import RoomContent from "./RoomContent.vue";
+import RoomContent from "./ChannelContent.vue";
 </script>
 
 <style scoped>

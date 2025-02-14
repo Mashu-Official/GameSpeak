@@ -48,38 +48,20 @@
 
 
 <script setup lang="ts">
-import {useCurUserState} from "../../../../pinia/curUserState.ts";
-import {Messages} from "../../../../interface&enum/Messages.ts";
+import {useCurUserState} from "../../../../../pinia/curUserState.ts";
+import {Messages} from "../../../../../interface&enum/Messages.ts";
 import {nextTick, onBeforeUnmount, onMounted, reactive, ref, watch} from "vue";
 import io from 'socket.io-client';
+import {useChannelState} from "../../../../../pinia/ChannelState.ts";
+import {useRoute} from "vue-router";
 
-
+const route = useRoute()
 const curUserState = useCurUserState();
+const channelState =  useChannelState()
 const state = reactive<{ messages: Messages[] }>({
     messages: []
 });
 const message = ref<string>('');
-const roomName = ref<string>('123'); // 房间名称
-
-// Socket 实例
-const socket = io('http://127.0.0.1:42224/message', {
-    path: '/message/'
-});
-
-// 加入房间
-const initMessages = () => {
-    const roomWebSocketID = `${curUserState.channel.hashID}-${curUserState.room.id}`
-    console.log(roomWebSocketID)
-    socket.emit("joinRoom", {
-        roomID: curUserState.room.id,   // 数据库上的ID
-        roomWebSocketID: roomWebSocketID,  // WS房间ID
-    })
-
-    socket.emit("getMessage")
-}
-// })
-initMessages()
-
 const messageContainer = ref(null)
 
 const scrollToBottom = async () => {
@@ -102,49 +84,60 @@ watch(() => state.messages, () => {
 }, {
     immediate: true,
     deep: true,
-});  // immediate: true 确保组件初次加载时也能滚动到底部
+});
 
+const socket = io('http://127.0.0.1:42224/ws', {
+    path: '/ws/'
+});
 
-socket.on("joinedRoom", (r) => {
-    console.log(r)
-})
-socket.on("getMessage", (messageList) => {
-    console.log(messageList)
-    state.messages.push(...messageList)
-})
+const joinRoom = () => {
+    const roomWebSocketID = `${curUserState.channel.hashID}-${curUserState.room.id}`
+    // console.log(roomWebSocketID)
+    socket.emit("joinRoom", {
+        channelID: curUserState.channel.hashID,  // 频道ID
+        roomID: curUserState.room.id,   // 数据库上的ID
+        roomWebSocketID: roomWebSocketID,  // WS房间ID
+        userID: curUserState.userInfo.id,
+    })
+    socket.once('joinedRoom',(messageList)=>{
+        // console.log(messageList)
+        state.messages.push(...messageList)
+        // channelState.getRoomList(`/api/channel/${route.params.hashID}`)
+        channelState.memberChangeFlag = true
+    })
+}
 
-
-socket.on("message", (message) => {
-    console.log(message)
-    state.messages.push(message)
-})
-
-watch(() => curUserState.room.name, () => {
-    if (socket) {
-        socket.close(); // 关闭socket连接
-        console.log('关闭')
-    }
-}, {
-    deep: true
-})
-// 发送消息
 const sendMessage = () => {
     if (!message.value.trim()) return; // 确保消息不为空
     const msgFrame = {
-        userID: 1,
+        userID: curUserState.userInfo.id,
         content: message.value
     };
-    socket.emit('message', msgFrame); // 发送消息给服务器
+    socket.emit('sentMessage', msgFrame); // 发送消息给服务器
     message.value = ''; // 清空输入框
 };
+
+const receiveMessage = () =>{
+    socket.on('receiveMessage',(newMessage)=>{
+        console.log(newMessage)
+        state.messages.push(newMessage)
+    })
+}
+
+joinRoom()
+receiveMessage()
+
+socket.on('memberChange', (users)=>{
+    channelState.roomMember = users
+})
 
 onBeforeUnmount(() => {
     if (socket) {
         socket.close(); // 关闭socket连接
+        // channelState.getRoomList(`/api/channel/${route.params.hashID}`)
+        channelState.memberChangeFlag = true
     }
 });
-
-//  一坨屎
 </script>
 
 <style scoped>

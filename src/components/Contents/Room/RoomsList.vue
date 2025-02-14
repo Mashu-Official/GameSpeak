@@ -49,61 +49,17 @@
 import {nextTick, onMounted, onUnmounted, reactive, ref, watch} from "vue";
 
 import CreateRoom from "./ListComponets/CreateRoom.vue";
-
-import {RoomType} from "../../../interface&enum/RoomTypeEnum.ts";
-import {Room} from "../../../interface&enum/Room.ts";
-
 import {useCurUserState} from "../../../pinia/curUserState.ts";
-
 import VoiceSetting from "./ListComponets/VoiceSetting.vue";
-import axiosReq from "../../../assets/js/axiosBase/axiosObject.js";
 import {useRoute} from "vue-router";
 import RoomListItem from "./ListComponets/RoomListItem.vue";
 
 const route = useRoute()
 const curUserState = useCurUserState()
+
 const isOpenModal = ref(false);
 
-onMounted(async () => {
-    await getRoomList()
-});
 
-const state = reactive<{ roomsList: Room[] }>({
-    roomsList: []
-})
-
-const getRoomList = async () => {
-    try {
-        const res = await axiosReq.get(`/api/channel/${route.params.hashID}`)
-        state.roomsList = res.data
-    }
-    catch (e) {
-
-    }
-}
-
-watch(() => route.params.hashID, async (newHashID) => {
-    if (newHashID) {
-        // console.log('hashID 变化:', newHashID);
-        await getRoomList();
-    }
-}, { immediate: true }); // 立即执行一次监听器
-
-const handleSubmit = (formData) => {
-    // console.log(formData)
-    const temp = {
-        id: 1,
-        name: formData.roomName,
-        type: formData.type,
-        curMemberNum: 15,
-        memberLimit: 50
-    }
-    state.roomsList.push(temp)
-}
-
-const enterRoom = (room) => {
-    curUserState.room = room
-}
 
 </script>
 

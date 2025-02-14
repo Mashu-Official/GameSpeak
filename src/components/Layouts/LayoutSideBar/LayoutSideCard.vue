@@ -69,7 +69,7 @@
         <div v-if="true" class="flex justify-center items-center overflow-hidden w-[52px] h-[52px] mt-2 mb-4 circle cursor-pointer select-none relative"
         @click.stop="toggleSubMenu">
             <img class="object-cover w-full h-full"
-                 src="https://cdn.jsdelivr.net/gh/Mashu-Official/Blog_IMG-Cabin/img2e632b0f1be954a022bc8549a941107f.png" alt="">
+                 :src="curUserState.userInfo.avatar" alt="">
 
         </div>
 

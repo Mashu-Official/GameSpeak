@@ -1,5 +1,5 @@
 <template>
-    <template  v-for="room in state.roomsList" :key="room.id">
+    <template  v-for="room in channelState.roomList" :key="room.id">
         <div class="roomItem px-3 py-1.5 cursor-pointer mb-[2px]"
              @dblclick="curUserState.enterRoom(room)">
 
@@ -57,51 +57,42 @@ import {useCurUserState} from "../../../../pinia/curUserState.ts";
 import VoiceSetting from "./VoiceSetting.vue";
 import axiosReq from "../../../../assets/js/axiosBase/axiosObject.js";
 import {useRoute} from "vue-router";
+import {useChannelState} from "../../../../pinia/ChannelState.ts";
 
 const route = useRoute()
 const curUserState = useCurUserState()
+const channelState = useChannelState()
 const isOpenModal = ref(false);
 
+
+
 onMounted(async () => {
-    await getRoomList()
+    await channelState.getRoomList(`/api/channel/${route.params.hashID}`)
 });
-
-const state = reactive<{ roomsList: Room[] }>({
-    roomsList: []
-})
-
-const getRoomList = async () => {
-    try {
-        const res = await axiosReq.get(`/api/channel/${route.params.hashID}`)
-        state.roomsList = res.data
-    }
-    catch (e) {
-
-    }
-}
 
 watch(() => route.params.hashID, async (newHashID) => {
     if (newHashID) {
-        // console.log('hashID 变化:', newHashID);
-        await getRoomList();
+        await channelState.getRoomList(`/api/channel/${route.params.hashID}`)
     }
 }, { immediate: true }); // 立即执行一次监听器
 
-const handleSubmit = (formData) => {
-    // console.log(formData)
-    const temp = {
-        id: 1,
-        name: formData.roomName,
-        type: formData.type,
-        curMemberNum: 15,
-        memberLimit: 50
-    }
-    state.roomsList.push(temp)
-}
+// const handleSubmit = (formData) => {
+//     // console.log(formData)
+//     const temp = {
+//         id: 1,
+//         name: formData.roomName,
+//         type: formData.type,
+//         curMemberNum: 15,
+//         memberLimit: 50
+//     }
+//     state.roomsList.push(temp)
+// }
 
 const enterRoom = (room) => {
     curUserState.room = room
 }
+
+
 </script>
 
 <style scoped>

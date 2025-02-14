@@ -59,7 +59,7 @@
 
 </style>
 <script setup>
-import SideCard from "./Layouts/SideBar/LayoutSideCard.vue";
+import SideCard from "./Layouts/LayoutSideBar/LayoutSideCard.vue";
 import LayoutHeader from "./Layouts/LayoutHeader.vue";
 import LayoutContent from "./Layouts/LayoutContent.vue";
 import {initThemeBtn, useThemeStore} from "../pinia/themeStore.js";
