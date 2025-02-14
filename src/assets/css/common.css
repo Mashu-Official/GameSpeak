@@ -28,3 +28,12 @@ body {
 select {
     appearance: none; /* 移除默认的下拉箭头 */
 }
+
+img {
+    image-rendering: smooth;
+    /*image-rendering: -moz-crisp-edges;*/
+    /*image-rendering: -o-crisp-edges;*/
+    /*image-rendering: -webkit-optimize-contrast;*/
+    /*image-rendering: crisp-edges;*/
+    /*-ms-interpolation-mode: nearest-neighbor;*/
+}

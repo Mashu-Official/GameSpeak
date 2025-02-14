@@ -1,6 +1,6 @@
 <template>
-    <template  v-for="room in channelState.roomList" :key="room.id">
-        <div class="roomItem px-3 py-1.5 cursor-pointer mb-[2px]"
+    <div class="mb-[2px]" v-for="room in channelState.roomList" :key="room.id">
+        <div class="roomItem px-3 py-1.5 cursor-pointer" :class="{ 'roomItem_Active' : curUserState.room.id === room.id}"
              @dblclick="curUserState.enterRoom(room)">
 
             <div class="flex flex-row items-center">
@@ -40,8 +40,17 @@
             </div>
 
             <span class="text-xs">{{ room.curMemberNum }}/{{ room.maximum }}</span>
+
         </div>
-    </template>
+        <div class="ml-4 px-4 py-1.5 flex justify-between items-center">
+            <div class="w-6 h-6">
+                <img class="w-full h-full object-center object-cover circle" src="https://cdn.jsdelivr.net/gh/Mashu-Official/Blog_IMG-Cabin/img2e632b0f1be954a022bc8549a941107f.png">
+            </div>
+            <div class="">
+                {{ 123 }}
+            </div>
+        </div>
+    </div>
 </template>
 
 <script setup lang="ts">

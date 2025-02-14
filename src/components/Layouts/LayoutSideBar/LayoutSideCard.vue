@@ -151,6 +151,7 @@ const getChannel = async () => {
 
     }
 }
+
 onMounted(async () =>{
     await getChannel()
 

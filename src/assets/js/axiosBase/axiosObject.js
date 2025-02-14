@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useCurUserState } from "@/pinia/curUserState.ts";
+import router from "../../../router/index.ts";
 
 const axiosReq = axios.create({
     // baseURL: import.meta.env.VITE_BASE_URL,
@@ -8,7 +9,6 @@ const axiosReq = axios.create({
     headers: {'X-Custom-Header': 'foobar'},
     withCredentials : true
 })
-
 
 // 请求拦截器：在请求发送前自动添加 Authorization 头部
 axiosReq.interceptors.request.use((config) => {
@@ -37,6 +37,7 @@ axiosReq.interceptors.response.use((response) => {
         // 清除本地存储中的 token
         localStorage.removeItem('token');
         // 可以在此处重定向到登录页面
+        router.push('/login')
     }
     return Promise.reject(error);
 });

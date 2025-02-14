@@ -4,7 +4,7 @@
 
         <div class="relative flex flex-wrap text-sm overflow-x-hidden flex-shrink-0"  ref="scrollRef">
             <!--        这个是当前用户        -->
-            <UserCard v-if="curUserState.userInfo.name" :user="curUserState.userInfo" />
+            <UserCard v-if="curUserState.userInfo.name" :user="curUserState.userInfo"  />
 
             <template v-for="user in channelState.roomMember" :key="user.id">
                 <UserCard :user="user" v-if="curUserState.userInfo.id !== user.id"/>

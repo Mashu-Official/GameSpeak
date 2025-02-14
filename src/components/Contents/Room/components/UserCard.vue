@@ -6,15 +6,15 @@
             <div class="rounded-lg  min-h-[128px] max-h-[128px] h-[128px] w-[242px] overflow-hidden object-center">
                 <img class="rounded-lg inline-block object-cover object-center w-full h-full"
                      :src="user.avatar"
-                     :alt="`[${user.username || user.name}]${user.avatar}`">
+                     :alt="`[${user.name}]${user.avatar}`">
             </div>
 
             <div class="px-4 pb-4 pt-2 ">
                 <span class="text-base">{{ user.username || user.name }}</span>
 
-                <div class="flex flex-row items-center justify-between mt-1">
+                <div class="flex flex-row items-center justify-between mt-2.5">
 
-                    <button v-if="user.name" class="flex flex-row items-center whitespace-nowrap">
+                    <button v-if="user.id === useCurUserState().userInfo.id" class="flex flex-row items-center whitespace-nowrap">
                         <svg v-show="1" width="20" height="20" viewBox="0 0 48 48" fill="none"
                              xmlns="http://www.w3.org/2000/svg">
                             <rect x="17" y="4" width="14" height="27" rx="7" fill="none" stroke="currentColor"
@@ -109,6 +109,7 @@
 <script setup lang="ts">
 import {UserInVoiceRoom} from "../../../../interface&enum/userInVoiceRoom.ts";
 import {ref} from "vue";
+import {useCurUserState} from "../../../../pinia/curUserState.ts";
 
 const user = ref<UserInVoiceRoom | any>()
 const props = defineProps<{ user: UserInVoiceRoom }>();

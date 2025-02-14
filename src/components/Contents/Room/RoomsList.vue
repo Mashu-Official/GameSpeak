@@ -35,7 +35,7 @@
 
             <div class="m-0 p-0 relative text-sm px-4 h-0 flex-1">
                 <!--房间列表-->
-                <RoomListItem/>
+                <RoomListItem />
             </div>
         </div>
 
