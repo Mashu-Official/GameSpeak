@@ -11,8 +11,8 @@
 </template>
 
 <script setup lang="ts">
-import RoomSidebar from "./RoomSidebar.vue";
-import RoomContent from "./ChannelContent.vue";
+import RoomSidebar from "./Room/RoomSidebar.vue";
+import RoomContent from "./Room/ChannelContent.vue";
 </script>
 
 <style scoped>

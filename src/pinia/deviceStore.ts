@@ -15,9 +15,12 @@ export const useDevicesStore = defineStore('useDevicesStore', {
         defaultAudioOutput: null as MediaDeviceInfo | null,  // 默认输出
         // 音量
         inputVolume: 100 as number,   // 输入音量
+        inputVolumeBefore: 100 as number,   // 改动前的输入音量
         outputVolume: 100 as number,   // 输出音量
+        outputVolumeBefore: 100 as number,   // 改动前的输出音量
         // 按键说话
-        pressToSpeak: true,
+        pressToSpeak: true as boolean,
+        pressKey: '' as string,
         // WebRTC相关
         mediaStream: null as MediaStream | null, // 当前音频流
         audioContext: null as AudioContext | null, // 当前音频上下文
@@ -104,6 +107,20 @@ export const useDevicesStore = defineStore('useDevicesStore', {
                 await this.startMic();
             }
         },
+        toggleMicroPhone(){
+            if (this.inputVolume === 0){
+                this.inputVolume = this.inputVolumeBefore
+            }else {
+                this.inputVolume = 0
+            }
+        },
+        toggleAudioOutput(){
+            if (this.outputVolume === 0){
+                this.outputVolume = this.outputVolumeBefore
+            }else {
+                this.outputVolume = 0
+            }
+        }
     },
     persist: {
         enabled: true,
