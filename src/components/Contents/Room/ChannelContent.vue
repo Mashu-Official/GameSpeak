@@ -49,6 +49,12 @@ const socket = io('http://127.0.0.1:42224/ws', {
     path: '/ws/'
 });
 
+// 加入频道 进入监听
+socket.emit('joinChannel',curUserState.channel.hashID)
+socket.on('joinedChannel',(r)=>{
+    console.log(r)
+})
+// 监听频道人数变化
 watch(() => channelState.memberChangeFlag,()=>{
     if (channelState.memberChangeFlag){
         socket.emit('refresh')
@@ -58,12 +64,11 @@ watch(() => channelState.memberChangeFlag,()=>{
     immediate:true,
     deep:true
 })
-socket.emit('joinChannel',curUserState.channel.hashID)
-socket.on('joinedChannel',(r)=>{
-    console.log(r)
-})
+
 onMounted(()=>{
-    socket.on('refreshed',()=>{
+    socket.on('refreshed',(roomsMember)=>{
+        console.log(roomsMember)
+        channelState.roomsMember = roomsMember
         channelState.getRoomList(`/api/channel/${route.params.hashID}`)
     })
 })

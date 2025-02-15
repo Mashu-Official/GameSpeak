@@ -128,6 +128,7 @@ joinRoom()
 receiveMessage()
 
 socket.on('memberChange', (users)=>{
+    // console.log(users)
     channelState.roomMember = users
 })
 

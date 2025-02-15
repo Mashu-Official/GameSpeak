@@ -1,6 +1,6 @@
 <template>
     <div class="mb-[2px]" v-for="room in channelState.roomList" :key="room.id">
-        <div class="roomItem px-3 py-1.5 cursor-pointer" :class="{ 'roomItem_Active' : curUserState.room.id === room.id}"
+        <div class="roomItem px-3 py-1.5 cursor-pointer mb-[4px]" :class="{ 'roomItem_Active' : curUserState.room.id === room.id}"
              @dblclick="curUserState.enterRoom(room)">
 
             <div class="flex flex-row items-center">
@@ -42,14 +42,25 @@
             <span class="text-xs">{{ room.curMemberNum }}/{{ room.maximum }}</span>
 
         </div>
-        <div class="ml-4 px-4 py-1.5 flex justify-between items-center">
-            <div class="w-6 h-6">
-                <img class="w-full h-full object-center object-cover circle" src="https://cdn.jsdelivr.net/gh/Mashu-Official/Blog_IMG-Cabin/img2e632b0f1be954a022bc8549a941107f.png">
+        <template v-for="item in channelState.roomsMember">
+            <div class="ml-6 userItem cursor-pointer" v-if="room.id === item.roomID" v-for="user in item.users">
+                <div class="px-4 py-1.5 flex justify-between items-center">
+                    <div class="w-6 h-6">
+                        <img class="w-full h-full object-center object-cover circle"
+                             :src="user.avatar"
+                             alt="">
+                    </div>
+                    <div class="">
+                        {{ user.name }}
+                    </div>
+                    <div class="">
+
+                    </div>
+                </div>
             </div>
-            <div class="">
-                {{ 123 }}
-            </div>
-        </div>
+
+        </template>
+
     </div>
 </template>
 
@@ -84,6 +95,10 @@ watch(() => route.params.hashID, async (newHashID) => {
         await channelState.getRoomList(`/api/channel/${route.params.hashID}`)
     }
 }, { immediate: true }); // 立即执行一次监听器
+
+// const roomMember = channelState.roomsMember.filter((room)=>{
+//     room.roomID === room.id
+// })
 
 // const handleSubmit = (formData) => {
 //     // console.log(formData)
@@ -136,13 +151,11 @@ const enterRoom = (room) => {
     background-color: rgb(28 28 32 / var(--tw-bg-opacity));
 }
 
-/* 设置滚动条的宽度 */
 .roomList::-webkit-scrollbar {
     width: 3px;
     display: block;
 }
 
-/* 设置滚动条的背景 */
 .roomList::-webkit-scrollbar-track {
     background: #ffffff;
     border-radius: 10px;
@@ -153,7 +166,6 @@ const enterRoom = (room) => {
     border-radius: 10px;
 }
 
-/* 设置滚动条的滑块 */
 .roomList::-webkit-scrollbar-thumb {
     background: #a2a2a2;
     border-radius: 10px;
@@ -172,5 +184,18 @@ const enterRoom = (room) => {
 
 .roomList::-webkit-scrollbar-corner {
     background: #f1f1f1;
+}
+
+.userItem {
+    border-radius: 0.5rem;
+    transition: background-color ease-in-out 0.15s;
+}
+
+.userItem:hover {
+    background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
+:is(.dark .userItem:hover) {
+    background-color: rgb(28 28 32 / var(--tw-bg-opacity));
 }
 </style>

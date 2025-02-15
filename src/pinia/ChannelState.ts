@@ -9,7 +9,7 @@ export const useChannelState = defineStore('useChannelState', {
     state: () => ({
         roomList: [] as Room[],
         memberChangeFlag: false as boolean,
-        roomMember: [] as UserInVoiceRoom[],
+        roomsMember: [] as UserInVoiceRoom[],
     }),
     actions: {
         async getRoomList (url:string){
