@@ -43,7 +43,7 @@
 
         </div>
         <template v-for="item in channelState.roomsMember">
-            <div class="ml-6 userItem cursor-pointer" v-if="room.id === item.roomID" v-for="user in item.users">
+            <div class="ml-6 userItem cursor-pointer select-none" v-if="room.id === item.roomID" v-for="user in item.users">
                 <div class="px-4 py-1.5 flex justify-between items-center">
                     <div class="w-6 h-6">
                         <img class="w-full h-full object-center object-cover circle"
@@ -82,9 +82,6 @@ import {useChannelState} from "../../../../pinia/ChannelState.ts";
 const route = useRoute()
 const curUserState = useCurUserState()
 const channelState = useChannelState()
-const isOpenModal = ref(false);
-
-
 
 onMounted(async () => {
     await channelState.getRoomList(`/api/channel/${route.params.hashID}`)
@@ -96,21 +93,6 @@ watch(() => route.params.hashID, async (newHashID) => {
     }
 }, { immediate: true }); // 立即执行一次监听器
 
-// const roomMember = channelState.roomsMember.filter((room)=>{
-//     room.roomID === room.id
-// })
-
-// const handleSubmit = (formData) => {
-//     // console.log(formData)
-//     const temp = {
-//         id: 1,
-//         name: formData.roomName,
-//         type: formData.type,
-//         curMemberNum: 15,
-//         memberLimit: 50
-//     }
-//     state.roomsList.push(temp)
-// }
 
 const enterRoom = (room) => {
     curUserState.room = room

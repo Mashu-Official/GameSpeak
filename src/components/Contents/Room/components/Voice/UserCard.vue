@@ -9,7 +9,7 @@
                      :alt="`[${user.name}]${user.avatar}`">
             </div>
 
-            <div class="px-4 pb-4 pt-2">
+            <div class="px-4 pb-2.5 pt-2">
                 <span class="text-base">{{ user.username || user.name }}</span>
 
                 <div class="flex flex-row items-center justify-between mt-2.5">
@@ -28,20 +28,20 @@
                         <OutputBTN v-else :state="null" :displayPosition="'bottom'"/>
 
                         <!--踢人按钮-->
-                        <!--                                    <button>-->
-                        <!--                                        <svg width="20" height="20" viewBox="0 0 48 48" fill="none"-->
-                        <!--                                             xmlns="http://www.w3.org/2000/svg">-->
-                        <!--                                            <path d="M23.9917 6H6V42H24" stroke="#ff0000" stroke-width="4"-->
-                        <!--                                                  stroke-linecap="round"-->
-                        <!--                                                  stroke-linejoin="round"/>-->
-                        <!--                                            <path d="M33 33L42 24L33 15" stroke="#ff0000" stroke-width="4"-->
-                        <!--                                                  stroke-linecap="round"-->
-                        <!--                                                  stroke-linejoin="round"/>-->
-                        <!--                                            <path d="M16 23.9917H42" stroke="#ff0000" stroke-width="4"-->
-                        <!--                                                  stroke-linecap="round"-->
-                        <!--                                                  stroke-linejoin="round"/>-->
-                        <!--                                        </svg>-->
-                        <!--                                    </button>-->
+                        <button>
+                            <svg width="20" height="20" viewBox="0 0 48 48" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path d="M23.9917 6H6V42H24" stroke="#ff0000" stroke-width="4"
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                                <path d="M33 33L42 24L33 15" stroke="#ff0000" stroke-width="4"
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                                <path d="M16 23.9917H42" stroke="#ff0000" stroke-width="4"
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                            </svg>
+                        </button>
                     </div>
                 </div>
 

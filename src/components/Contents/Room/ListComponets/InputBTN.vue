@@ -27,7 +27,7 @@
             </svg>
         </button>
 
-        <div class="absolute -translate-x-1/2 w-[720px] flex justify-center py-12"
+        <div class="absolute -translate-x-1/2 w-[720px] flex justify-center py-6"
              :class="{
                    'pb-[23px] bottom-5': displayPosition === 'top',
                   'pt-[23px] top-5': displayPosition === 'bottom'
