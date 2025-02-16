@@ -1,28 +1,28 @@
 <template>
-    <div class="mb-[4px]" v-for="room in channelState.roomList" :key="room.id">
-        <div class="roomItem px-3 py-1.5 cursor-pointer mb-[4px]" :class="{ 'roomItem_Active' : curUserState.room.id === room.id}"
+    <div v-for="room in channelState.roomList" :key="room.id" class="mb-[4px]">
+        <div :class="{ 'roomItem_Active' : curUserState.room.id === room.id}" class="roomItem px-3 py-1.5 cursor-pointer mb-[4px]"
              @dblclick="curUserState.enterRoom(room)">
 
             <div class="flex flex-row items-center">
                 <!--文字-->
-                <svg v-if="room.type === 'Text'" width="22" height="22" viewBox="0 0 48 48" fill="none"
+                <svg v-if="room.type === 'Text'" fill="none" height="22" viewBox="0 0 48 48" width="22"
                      xmlns="http://www.w3.org/2000/svg">
-                    <path d="M33 38H22V30H36V22H44V38H39L36 41L33 38Z" stroke="currentColor" stroke-width="3"
-                          stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M4 6H36V30H17L13 34L9 30H4V6Z" fill="none" stroke="currentColor" stroke-width="3"
-                          stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M19 18H20" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-                    <path d="M26 18H27" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-                    <path d="M12 18H13" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                    <path d="M33 38H22V30H36V22H44V38H39L36 41L33 38Z" stroke="currentColor" stroke-linecap="round"
+                          stroke-linejoin="round" stroke-width="3"/>
+                    <path d="M4 6H36V30H17L13 34L9 30H4V6Z" fill="none" stroke="currentColor" stroke-linecap="round"
+                          stroke-linejoin="round" stroke-width="3"/>
+                    <path d="M19 18H20" stroke="currentColor" stroke-linecap="round" stroke-width="3"/>
+                    <path d="M26 18H27" stroke="currentColor" stroke-linecap="round" stroke-width="3"/>
+                    <path d="M12 18H13" stroke="currentColor" stroke-linecap="round" stroke-width="3"/>
                 </svg>
                 <!--语音-->
-                <svg v-else-if="room.type === 'Voice'" width="22" height="22" viewBox="0 0 48 48" fill="none"
+                <svg v-else-if="room.type === 'Voice'" fill="none" height="22" viewBox="0 0 48 48" width="22"
                      xmlns="http://www.w3.org/2000/svg">
                     <path d="M24 6V42C17 42 11.7985 32.8391 11.7985 32.8391H6C4.89543 32.8391 4 31.9437 4 30.8391V17.0108C4 15.9062 4.89543 15.0108 6 15.0108H11.7985C11.7985 15.0108 17 6 24 6Z"
-                          fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/>
+                          fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="3"/>
                     <path d="M32 15L32 15C32.6232 15.5565 33.1881 16.1797 33.6841 16.8588C35.1387 18.8504 36 21.3223 36 24C36 26.6545 35.1535 29.1067 33.7218 31.0893C33.2168 31.7885 32.6391 32.4293 32 33"
-                          stroke="currentColor" stroke-width="3" stroke-linecap="round"
-                          stroke-linejoin="round"/>
+                          stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                          stroke-width="3"/>
                 </svg>
 <!--                &lt;!&ndash;文字语音  废用&ndash;&gt;-->
 <!--                <svg v-else-if="room.type === 'Both'" width="22" height="22" viewBox="0 0 48 48" fill="none"-->
@@ -43,12 +43,12 @@
 
         </div>
         <template v-for="item in channelState.roomsMember">
-            <div class="ml-6 userItem cursor-pointer select-none" v-if="room.id === item.roomID" v-for="user in item.users">
+            <div v-for="user in item.users" v-if="room.id === item.roomID" class="ml-6 userItem cursor-pointer select-none">
                 <div class="px-4 py-1.5 flex justify-between items-center">
                     <div class="w-6 h-6">
-                        <img class="w-full h-full object-center object-cover circle"
-                             :src="user.avatar"
-                             alt="">
+                        <img :src="user.avatar"
+                             alt=""
+                             class="w-full h-full object-center object-cover circle">
                     </div>
                     <div class="">
                         {{ user.name }}
@@ -64,7 +64,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import {nextTick, onMounted, onUnmounted, reactive, ref, watch} from "vue";
 
 import CreateRoom from "/CreateRoom.vue";
@@ -84,6 +84,7 @@ const curUserState = useCurUserState()
 const channelState = useChannelState()
 
 onMounted(async () => {
+    curUserState.room = {}
     await channelState.getRoomList(`/api/channel/${route.params.hashID}`)
 });
 
@@ -92,7 +93,6 @@ watch(() => route.params.hashID, async (newHashID) => {
         await channelState.getRoomList(`/api/channel/${route.params.hashID}`)
     }
 }, { immediate: true }); // 立即执行一次监听器
-
 
 const enterRoom = (room) => {
     curUserState.room = room

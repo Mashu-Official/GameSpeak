@@ -14,7 +14,7 @@
         </button>
 
 <!--        TODO 要拆组件 公共化 进入房间后要关闭这个组件 -->
-        <div class="flex flex-row space-x-2.5">
+        <div class="flex flex-row space-x-4">
             <!--音频输入-->
            <InputBTN :state="'self'" :displayPosition="'top'"/>
 

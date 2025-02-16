@@ -89,7 +89,8 @@ watch(() => state.messages, () => {
 const socket = io('http://127.0.0.1:42224/ws', {
     path: '/ws/'
 });
-
+curUserState.Socket = socket
+// const socket = curUserState.Socket
 const joinRoom = () => {
     const roomWebSocketID = `${curUserState.channel.hashID}-${curUserState.room.id}`
     // console.log(roomWebSocketID)
@@ -135,7 +136,6 @@ socket.on('memberChange', (users)=>{
 onBeforeUnmount(() => {
     if (socket) {
         socket.close(); // 关闭socket连接
-        // channelState.getRoomList(`/api/channel/${route.params.hashID}`)
         channelState.memberChangeFlag = true
     }
 });

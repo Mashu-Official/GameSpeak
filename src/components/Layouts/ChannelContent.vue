@@ -1,26 +1,35 @@
 <template>
-    <div class="flex flex-1 flex-row w-full pl-2 pt-6">
+    <div class="flex flex-1 flex-row w-full ">
+<!--        pl-2 pt-6 border-2 border-white-->
         <!--房间列表-->
-        <KeepAlive>
-            <RoomsList />
-        </KeepAlive>
-        <!--默认窗口-->
-        <HeroCard v-if="!curUserState.room"/>
 
-        <KeepAlive>
-            <template v-if="curUserState.room.type === 'Text'">
-                <!--聊天窗口-->
-                <MessagesRoom :key="curUserState.room.id"/>
-            </template>
-        </KeepAlive>
+            <KeepAlive>
+                <RoomsList />
+            </KeepAlive>
 
 
-        <KeepAlive>
-            <template v-if="curUserState.room.type === 'Voice' ">
-                <!--语音窗口-->
-                <VoiceRoom :key="curUserState.room.id"/>
-            </template>
-        </KeepAlive>
+
+
+       <div class="pt-6 w-full h-full">
+           <!--默认窗口-->
+           <KeepAlive>
+               <HeroCard v-if="!curUserState.room"/>
+           </KeepAlive>
+           <KeepAlive>
+               <template v-if="curUserState.room.type === 'Text'">
+                   <!--聊天窗口-->
+                   <MessagesRoom :key="curUserState.room.id"/>
+               </template>
+           </KeepAlive>
+
+
+           <KeepAlive>
+               <template v-if="curUserState.room.type === 'Voice' ">
+                   <!--语音窗口-->
+                   <VoiceRoom :key="curUserState.room.id"/>
+               </template>
+           </KeepAlive>
+       </div>
     </div>
 
 
@@ -48,7 +57,7 @@ onMounted(()=>{
 const socket = io('http://127.0.0.1:42224/ws', {
     path: '/ws/'
 });
-
+curUserState.Socket = socket
 // 加入频道 进入监听
 socket.emit('joinChannel',curUserState.channel.hashID)
 socket.on('joinedChannel',(r)=>{

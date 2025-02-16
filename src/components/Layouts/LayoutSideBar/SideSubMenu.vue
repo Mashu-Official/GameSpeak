@@ -45,7 +45,7 @@
                           fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
                 </svg>
                 <span class="whitespace-nowrap">
-                    网页设置
+                    管理设置
                 </span>
             </div>
         </div>

@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import router from "../router";
 import {channelAttribute} from "../interface&enum/ChannelAttribute.ts";
 import {Room} from "../interface&enum/Room.ts";
+import {useChannelState} from "./ChannelState.ts";
 
 
 interface UserInfo {
@@ -23,6 +24,7 @@ export const useCurUserState = defineStore('useCurUserState', {
         } as UserInfo,
         token: null as string | null,
         isElectronEnv: !!window.ipcRenderer, // 判断是否在Electron环境中
+        Socket: null as object | null, // 当前socket实例
     }),
     actions: {
         initSelect(){
@@ -53,6 +55,13 @@ export const useCurUserState = defineStore('useCurUserState', {
             this.room = room;
             this.curConnectedRoom = room;
         },
+        leaveRoom(){
+            if (this.Socket) {
+                this.Socket.close(); // 关闭socket连接
+                useChannelState().memberChangeFlag = true
+                this.room = {}
+            }
+        }
     },
     persist: {
         enabled: true,
