@@ -120,13 +120,6 @@ const enterRoom = (room) => {
 </script>
 
 <style scoped>
-
-.roomList {
-    overflow-y: scroll;
-    flex: 1;
-    flex-shrink: 0;
-}
-
 .roomItem {
     display: flex;
     align-items: center;
@@ -149,41 +142,6 @@ const enterRoom = (room) => {
 
 :is(.dark .roomItem_Active) {
     background-color: rgb(28 28 32 / var(--tw-bg-opacity));
-}
-
-.roomList::-webkit-scrollbar {
-    width: 3px;
-    display: block;
-}
-
-.roomList::-webkit-scrollbar-track {
-    background: #ffffff;
-    border-radius: 10px;
-}
-
-:is(.dark .roomList)::-webkit-scrollbar-track {
-    background: #a2a2a2;
-    border-radius: 10px;
-}
-
-.roomList::-webkit-scrollbar-thumb {
-    background: #a2a2a2;
-    border-radius: 10px;
-    /*transition: background 0.3s ease-in-out;*/
-}
-
-:is(.dark .roomList)::-webkit-scrollbar-thumb {
-    background: #ffffff; /* 滚动条滑块的颜色 */
-    border-radius: 10px;
-    /*transition: background 0.3s ease-in-out;*/
-}
-
-.roomList::-webkit-scrollbar-thumb:hover {
-    background: #464646
-}
-
-.roomList::-webkit-scrollbar-corner {
-    background: #f1f1f1;
 }
 
 .userItem {

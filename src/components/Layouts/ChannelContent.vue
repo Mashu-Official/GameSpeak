@@ -2,7 +2,7 @@
     <div class="flex flex-1 flex-row w-full pl-2 pt-6">
         <!--房间列表-->
         <KeepAlive>
-            <RoomsList/>
+            <RoomsList />
         </KeepAlive>
         <!--默认窗口-->
         <HeroCard v-if="!curUserState.room"/>
@@ -28,14 +28,14 @@
 
 <script setup lang="ts">
 import {onMounted, reactive, watch} from "vue";
-import MessagesRoom from "./components/Message/MessagesRoom.vue";
-import Room from "./RoomsList.vue";
-import VoiceRoom from "./components/Voice/VoiceRoom.vue";
-import HeroCard from "./components/HeroCard.vue";
-import {useCurUserState} from "../../../pinia/curUserState.ts";
-import RoomsList from "./RoomsList.vue";
+import MessagesRoom from "../Contents/Room/components/Message/MessagesRoom.vue";
+import Room from "../Contents/Room/RoomsList.vue";
+import VoiceRoom from "../Contents/Room/components/Voice/VoiceRoom.vue";
+import HeroCard from "../Contents/Room/components/HeroCard.vue";
+import {useCurUserState} from "../../pinia/curUserState.ts";
+import RoomsList from "../Contents/Room/RoomsList.vue";
 import io from "socket.io-client";
-import {useChannelState} from "../../../pinia/ChannelState.ts";
+import {useChannelState} from "../../pinia/ChannelState.ts";
 import {useRoute} from "vue-router";
 
 const curUserState = useCurUserState()
@@ -67,7 +67,7 @@ watch(() => channelState.memberChangeFlag,()=>{
 
 onMounted(()=>{
     socket.on('refreshed',(roomsMember)=>{
-        console.log(roomsMember)
+        // console.log(roomsMember)
         channelState.roomsMember = roomsMember
         channelState.getRoomList(`/api/channel/${route.params.hashID}`)
     })

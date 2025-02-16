@@ -1,7 +1,5 @@
 <template>
-    <div class="flex flex-col overflow-x-hidden overflow-y-hidden flex-shrink-0
-  min-w-[255px] max-w-[345px]
-     select-none">
+    <div class="flex flex-col flex-shrink-0 min-w-[255px] max-w-[345px]select-none">
 
         <div>
             <div class="flex flex-row justify-between items-center px-4 relative">
@@ -65,33 +63,9 @@ const isOpenModal = ref(false);
 
 <style scoped>
 .roomList {
-    overflow-y: scroll;
+    overflow-y: auto;
     flex: 1;
     flex-shrink: 0;
-}
-
-.roomItem {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-radius: 0.75rem;
-    transition: background-color ease-in-out 0.15s;
-}
-
-.roomItem:hover {
-    background-color: rgb(255 255 255 / var(--tw-bg-opacity));
-}
-
-:is(.dark .roomItem:hover) {
-    background-color: rgb(28 28 32 / var(--tw-bg-opacity));
-}
-
-.roomItem_Active {
-    background-color: rgb(255 255 255 / var(--tw-bg-opacity));
-}
-
-:is(.dark .roomItem_Active) {
-    background-color: rgb(28 28 32 / var(--tw-bg-opacity));
 }
 
 /* 设置滚动条的宽度 */

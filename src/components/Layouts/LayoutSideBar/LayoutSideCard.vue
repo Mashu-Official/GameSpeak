@@ -16,7 +16,7 @@
                     </svg>
                 </div>
             </div>
-
+            <!--私信-->
             <div class="avatar" @mouseenter="showChannelName($event, '私信')" @mouseleave="hideChannelName">
                 <div class="avatarContainer flex justify-center items-center">
                     <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -28,6 +28,17 @@
                         <path d="M14 26H32" stroke="currentColor" stroke-width="4" stroke-linecap="round"
                               stroke-linejoin="round"/>
                         <path d="M14 34H24" stroke="currentColor" stroke-width="4" stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            </div>
+            <!--加入新频道-->
+            <div class="avatar" @mouseenter="showChannelName($event, '加入新频道')" @mouseleave="hideChannelName">
+                <div class="avatarContainer flex justify-center items-center">
+                    <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M24.0605 10L24.0239 38" stroke="currentColor" stroke-width="4" stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                        <path d="M10 24L38 24" stroke="currentColor" stroke-width="4" stroke-linecap="round"
                               stroke-linejoin="round"/>
                     </svg>
                 </div>
@@ -66,16 +77,18 @@
 
         <div class="divide" style="width: 60%;"></div>
 
-        <div v-if="true" class="flex justify-center items-center overflow-hidden w-[52px] h-[52px] mt-2 mb-4 circle cursor-pointer select-none relative"
-        @click.stop="toggleSubMenu">
+        <div v-if="true"
+             class="flex justify-center items-center overflow-hidden w-[52px] h-[52px] mt-2 mb-4 circle cursor-pointer select-none relative"
+             @click.stop="toggleSubMenu">
             <img class="object-cover w-full h-full"
                  :src="curUserState.userInfo.avatar" alt="">
 
         </div>
 
-        <div v-else class="flex justify-center items-center overflow-hidden w-[52px] h-[52px] mt-2 mb-4 circle cursor-pointer select-none relative userAvatar"
+        <div v-else
+             class="flex justify-center items-center overflow-hidden w-[52px] h-[52px] mt-2 mb-4 circle cursor-pointer select-none relative userAvatar"
              @click="router.push('/login')">
-           <span class="text-xl font-bold">登录</span>
+            <span class="text-xl font-bold">登录</span>
         </div>
 
         <SideSubMenu v-if="isOpenSubMenu" ref="subMenuElement" :isSidebarOpen="isSidebarOpen" @emit="handleToggle"/>
@@ -84,15 +97,14 @@
 </template>
 
 <script setup lang="ts">
-import {nextTick, onMounted, onUnmounted, reactive, ref} from "vue";
+import {onMounted, onUnmounted, reactive, ref} from "vue";
 import {hideChannelName, showChannelName} from "../../../assets/js/channelName.ts";
 import {useCurUserState} from "../../../pinia/curUserState.ts"
-import { channelAttribute } from "../../../interface&enum/ChannelAttribute.ts";
-import { RoomType } from "../../../interface&enum/RoomTypeEnum.ts";
+import {channelAttribute} from "../../../interface&enum/ChannelAttribute.ts";
 import SideSubMenu from "./SideSubMenu.vue";
 import {useToggleFlagStore} from "../../../pinia/toggleFlagStore.ts";
 import router from "../../../router";
-import { useToast } from 'vue-toastification';
+import {useToast} from 'vue-toastification';
 import axiosReq from '../../../assets/js/axiosBase/axiosObject.js'
 
 // 初始化 Toast
@@ -106,19 +118,19 @@ const subMenuTrigger = ref<HTMLDivElement>()
 
 const curUserState = useCurUserState()
 
-const toggleSubMenu = () =>{
+const toggleSubMenu = () => {
     isOpenSubMenu.value = !isOpenSubMenu.value
     document.addEventListener('click', handleClickOutside);
 }
-const handleToggle = (toggleSign)=>{
+const handleToggle = (toggleSign) => {
     isOpenSubMenu.value = toggleSign
 }
 
 const handleClickOutside = (event) => {
-    if (useToggleFlagStore().subMenuLock){
+    if (useToggleFlagStore().subMenuLock) {
         return
     }
-    if ((event.target !== subMenuTrigger.value) || (event.target !== subMenuElement.value)){
+    if ((event.target !== subMenuTrigger.value) || (event.target !== subMenuElement.value)) {
         isOpenSubMenu.value = false  // document.removeEventListener('click', handleClickOutside);
     }
 };
@@ -136,7 +148,7 @@ const getChannel = async () => {
             console.log(err.response.status); // HTTP 状态码
             console.log(err.response.headers); // 响应头
 
-            if (err.response.status === 400){
+            if (err.response.status === 400) {
                 toast.error(err.response.data.message)
             }
         } else if (err.request) {
@@ -152,7 +164,7 @@ const getChannel = async () => {
     }
 }
 
-onMounted(async () =>{
+onMounted(async () => {
     await getChannel()
 
 });
@@ -218,14 +230,14 @@ onUnmounted(() => {
     /*transition: transform 0.3s ease-out;*/
 }
 
-.userAvatar{
+.userAvatar {
     --tw-bg-opacity: 1;
     background-color: rgb(28 28 32 / var(--tw-bg-opacity));
     --tw-text-opacity: 1;
     color: rgb(240 244 246 / var(--tw-text-opacity));
 }
 
-:is(.dark .userAvatar){
+:is(.dark .userAvatar) {
     --tw-bg-opacity: 1;
     background-color: rgb(255 255 255 / var(--tw-bg-opacity));
     --tw-text-opacity: 1;

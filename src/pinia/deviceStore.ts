@@ -15,9 +15,9 @@ export const useDevicesStore = defineStore('useDevicesStore', {
         defaultAudioOutput: null as MediaDeviceInfo | null,  // 默认输出
         // 音量
         inputVolume: 100 as number,   // 输入音量
-        inputVolumeBefore: 100 as number,   // 改动前的输入音量
         outputVolume: 100 as number,   // 输出音量
-        outputVolumeBefore: 100 as number,   // 改动前的输出音量
+        noInput: false as boolean,    // 禁用音频输入
+        noOutput: false as boolean,  // 禁用音频输出
         // 按键说话
         pressToSpeak: true as boolean,
         pressKey: '' as string,
@@ -108,17 +108,15 @@ export const useDevicesStore = defineStore('useDevicesStore', {
             }
         },
         toggleMicroPhone(){
-            if (this.inputVolume === 0){
-                this.inputVolume = this.inputVolumeBefore
-            }else {
-                this.inputVolume = 0
+           this.noInput = !this.noInput
+            if (this.noInput){
+
             }
         },
         toggleAudioOutput(){
-            if (this.outputVolume === 0){
-                this.outputVolume = this.outputVolumeBefore
-            }else {
-                this.outputVolume = 0
+            this.noOutput = !this.noOutput
+            if (this.noOutput){
+
             }
         }
     },
