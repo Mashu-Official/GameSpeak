@@ -1,10 +1,10 @@
 <template>
 
-    <div class="overflow-y-auto flex-shrink-0 select-none box-content VoiceRoomMembers">
+    <div class=" flex-shrink-0 select-none box-content VoiceRoomMembers">
 
-        <div class="relative flex flex-wrap text-sm overflow-x-hidden flex-shrink-0"  ref="scrollRef">
+        <div class="relative flex flex-wrap text-sm flex-shrink-0"  ref="scrollRef">
             <!--        这个是当前用户        -->
-            <UserCard v-if="curUserState.userInfo.name" :user="curUserState.userInfo"  />
+            <UserCard v-if="curUserState.userInfo.name" :user="curUserState.userInfo"/>
 
             <template v-for="user in channelState.roomMember" :key="user.id">
                 <UserCard :user="user" v-if="curUserState.userInfo.id !== user.id"/>
@@ -19,7 +19,7 @@
 import {useCurUserState} from "../../../../../pinia/curUserState.ts";
 import {nextTick, onMounted, onUnmounted, reactive, ref} from "vue";
 import {UserInVoiceRoom} from "../../../../../interface&enum/userInVoiceRoom.ts";
-import UserCard from "../UserCard.vue";
+import UserCard from "./UserCard.vue";
 import {useChannelState} from "../../../../../pinia/ChannelState.ts";
 
 const curUserState = useCurUserState()

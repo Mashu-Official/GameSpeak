@@ -7,6 +7,7 @@
        <KeepAlive>
            <MessageCard/>
        </KeepAlive>
+
     </div>
     <RoomSidebar class=""/>
 </template>

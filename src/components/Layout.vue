@@ -9,7 +9,7 @@
                 <a-layout-sider class="hidden sm:block overflow-visible"  style="width: 74px">
                     <SideCard />
                 </a-layout-sider>
-                <a-layout-content>
+                <a-layout-content  class="overflow-hidden">
                     <LayoutContent />
                 </a-layout-content>
 

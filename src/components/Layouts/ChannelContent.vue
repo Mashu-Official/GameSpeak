@@ -8,7 +8,7 @@
         <HeroCard v-if="!curUserState.room"/>
 
         <KeepAlive>
-            <template  v-if="curUserState.room.type === 'Text'">
+            <template v-if="curUserState.room.type === 'Text'">
                 <!--聊天窗口-->
                 <MessagesRoom :key="curUserState.room.id"/>
             </template>
