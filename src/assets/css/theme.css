@@ -1,118 +1,177 @@
+@property --light-bg-color_1 {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: rgb(255 255 255);
+}
+
+@property --dark-bg-color_1 {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: rgb(28 28 32);
+}
+
+@property --light-bg-color_2 {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: rgb(243 243 243);
+}
+
+@property --dark-bg-color_2 {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: rgb(48 48 48);
+}
+
+@property --light-card-color {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: rgb(227 227 227);
+}
+
+@property --dark-card-color {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: rgb(62 62 68);
+}
+
+@property --light-text-color {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: rgb(55 65 81);
+}
+
+@property --dark-text-color {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: rgb(240 244 246);
+}
+
+@property --divider-light-color {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: rgb(224 228 230);
+}
+
+@property --divider-dark-color {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: rgb(58 65 72);
+}
+
+/* Applying variables to the styles */
 body {
     margin: 0;
     padding: 0;
     --tw-text-opacity: 1;
-    color: rgb(55 65 81 / var(--tw-text-opacity));
+    color: var(--light-text-color);
     --tw-bg-opacity: 1;
-    background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+    background-color: var(--light-bg-color_1);
 }
 
 :is(.dark body) {
     --tw-text-opacity: 1;
-    color: rgb(240 244 246 / var(--tw-text-opacity));
+    color: var(--dark-text-color);
     --tw-bg-opacity: 1;
-    background-color: rgb(28 28 32 / var(--tw-bg-opacity));
+    background-color: var(--dark-bg-color_1);
 }
 
-.header{
+.header {
     --tw-text-opacity: 1;
-    color: rgb(55 65 81 / var(--tw-text-opacity));
+    color: var(--light-text-color);
     --tw-bg-opacity: 1;
-    background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+    background-color: var(--light-bg-color_1);
 }
 
-:is(.dark .header){
+:is(.dark .header) {
     --tw-text-opacity: 1;
-    color: rgb(240 244 246 / var(--tw-text-opacity));
+    color: var(--dark-text-color);
     --tw-bg-opacity: 1;
-    background-color: rgb(28 28 32 / var(--tw-bg-opacity));
+    background-color: var(--dark-bg-color_1);
 }
 
-.sidebar{
+.sidebar {
     --tw-bg-opacity: 1;
-    background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+    background-color: var(--light-bg-color_1);
     --tw-text-opacity: 1;
-    color: rgb(55 65 81 / var(--tw-text-opacity));
+    color: var(--light-text-color);
 }
 
-:is(.dark .sidebar){
+:is(.dark .sidebar) {
     --tw-bg-opacity: 1;
-    background-color: rgb(28 28 32 / var(--tw-bg-opacity));
+    background-color: var(--dark-bg-color_1);
     --tw-text-opacity: 1;
-    color: rgb(240 244 246 / var(--tw-text-opacity))
+    color: var(--dark-text-color);
 }
 
-
-.content{
+.content {
     border-top-left-radius: 1rem;
     --tw-text-opacity: 1;
-    color: rgb(55 65 81 / var(--tw-text-opacity));
+    color: var(--light-text-color);
     --tw-bg-opacity: 1;
-    background-color: rgb(243 243 243 / var(--tw-bg-opacity));
+    background-color: var(--light-bg-color_2);
 }
 
-:is(.dark .content){
+:is(.dark .content) {
     --tw-text-opacity: 1;
-    color: rgb(240 244 246 / var(--tw-text-opacity));
+    color: var(--dark-text-color);
     --tw-bg-opacity: 1;
-    background-color: rgb(48 48 48 / var(--tw-bg-opacity));
+    background-color: var(--dark-bg-color_2);
 }
 
-.divide{
-    border-color: rgb(224 228 230 / var(--tw-text-opacity));
-
-}
-:is(.dark .divide){
-    border-color: rgb(58 65 72 / var(--tw-text-opacity));
+.divide {
+    border-color: var(--divider-light-color);
 }
 
-.avatarContainer{
+:is(.dark .divide) {
+    border-color: var(--divider-dark-color);
+}
+
+.avatarContainer {
     --tw-text-opacity: 1;
-    color: rgb(55 65 81 / var(--tw-text-opacity));
+    color: var(--light-text-color);
     --tw-bg-opacity: 1;
-    background-color: rgb(227 227 227 / var(--tw-bg-opacity));
-    border: solid rgb(255 255 255 / var(--tw-bg-opacity)) 2px;
+    background-color: var(--light-card-color);
+    border: solid var(--light-bg-color_1) 2px;
 }
 
-:is(.dark .avatarContainer){
+:is(.dark .avatarContainer) {
     --tw-text-opacity: 1;
-    color: rgb(240 244 246 / var(--tw-text-opacity));
+    color: var(--dark-text-color);
     --tw-bg-opacity: 1;
-    background-color: rgb(62 62 68 / var(--tw-bg-opacity));
-    border: solid rgb(28 28 32 / var(--tw-bg-opacity)) 2px;
+    background-color: var(--dark-card-color);
+    border: solid var(--dark-bg-color_1) 2px;
 }
-
-
 
 .serverName {
     --tw-text-opacity: 1;
-    color: rgb(55 65 81 / var(--tw-text-opacity));
+    color: var(--light-text-color);
     --tw-bg-opacity: 1;
-    background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+    background-color: var(--light-bg-color_1);
 }
 
-:is(.dark .serverName){
+:is(.dark .serverName) {
     --tw-text-opacity: 1;
-    color: rgb(240 244 246 / var(--tw-text-opacity));
+    color: var(--dark-text-color);
     --tw-bg-opacity: 1;
-    background-color: rgb(28 28 32 / var(--tw-bg-opacity));
+    background-color: var(--dark-bg-color_1);
 }
 
 .ViewCard {
     --tw-bg-opacity: 1;
-    background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+    background-color: var(--light-bg-color_1);
     --tw-text-opacity: 1;
-    color: rgb(55 65 81 / var(--tw-text-opacity));
+    color: var(--light-text-color);
 }
+
 :is(.dark .ViewCard) {
     --tw-bg-opacity: 1;
-    background-color: rgb(28 28 32 / var(--tw-bg-opacity));
+    background-color: var(--dark-bg-color_1);
     --tw-text-opacity: 1;
-    color: rgb(240 244 246 / var(--tw-text-opacity))
+    color: var(--dark-text-color);
 }
 
 input::placeholder {
-    color: rgb(55, 65, 81);
+    color: var(--light-text-color);
     font-weight: 600;
     background-color: transparent;
 }
@@ -122,10 +181,28 @@ input::placeholder {
     font-weight: 600;
     background-color: transparent;
 }
+
 select {
     background-color: transparent;
 }
 
 select option {
     background-color: transparent;
+}
+
+.roomListContainer {
+    box-sizing: border-box;
+    border-right: 2px solid var(--divider-light-color);
+}
+
+:is(.dark .roomListContainer) {
+    border-right: 2px solid var(--divider-dark-color);
+}
+.channelMemberListContainer {
+    box-sizing: border-box;
+    border-left: 2px solid var(--divider-light-color);
+}
+
+:is(.dark .channelMemberListContainer) {
+    border-left: 2px solid var(--divider-dark-color);
 }

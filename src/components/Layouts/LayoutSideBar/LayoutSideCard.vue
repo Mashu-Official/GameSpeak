@@ -166,7 +166,6 @@ const getChannel = async () => {
 
 onMounted(async () => {
     await getChannel()
-
 });
 
 onUnmounted(() => {
@@ -178,8 +177,8 @@ onUnmounted(() => {
 <style scoped>
 .channelsList {
     overflow: auto;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE & Edge */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 .channelsList::webkit-scrollbar {
@@ -214,7 +213,6 @@ onUnmounted(() => {
 .avatar > .avatarContainer:hover {
     transform: scale(1.08);
     transition: transform 0.16s ease-in
-    /*scale: 110%;*/
 }
 
 .selectedAvatar {
@@ -224,10 +222,6 @@ onUnmounted(() => {
 :is(.dark .selectedAvatar) {
     --tw-bg-opacity: 1;
     border: solid rgb(227 227 227 / var(--tw-bg-opacity)) 2px;
-}
-
-.sidebar {
-    /*transition: transform 0.3s ease-out;*/
 }
 
 .userAvatar {

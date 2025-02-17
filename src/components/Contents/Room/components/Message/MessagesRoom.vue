@@ -1,15 +1,18 @@
 <template>
-    <div class="flex flex-1 flex-col items-start h-full px-8 relative">
-        <div class="text-xl">{{ curUserState.room.name || "找不到该房间" }}</div>
+    <div class="flex flex-row h-full w-full ">
+        <div class="flex flex-1 flex-col items-start h-full relative pt-6">
+            <div class="px-8 w-full mb-2">
+                <div class="text-xl">{{ curUserState.room.name || "找不到该房间" }}</div>
+                <div class="divide"></div>
+            </div>
 
-        <div class="divide mb-2" style="width: 100%"></div>
+            <KeepAlive>
+                <MessageCard/>
+            </KeepAlive>
 
-       <KeepAlive>
-           <MessageCard/>
-       </KeepAlive>
-
+        </div>
+        <RoomSidebar />
     </div>
-    <RoomSidebar class=""/>
 </template>
 
 <script setup lang="ts">

@@ -1,19 +1,21 @@
 <template>
 
-    <div class="flex flex-1 flex-col items-start h-full px-8 relative">
-        <div class="h-1/3 flex-shrink-0">
+    <div class="flex flex-1 flex-col items-start h-full pl-8 pt-6 relative ">
+        <div class="h-1/3 flex-shrink-0 w-full ">
             <VoiceCard class="h-full"/>
         </div>
 
 
         <div class="flex w-full h-full justify-start ">
-            <div class="flex flex-col flex-1 mt-4">
-                <div class="text-xl ">{{ curUserState.room.name || "找不到该房间" }}</div>
-                <div class="divide mb-4" style="width: 100%"></div>
+            <div class="flex flex-col flex-1 mt-2">
+                <div class="w-full mb-2 pr-8">
+                    <div class="text-xl">{{ curUserState.room.name || "找不到该房间" }}</div>
+                    <div class="divide"></div>
+                </div>
                 <MessageCard class="flex-1 h-full" :key="curUserState.room.id"/>
             </div>
 
-            <RoomSidebar class="mt-4"/>
+            <RoomSidebar class="pt-0 mt-2"/>
         </div>
     </div>
 

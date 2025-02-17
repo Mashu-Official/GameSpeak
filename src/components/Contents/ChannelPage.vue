@@ -3,7 +3,7 @@
         <a-layout style="height: 100%">
 
             <a-layout-content style="background-color: transparent">
-                <RoomContent/>
+                <ChannelContent />
             </a-layout-content>
 
         </a-layout>
@@ -11,8 +11,8 @@
 </template>
 
 <script setup lang="ts">
-import RoomSidebar from "./Room/RoomSidebar.vue";
-import RoomContent from "../Layouts/ChannelContent.vue";
+import ChannelContent from "./Room/ChannelContent.vue";
+
 </script>
 
 <style scoped>

@@ -41,11 +41,6 @@ onMounted(async () => {
 
 });
 
-
-// const inputVolume =ref(deviceStore.inputVolume)
-// watch(()=>inputVolume,()=>{
-//
-// })
 </script>
 
 

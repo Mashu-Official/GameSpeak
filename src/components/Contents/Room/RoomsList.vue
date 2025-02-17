@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col flex-shrink-0 min-w-[268px] max-w-[345px] select-none px-1 pt-6 box-border border-r-2 border-white">
+    <div class="flex flex-col flex-shrink-0 min-w-[268px] max-w-[345px] select-none px-1 pt-6 roomListContainer">
 
         <div>
             <div class="flex flex-row justify-between items-center px-4 relative">

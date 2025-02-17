@@ -1,14 +1,14 @@
 <template>
-    <div class="flex flex-col items-start h-full min-w-[252px] pl-4 relative ">
+    <div class="flex flex-col items-start h-full min-w-[262px] relative pt-6 px-6 channelMemberListContainer">
         <template v-if="curUserState.channel"> 
 
             <div class="text-xl">在线成员</div>
-            <div class="divide mb-4" style="width: 100%"></div>
+            <div class="divide mb-2" style="width: 100%"></div>
 
-            <div class="memberList w-full pr-2 flex-1">
+            <div class="memberList w-full flex-1">
                 <!--房间列表-->
                 <div class="m-0 p-0 relative text-sm h-0 flex-1">
-                    <div class="memberItem py-2 px-2 cursor-pointer mb-[2px]">
+                    <div class="memberItem py-2 px-4 cursor-pointer mb-[2px]">
                         <div class="flex flex-row items-center">
                             <img class="circle w-9 h-9" src="https://cdn.jsdelivr.net/gh/Mashu-Official/Blog_IMG-Cabin/img/%E5%90%A7%E5%94%A72.png" alt="">
                             <span class="whitespace-nowrap ml-4 font-semibold">name</span>

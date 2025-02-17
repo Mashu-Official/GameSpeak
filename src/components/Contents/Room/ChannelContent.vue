@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-1 flex-row w-full ">
+    <div class="flex flex-1 flex-row w-full">
 <!--        pl-2 pt-6 border-2 border-white-->
         <!--房间列表-->
 
@@ -10,11 +10,12 @@
 
 
 
-       <div class="pt-6 w-full h-full">
+       <div class="w-full h-full">
            <!--默认窗口-->
            <KeepAlive>
                <HeroCard v-if="!curUserState.room"/>
            </KeepAlive>
+
            <KeepAlive>
                <template v-if="curUserState.room.type === 'Text'">
                    <!--聊天窗口-->
@@ -37,22 +38,23 @@
 
 <script setup lang="ts">
 import {onMounted, reactive, watch} from "vue";
-import MessagesRoom from "../Contents/Room/components/Message/MessagesRoom.vue";
-import Room from "../Contents/Room/RoomsList.vue";
-import VoiceRoom from "../Contents/Room/components/Voice/VoiceRoom.vue";
-import HeroCard from "../Contents/Room/components/HeroCard.vue";
-import {useCurUserState} from "../../pinia/curUserState.ts";
-import RoomsList from "../Contents/Room/RoomsList.vue";
+import MessagesRoom from "./components/Message/MessagesRoom.vue";
+import Room from "./RoomsList.vue";
+import VoiceRoom from "./components/Voice/VoiceRoom.vue";
+import HeroCard from "./components/HeroCard.vue";
+import {useCurUserState} from "../../../pinia/curUserState.ts";
+import RoomsList from "./RoomsList.vue";
 import io from "socket.io-client";
-import {useChannelState} from "../../pinia/ChannelState.ts";
+import {useChannelState} from "../../../pinia/ChannelState.ts";
 import {useRoute} from "vue-router";
 
 const curUserState = useCurUserState()
 const channelState = useChannelState()
 const route = useRoute()
-onMounted(()=>{
-    // curUserState.room = {}
-})
+
+// onMounted(()=>{
+//     curUserState.room = {}
+// })
 
 const socket = io('http://127.0.0.1:42224/ws', {
     path: '/ws/'

@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col justify-between flex-1 w-full">
+    <div class="flex flex-col justify-between flex-1 w-full pr-1">
         <div class="messagesList" ref="messageContainer">
             <div class="flex flex-col space-y-3.5 h-0 flex-1">
                 <div class="flex flex-col items-start " v-for="(message, index) in state.messages"
@@ -190,15 +190,15 @@ onBeforeUnmount(() => {
 }
 
 /* 设置滚动条的背景 */
-.messagesList::-webkit-scrollbar-track {
-    background: #ffffff;
-    border-radius: 10px;
-}
+/*.messagesList::-webkit-scrollbar-track {*/
+/*    background: #ffffff;*/
+/*    border-radius: 10px;*/
+/*}*/
 
-:is(.dark .messagesList)::-webkit-scrollbar-track {
-    background: #a2a2a2;
-    border-radius: 10px;
-}
+/*:is(.dark .messagesList)::-webkit-scrollbar-track {*/
+/*    background: #a2a2a2;*/
+/*    border-radius: 10px;*/
+/*}*/
 
 /* 设置滚动条的滑块 */
 .messagesList::-webkit-scrollbar-thumb {
