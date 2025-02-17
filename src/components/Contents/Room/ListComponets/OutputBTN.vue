@@ -63,7 +63,6 @@ const props = defineProps<{
     state: string
     displayPosition:string
 }>()
-console.log(props)
 
 const outputVolume = ref<number>(useDevicesStore().outputVolume);  // 初始化为store中的值
 const noOutput = ref<boolean>(useDevicesStore().noOutput);  // 初始化为store中的值

@@ -24,7 +24,9 @@ export const useCurUserState = defineStore('useCurUserState', {
         } as UserInfo,
         token: null as string | null,
         isElectronEnv: !!window.ipcRenderer, // 判断是否在Electron环境中
-        Socket: null as object | null, // 当前socket实例
+
+        SocketChannel: null as object | null, // 当前socket实例
+        SocketRoom: null as object | null, // 当前socket实例
     }),
     actions: {
         initSelect(){
@@ -56,8 +58,9 @@ export const useCurUserState = defineStore('useCurUserState', {
             this.curConnectedRoom = room;
         },
         leaveRoom(){
-            if (this.Socket) {
-                this.Socket.close(); // 关闭socket连接
+            if (this.SocketRoom) {
+                // @ts-ignore
+                this.SocketRoom.close(); // 关闭socket连接
                 useChannelState().memberChangeFlag = true
                 this.room = {}
             }

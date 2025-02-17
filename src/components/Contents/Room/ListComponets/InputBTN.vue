@@ -34,7 +34,7 @@
                 }"
         >
             <div class="ViewCard flex justify-around"
-                :class="{
+                 :class="{
                     'flex-col-reverse': displayPosition === 'top',
                   'flex-col': displayPosition === 'bottom'
                 }"
@@ -45,13 +45,17 @@
                         :default-value="inputVolume"
                         :style="{ width: '135px' }"/>
 
-                <div class="divide my-3"></div>
-                <div class="flex"
+                <div class="divide "
                      :class="{
-                    'flex-col': displayPosition === 'top',
+                        'mb-3': displayPosition === 'top',
+                        'mt-3': displayPosition === 'bottom'
+                }"></div>
+                <div class="flex settingList"
+                     :class="{
+                      'flex-col': displayPosition === 'top',
                       'flex-col-reverse': displayPosition === 'bottom'
                 }">
-                    <div class="flex justify-between py-2">
+                    <div class="p-2 rounded-lg">
                         <div>
                             语音设置
                         </div>
@@ -73,10 +77,10 @@
                                   fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/>
                         </svg>
                     </div>
-                    <div class="flex justify-between py-2">
+                    <div class="p-2 rounded-lg">
                         语音降噪
                     </div>
-                    <div class="flex justify-between py-2">
+                    <div class="p-2 rounded-lg">
                         拾音加强
                     </div>
                 </div>
@@ -99,7 +103,7 @@ const props = defineProps<{
 
 const inputVolume = ref<number>(useDevicesStore().inputVolume)
 
-if (props.state === 'self'){
+if (props.state === 'self') {
     const deviceStore = useDevicesStore()
 
     watch(() => deviceStore.inputVolume, (newVal) => {
@@ -108,8 +112,7 @@ if (props.state === 'self'){
     watch(() => inputVolume.value, (newVal) => {
         deviceStore.inputVolume = newVal;
     });
-}
-else {
+} else {
     inputVolume.value = 1
 }
 
@@ -142,5 +145,16 @@ onMounted(async () => {
 .voiceSettingBtnGroup div:hover {
     opacity: 100;
     visibility: visible;
+}
+
+.settingList > div {
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: background-color 0.15s ease-in-out;
+}
+
+.settingList > div:hover {
+    background-color: var(--dark-card-color);
 }
 </style>

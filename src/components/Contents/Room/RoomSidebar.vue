@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col items-start h-full min-w-[262px] relative pt-6 px-6 channelMemberListContainer">
+    <div class="flex flex-col items-start h-full min-w-[262px] relative px-6 channelMemberListContainer">
         <template v-if="curUserState.channel"> 
 
             <div class="text-xl">在线成员</div>

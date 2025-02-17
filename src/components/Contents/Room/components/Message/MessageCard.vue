@@ -36,7 +36,7 @@
             </div>
         </div>
 
-        <div class="flex mt-2 w-full pr-4">
+        <div class="flex mt-2 w-full pr-6">
             <div class="f-inp flex flex-row items-center w-full">
                 <input v-model="message" :placeholder="`向 ${ curUserState.room.name } 发送消息`"
                        @keyup.enter="sendMessage">
@@ -89,7 +89,7 @@ watch(() => state.messages, () => {
 const socket = io('http://127.0.0.1:42224/ws', {
     path: '/ws/'
 });
-curUserState.Socket = socket
+curUserState.SocketRoom = socket
 // const socket = curUserState.Socket
 const joinRoom = () => {
     const roomWebSocketID = `${curUserState.channel.hashID}-${curUserState.room.id}`

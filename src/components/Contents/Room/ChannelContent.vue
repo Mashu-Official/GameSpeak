@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-1 flex-row w-full">
+    <div class="flex flex-1 flex-row w-full" :key="curUserState.channel.hashID">
 <!--        pl-2 pt-6 border-2 border-white-->
         <!--房间列表-->
 
@@ -16,20 +16,19 @@
                <HeroCard v-if="!curUserState.room"/>
            </KeepAlive>
 
-           <KeepAlive>
-               <template v-if="curUserState.room.type === 'Text'">
-                   <!--聊天窗口-->
-                   <MessagesRoom :key="curUserState.room.id"/>
-               </template>
-           </KeepAlive>
+           <transition name="fade" mode="out-in">
 
+                   <template v-if="curUserState.room.type === 'Text'">
+                       <!-- 聊天窗口 -->
+                       <MessagesRoom :key="curUserState.room.id" />
+                   </template>
 
-           <KeepAlive>
-               <template v-if="curUserState.room.type === 'Voice' ">
-                   <!--语音窗口-->
-                   <VoiceRoom :key="curUserState.room.id"/>
-               </template>
-           </KeepAlive>
+                   <template v-else-if="curUserState.room.type === 'Voice'">
+                       <!-- 语音窗口 -->
+                       <VoiceRoom :key="curUserState.room.id" />
+                   </template>
+
+           </transition>
        </div>
     </div>
 
@@ -59,7 +58,7 @@ const route = useRoute()
 const socket = io('http://127.0.0.1:42224/ws', {
     path: '/ws/'
 });
-curUserState.Socket = socket
+curUserState.SocketChannel = socket
 // 加入频道 进入监听
 socket.emit('joinChannel',curUserState.channel.hashID)
 socket.on('joinedChannel',(r)=>{
@@ -87,4 +86,18 @@ onMounted(()=>{
 
 <style scoped>
 
+.fade-enter-from,
+.fade-leave-to {
+opacity: 0;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+transition: opacity 0.15s ease-in-out;
+}
+
+.fade-enter-to,
+.fade-leave-from {
+opacity: 1;
+}
 </style>

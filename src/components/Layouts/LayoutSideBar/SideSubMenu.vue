@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col items-start absolute SubMenuCard ViewCard left-2 bottom-8 mb-16 z-50 w-[305px] select-none">
+    <div class="flex flex-col items-start absolute SubMenuCard ViewCard left-2 bottom-8 mb-16 z-50 w-[305px] select-none" ref="rootElement">
 
         <div class="flex flex-row justify-between items-start w-full">
             <div class="w-16 h-16 circle overflow-hidden ml-2">
@@ -82,9 +82,15 @@ import {useToggleFlagStore} from "../../../pinia/toggleFlagStore.ts";
 import HeaderButton from "../../Contents/Setting/Components/HeaderButton.vue";
 import {useCurUserState} from "../../../pinia/curUserState.ts";
 
+const rootElement = ref(null);
+defineExpose({
+    rootElement
+});
+
 const props = defineProps<{
     isOpenSubMenu: boolean;
 }>()
+
 const emit = defineEmits(['emit'])
 const curUserState = useCurUserState()
 

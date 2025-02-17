@@ -1,7 +1,9 @@
 <template>
     <div v-for="room in channelState.roomList" :key="room.id" class="mb-[4px]">
-        <div :class="{ 'roomItem_Active' : curUserState.room.id === room.id}" class="roomItem px-3 py-1.5 cursor-pointer mb-[4px]"
-             @dblclick="curUserState.enterRoom(room)">
+        <div class="roomItem px-3 py-1.5 cursor-pointer mb-[4px]"
+             :class="{ 'roomItem_Active' : curUserState.room.id === room.id}"
+             @dblclick="curUserState.enterRoom(room)"
+             :data-room-id="room.id">
 
             <div class="flex flex-row items-center">
                 <!--文字-->
@@ -24,26 +26,25 @@
                           stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                           stroke-width="3"/>
                 </svg>
-<!--                &lt;!&ndash;文字语音  废用&ndash;&gt;-->
-<!--                <svg v-else-if="room.type === 'Both'" width="22" height="22" viewBox="0 0 48 48" fill="none"-->
-<!--                     xmlns="http://www.w3.org/2000/svg">-->
-<!--                    <path d="M4 30C4 36.6274 9.37258 42 16 42C22.6274 42 26 38 27 35L28.5385 30L35 9L44 42"-->
-<!--                          stroke="currentColor" stroke-width="3" stroke-linecap="round"-->
-<!--                          stroke-linejoin="round"/>-->
-<!--                    <path d="M40.7274 30H28.5386" stroke="currentColor" stroke-width="3" stroke-linecap="round"-->
-<!--                          stroke-linejoin="round"/>-->
-<!--                    <path d="M22 15C22 11.6863 19.3137 9 16 9C12.6863 9 10 11.6863 10 15V30C10 33.3137 12.6863 36 16 36C19.3137 36 22 33.3137 22 30V15Z"-->
-<!--                          fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"-->
-<!--                          stroke-linejoin="round"/>-->
-<!--                </svg>-->
-                <span class="whitespace-nowrap ml-2 py-2 font-semibold">{{ room.name }}</span>
+
+                <span class="whitespace-nowrap ml-2 py-2 font-semibold flex space-x-2 items-center">
+                   <span>{{ room.name }}</span>
+            <!--TODO 密码房间开发中-->
+
+<!--                    <svg v-if="room.havePassword" width="16" height="16" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">-->
+<!--                        <rect x="6" y="22" width="36" height="22" rx="2" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>-->
+<!--                        <path d="M14 22V14C14 8.47715 18.4772 4 24 4C29.5228 4 34 8.47715 34 14V22" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>-->
+<!--                        <path d="M24 30V36" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>-->
+
+                </span>
             </div>
 
             <span class="text-xs">{{ room.curMemberNum }}/{{ room.maximum }}</span>
 
         </div>
         <template v-for="item in channelState.roomsMember">
-            <div v-for="user in item.users" v-if="room.id === item.roomID" class="ml-6 userItem cursor-pointer select-none">
+            <div v-for="user in item.users" v-if="room.id === item.roomID"
+                 class="ml-6 userItem cursor-pointer select-none">
                 <div class="px-4 py-1.5 flex justify-between items-center">
                     <div class="w-6 h-6">
                         <img :src="user.avatar"
@@ -65,17 +66,9 @@
 </template>
 
 <script lang="ts" setup>
-import {nextTick, onMounted, onUnmounted, reactive, ref, watch} from "vue";
-
-import CreateRoom from "/CreateRoom.vue";
-
-import {RoomType} from "../../../../interface&enum/RoomTypeEnum.ts";
-import {Room} from "../../../../interface&enum/Room.ts";
+import {onMounted, watch} from "vue";
 
 import {useCurUserState} from "../../../../pinia/curUserState.ts";
-
-import VoiceSetting from "./VoiceSetting.vue";
-import axiosReq from "../../../../assets/js/axiosBase/axiosObject.js";
 import {useRoute} from "vue-router";
 import {useChannelState} from "../../../../pinia/ChannelState.ts";
 
@@ -92,7 +85,7 @@ watch(() => route.params.hashID, async (newHashID) => {
     if (newHashID) {
         await channelState.getRoomList(`/api/channel/${route.params.hashID}`)
     }
-}, { immediate: true }); // 立即执行一次监听器
+}, {immediate: true}); // 立即执行一次监听器
 
 const enterRoom = (room) => {
     curUserState.room = room

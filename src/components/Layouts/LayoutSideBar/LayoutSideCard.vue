@@ -91,7 +91,10 @@
             <span class="text-xl font-bold">登录</span>
         </div>
 
-        <SideSubMenu v-if="isOpenSubMenu" ref="subMenuElement" :isSidebarOpen="isSidebarOpen" @emit="handleToggle"/>
+        <div v-show="isOpenSubMenu">
+            <SideSubMenu ref="subMenuElement" :isOpenSubMenu="isOpenSubMenu" @emit="handleToggle"/>
+        </div>
+
     </div>
 
 </template>
@@ -127,11 +130,13 @@ const handleToggle = (toggleSign) => {
 }
 
 const handleClickOutside = (event) => {
-    if (useToggleFlagStore().subMenuLock) {
-        return
-    }
-    if ((event.target !== subMenuTrigger.value) || (event.target !== subMenuElement.value)) {
-        isOpenSubMenu.value = false  // document.removeEventListener('click', handleClickOutside);
+    if (
+        isOpenSubMenu.value &&
+        !subMenuElement.value?.rootElement?.contains(event.target) &&
+        !subMenuTrigger.value?.contains(event.target)
+    ) {
+        isOpenSubMenu.value = false;
+        document.removeEventListener('click', handleClickOutside);
     }
 };
 
