@@ -30,27 +30,14 @@ export const useCurUserState = defineStore('useCurUserState', {
     }),
     actions: {
         initSelect(){
-            this.channel = {}
-            this.room = {}
-        },
-        initSetting() {
-            // 在这里可以添加逻辑来检查是否有默认设置需要被应用
-            // 例如，可以从后端获取默认设置或者设定一些初始值
-            // 示例：检查是否已经设置了麦克风和耳机，如果没有，则设置为默认值
-            // if (!this.setting.microphone) {
-            //     this.setting.microphone = 'default-microphone'; // 示例默认值
-            // }
-            // if (!this.setting.headphone) {
-            //     this.setting.headphone = 'default-headphone'; // 示例默认值
-            // }
-            // if (!this.setting.microphoneSpeakType) {
-            //     this.setting.microphoneSpeakType = 'voice-activated'; // 示例默认值
-            // }
+            // this.channel = {}
+            // this.room = {}
         },
         enterChannel(channel:channelAttribute) {
             this.room = {}
             router.push(`/channel/${channel.hashID}`).then(() => {
-                this.channel = channel;
+                this.channel = channel
+                console.log(channel)
             });
         },
         enterRoom(room:Room) {
@@ -65,6 +52,7 @@ export const useCurUserState = defineStore('useCurUserState', {
                 this.room = {}
             }
         }
+        // onMounted
     },
     persist: {
         enabled: true,

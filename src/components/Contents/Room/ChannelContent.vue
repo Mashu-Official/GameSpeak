@@ -1,14 +1,11 @@
 <template>
     <div class="flex flex-1 flex-row w-full" :key="curUserState.channel.hashID">
-<!--        pl-2 pt-6 border-2 border-white-->
+
         <!--房间列表-->
 
             <KeepAlive>
                 <RoomsList />
             </KeepAlive>
-
-
-
 
        <div class="w-full h-full">
            <!--默认窗口-->
@@ -17,7 +14,7 @@
            </KeepAlive>
 
            <transition name="fade" mode="out-in">
-
+               <KeepAlive>
                    <template v-if="curUserState.room.type === 'Text'">
                        <!-- 聊天窗口 -->
                        <MessagesRoom :key="curUserState.room.id" />
@@ -27,7 +24,7 @@
                        <!-- 语音窗口 -->
                        <VoiceRoom :key="curUserState.room.id" />
                    </template>
-
+               </KeepAlive>
            </transition>
        </div>
     </div>
@@ -46,6 +43,7 @@ import RoomsList from "./RoomsList.vue";
 import io from "socket.io-client";
 import {useChannelState} from "../../../pinia/ChannelState.ts";
 import {useRoute} from "vue-router";
+import axiosReq from "../../../assets/js/axiosBase/axiosObject.js";
 
 const curUserState = useCurUserState()
 const channelState = useChannelState()
@@ -62,7 +60,7 @@ curUserState.SocketChannel = socket
 // 加入频道 进入监听
 socket.emit('joinChannel',curUserState.channel.hashID)
 socket.on('joinedChannel',(r)=>{
-    console.log(r)
+    // console.log(r)
 })
 // 监听频道人数变化
 watch(() => channelState.memberChangeFlag,()=>{
@@ -81,7 +79,12 @@ onMounted(()=>{
         channelState.roomsMember = roomsMember
         channelState.getRoomList(`/api/channel/${route.params.hashID}`)
     })
+    axiosReq.get("/api/demo").then(r=>{
+        console.log(r)
+    })
 })
+
+
 </script>
 
 <style scoped>

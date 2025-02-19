@@ -77,15 +77,15 @@ const curUserState = useCurUserState()
 const channelState = useChannelState()
 
 onMounted(async () => {
-    curUserState.room = {}
-    // await channelState.getRoomList(`/api/channel/${route.params.hashID}`)
+    // curUserState.room = {}
+    await channelState.getRoomList(`/api/channel/${route.params.hashID}`)
 });
 
 watch(() => route.params.hashID, async (newHashID,oldHashID) => {
-    console.log(newHashID,oldHashID)
-    if (newHashID !== oldHashID && oldHashID) {
+    // console.log(newHashID,oldHashID)
+    // if (newHashID !== oldHashID && oldHashID) {
         await channelState.getRoomList(`/api/channel/${route.params.hashID}`)
-    }
+    // }
 }, {immediate: true}); // 立即执行一次监听器
 
 const enterRoom = (room) => {

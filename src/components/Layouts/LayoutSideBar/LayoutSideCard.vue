@@ -91,6 +91,8 @@
             <span class="text-xl font-bold">登录</span>
         </div>
 
+
+
         <div v-show="isOpenSubMenu">
             <SideSubMenu ref="subMenuElement" :isOpenSubMenu="isOpenSubMenu" @emit="handleToggle"/>
         </div>
@@ -142,6 +144,8 @@ const handleClickOutside = (event) => {
 
 const Channels = reactive<channelAttribute[]>([])
 
+
+// 修改这个 TODO 把每个服务中心去耦合 baseurl 要可变
 const getChannel = async () => {
     try {
         const res = await axiosReq.get("/api/channels")

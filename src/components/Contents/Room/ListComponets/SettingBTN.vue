@@ -14,7 +14,7 @@
         <!--            设置-->
         <!--        </div>-->
 
-        <div class="ViewCard absolute right-8 whitespace-nowrap hidden flex flex-col space-y-1 -mt-3">
+        <div class="ViewCard absolute right-8 whitespace-nowrap hidden flex flex-col space-y-1 py-3 -mt-3">
 
             <div class="p-2 rounded-lg" @click="createRoom">
                 新增房间
