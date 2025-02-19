@@ -76,7 +76,7 @@
                     <div class="flex flex-col space-y-4 items-start w-full px-7">
                         <span class="text-base font-bold">测试麦克风</span>
                         <div class="flex justify-between">
-                            <button class="font-semibold" @click="toggleTestMic">{{ isTestingMic ? '停止测试' : '开始测试' }}</button>
+<!--                            <button class="font-semibold" @click="toggleTestMic">{{ isTestingMic ? '停止测试' : '开始测试' }}</button>-->
                         </div>
                     </div>
 
@@ -153,7 +153,6 @@ import {useDevicesStore} from "@/pinia/deviceStore.ts";
 const deviceStore = useDevicesStore()
 
 
-// localStorage.clear()
 // 必须这么写 不然选择框会BUG
 if (!deviceStore.inputDevices){
     deviceStore.getDevices()

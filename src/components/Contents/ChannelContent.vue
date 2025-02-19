@@ -4,7 +4,7 @@
         <!--房间列表-->
 
             <KeepAlive>
-                <RoomsList />
+                <RoomsList :key="curUserState.room.id" />
             </KeepAlive>
 
        <div class="w-full h-full">
@@ -14,7 +14,7 @@
            </KeepAlive>
 
            <transition name="fade" mode="out-in">
-               <KeepAlive>
+
                    <template v-if="curUserState.room.type === 'Text'">
                        <!-- 聊天窗口 -->
                        <MessagesRoom :key="curUserState.room.id" />
@@ -24,7 +24,7 @@
                        <!-- 语音窗口 -->
                        <VoiceRoom :key="curUserState.room.id" />
                    </template>
-               </KeepAlive>
+
            </transition>
        </div>
     </div>
@@ -34,34 +34,37 @@
 
 <script setup lang="ts">
 import {onMounted, reactive, watch} from "vue";
-import MessagesRoom from "./components/Message/MessagesRoom.vue";
-import Room from "./RoomsList.vue";
-import VoiceRoom from "./components/Voice/VoiceRoom.vue";
-import HeroCard from "./components/HeroCard.vue";
-import {useCurUserState} from "../../../pinia/curUserState.ts";
-import RoomsList from "./RoomsList.vue";
+import MessagesRoom from "./Room/components/Message/MessagesRoom.vue";
+import Room from "./Room/RoomsList.vue";
+import VoiceRoom from "./Room/components/Voice/VoiceRoom.vue";
+import HeroCard from "./Room/components/HeroCard.vue";
+import {useCurUserState} from "../../pinia/curUserState.ts";
+import RoomsList from "./Room/RoomsList.vue";
 import io from "socket.io-client";
-import {useChannelState} from "../../../pinia/ChannelState.ts";
+import {useChannelState} from "../../pinia/ChannelState.ts";
 import {useRoute} from "vue-router";
-import axiosReq from "../../../assets/js/axiosBase/axiosObject.js";
+import axiosReq from "../../assets/js/axiosBase/axiosObject.js";
 
 const curUserState = useCurUserState()
 const channelState = useChannelState()
 const route = useRoute()
 
-// onMounted(()=>{
-//     curUserState.room = {}
-// })
+onMounted(()=>{
+    curUserState.room = {}
+})
 
 const socket = io('http://127.0.0.1:42224/ws', {
     path: '/ws/'
 });
-curUserState.SocketChannel = socket
+
+curUserState.socketRoom = socket
+
 // 加入频道 进入监听
 socket.emit('joinChannel',curUserState.channel.hashID)
 socket.on('joinedChannel',(r)=>{
     // console.log(r)
 })
+
 // 监听频道人数变化
 watch(() => channelState.memberChangeFlag,()=>{
     if (channelState.memberChangeFlag){
@@ -73,15 +76,17 @@ watch(() => channelState.memberChangeFlag,()=>{
     deep:true
 })
 
+
+
 onMounted(()=>{
     socket.on('refreshed',(roomsMember)=>{
         // console.log(roomsMember)
         channelState.roomsMember = roomsMember
         channelState.getRoomList(`/api/channel/${route.params.hashID}`)
     })
-    axiosReq.get("/api/demo").then(r=>{
-        console.log(r)
-    })
+    // axiosReq.get("/api/demo").then(r=>{
+    //     console.log(r)
+    // })
 })
 
 

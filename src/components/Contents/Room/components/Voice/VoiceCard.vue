@@ -21,10 +21,16 @@ import {nextTick, onMounted, onUnmounted, reactive, ref} from "vue";
 import {UserInVoiceRoom} from "../../../../../interface&enum/userInVoiceRoom.ts";
 import UserCard from "./UserCard.vue";
 import {useChannelState} from "../../../../../pinia/ChannelState.ts";
+import {useDevicesStore} from "../../../../../pinia/deviceStore.ts";
 
 const curUserState = useCurUserState()
 const channelState = useChannelState()
-//
+const devicesStore = useDevicesStore()
+
+onMounted(async () =>{
+    await nextTick()
+    await useDevicesStore().startMic()
+})
 // const state = reactive<{ users: UserInVoiceRoom[] }>({
 //     users: []
 // })

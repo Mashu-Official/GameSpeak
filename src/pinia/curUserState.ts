@@ -24,9 +24,9 @@ export const useCurUserState = defineStore('useCurUserState', {
         } as UserInfo,
         token: null as string | null,
         isElectronEnv: !!window.ipcRenderer, // 判断是否在Electron环境中
-
-        SocketChannel: null as object | null, // 当前socket实例
-        SocketRoom: null as object | null, // 当前socket实例
+        leaveRoomFlag: false as boolean,
+        // SocketChannel: null as object | null, // 当前socket实例
+        // SocketRoom: null as object | null, // 当前socket实例
     }),
     actions: {
         initSelect(){
@@ -36,23 +36,17 @@ export const useCurUserState = defineStore('useCurUserState', {
         enterChannel(channel:channelAttribute) {
             this.room = {}
             router.push(`/channel/${channel.hashID}`).then(() => {
-                this.channel = channel
-                console.log(channel)
+                this.channel = channel;
             });
         },
         enterRoom(room:Room) {
             this.room = room;
-            this.curConnectedRoom = room;
+            // this.curConnectedRoom = room;
         },
         leaveRoom(){
-            if (this.SocketRoom) {
-                // @ts-ignore
-                this.SocketRoom.close(); // 关闭socket连接
-                useChannelState().memberChangeFlag = true
-                this.room = {}
-            }
+            this.leaveRoomFlag = !this.leaveRoomFlag
+            useChannelState().memberChangeFlag = !useChannelState().memberChangeFlag
         }
-        // onMounted
     },
     persist: {
         enabled: true,

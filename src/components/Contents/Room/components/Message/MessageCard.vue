@@ -89,8 +89,7 @@ watch(() => state.messages, () => {
 const socket = io('http://127.0.0.1:42224/ws', {
     path: '/ws/'
 });
-curUserState.SocketRoom = socket
-// const socket = curUserState.Socket
+
 const joinRoom = () => {
     const roomWebSocketID = `${curUserState.channel.hashID}-${curUserState.room.id}`
     // console.log(roomWebSocketID)
@@ -139,6 +138,20 @@ onBeforeUnmount(() => {
         channelState.memberChangeFlag = true
     }
 });
+
+// 监听退出标志变量
+watch(() => curUserState.leaveRoomFlag,()=>{
+    if (curUserState.leaveRoomFlag){
+        if (socket){
+            curUserState.leaveRoomFlag = !curUserState.leaveRoomFlag
+            curUserState.room = {}
+            socket.close()
+        }
+    }
+},{
+    immediate:true,
+    deep:true
+})
 </script>
 
 <style scoped>

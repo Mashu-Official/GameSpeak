@@ -69,16 +69,50 @@ export const useDevicesStore = defineStore('useDevicesStore', {
                 }
             }
         },
+
+        logDevices() {
+            // @ts-ignore
+            const logKeyValue = (key, value) => {
+                console.log(`${key}:`, value);
+            };
+
+            // // 打印设备列表
+            // logKeyValue('inputDevices', this.inputDevices);
+            // logKeyValue('outputDevices', this.outputDevices);
+
+            // 打印当前设备
+            logKeyValue('audioInput', this.audioInput.label);
+            logKeyValue('audioOutput', this.audioOutput.label);
+
+            // 打印系统默认设备
+            logKeyValue('defaultAudioInput', this.defaultAudioInput.label);
+            logKeyValue('defaultAudioOutput', this.defaultAudioOutput.label);
+        },
+
         async startMic() {
             try {
+                this.logDevices()
+                // 设置获取音频流的约束条件，如果指定了音频输入设备，则使用其deviceId；否则不限定设备
                 const constraints = {
-                    audio: {deviceId: this.audioInput?.deviceId ? {exact: this.audioInput.deviceId} : undefined}
+                    audio: this.audioInput?.deviceId ? { deviceId: { exact: this.audioInput.deviceId } } : true
                 };
+
+                // 获取用户的媒体流（在这里是音频流）
                 this.mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
+                console.log('成功获取到音频流:', this.mediaStream);
+
+                // 创建AudioContext实例
                 this.audioContext = new AudioContext();
+
                 if (this.mediaStream && this.audioContext) {
+                    // 从媒体流中创建一个MediaStreamAudioSourceNode作为音频源
                     this.source = this.audioContext.createMediaStreamSource(this.mediaStream);
+
+                    // 将音频源连接到AudioContext的destination以通过默认输出设备播放音频
                     this.source.connect(this.audioContext.destination);
+                    console.log('音频源已连接到默认输出设备');
+
+                    // 标记正在测试麦克风
                     this.isTestingMic = true;
                 }
             } catch (err) {

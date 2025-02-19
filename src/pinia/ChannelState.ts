@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import {Room} from "../interface&enum/Room.ts";
 import {UserInVoiceRoom} from "../interface&enum/userInVoiceRoom.ts";
 import axiosReq from "../assets/js/axiosBase/axiosObject.js";
+import {b} from "vite/dist/node/types.d-aGj9QkWt";
 
 
 // @ts-ignore
@@ -18,12 +19,9 @@ export const useChannelState = defineStore('useChannelState', {
                 this.roomList = res.data
             }
             catch (e) {
-                console.log(123)
                 console.log(e)
             }
         },
-
-
     },
 
 });

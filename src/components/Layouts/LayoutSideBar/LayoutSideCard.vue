@@ -102,7 +102,7 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, onUnmounted, reactive, ref} from "vue";
+import {nextTick, onMounted, onUnmounted, reactive, ref} from "vue";
 import {hideChannelName, showChannelName} from "../../../assets/js/channelName.ts";
 import {useCurUserState} from "../../../pinia/curUserState.ts"
 import {channelAttribute} from "../../../interface&enum/ChannelAttribute.ts";
@@ -146,6 +146,7 @@ const Channels = reactive<channelAttribute[]>([])
 
 
 // 修改这个 TODO 把每个服务中心去耦合 baseurl 要可变
+// 请求部分
 const getChannel = async () => {
     try {
         const res = await axiosReq.get("/api/channels")
@@ -174,11 +175,12 @@ const getChannel = async () => {
 }
 
 onMounted(async () => {
+    await nextTick()
     await getChannel()
 });
 
 onUnmounted(() => {
-
+    // curUserState.channel = {}
 })
 
 </script>

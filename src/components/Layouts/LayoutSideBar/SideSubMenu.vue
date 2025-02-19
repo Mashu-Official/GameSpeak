@@ -97,7 +97,7 @@ const curUserState = useCurUserState()
 const isOpenDrawer = ref(false);
 const custom = ref([])
 const toggleSubMenu = ()=>{
-    emit('emit', props.isOpenSubMenu)
+    emit('emit', !props.isOpenSubMenu)
 }
 enum whichSettingPage {
     WebSetting = "WebSetting",

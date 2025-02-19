@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import ChannelContent from "./Room/ChannelContent.vue";
+import ChannelContent from "./ChannelContent.vue";
 
 </script>
 

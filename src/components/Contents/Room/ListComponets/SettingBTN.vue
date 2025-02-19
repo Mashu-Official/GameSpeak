@@ -14,7 +14,8 @@
         <!--            设置-->
         <!--        </div>-->
 
-        <div class="ViewCard absolute right-8 whitespace-nowrap hidden flex flex-col space-y-1 py-3 -mt-3">
+        <div class="p-4 absolute right-4 -mt-8">
+            <div class="ViewCard whitespace-nowrap hidden flex-col space-y-1 py-3 ">
 
             <div class="p-2 rounded-lg" @click="createRoom">
                 新增房间
@@ -22,6 +23,7 @@
             <div class="p-2 rounded-lg" @click="deleteRoom">
                 删除房间
             </div>
+        </div>
         </div>
 
         <CreateRoom class="select-none" :isOpenModal="isOpenModal" @openModal="handleModalChange"/>
@@ -52,11 +54,11 @@ const handleModalChange = (openModal) => {
 </script>
 <style scoped>
 
-.relative:hover .ViewCard {
+.relative button:hover + div .ViewCard {
     display: flex;
 }
 
-.ViewCard:hover {
+.relative div:hover .ViewCard {
     display: flex;
 }
 
