@@ -154,9 +154,9 @@ const deviceStore = useDevicesStore()
 
 
 // 必须这么写 不然选择框会BUG
-if (!deviceStore.inputDevices){
-    deviceStore.getDevices()
-}
+// if (!deviceStore.inputDevices){
+//     deviceStore.getDevices()
+// }
 onMounted(async () => {
     // console.log('default',deviceStore.defaultAudioInput)
     // console.log('default',deviceStore.defaultAudioOutput)
@@ -165,6 +165,10 @@ onMounted(async () => {
     // console.log(defaultOutput.value, defaultInput.value)
     // console.log(deviceStore.audioInput)
     // console.log(deviceStore.audioOutput)
+    await nextTick()
+    if (!deviceStore.inputDevices){
+        await deviceStore.getDevices()
+    }
 })
 
 const logVal = (val) =>{

@@ -9,7 +9,7 @@
                 <audio :id="`remote-audio-${user.id}`" autoplay style="display:none;"></audio>
             </template>
         </div>
-            <audio id="local-audio" autoplay></audio>
+        <!--        <audio id="local-audio" autoplay></audio>-->
 
         <!-- 这里添加显示连接的部分 -->
         <div>
@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 import {useCurUserState} from "../../../../../pinia/curUserState.ts";
-import {nextTick, onMounted, onUnmounted, ref} from "vue";
+import {nextTick, onMounted, ref} from "vue";
 import UserCard from "./UserCard.vue";
 import {useChannelState} from "../../../../../pinia/ChannelState.ts";
 import {useDevicesStore} from "../../../../../pinia/deviceStore.ts";
@@ -46,15 +46,9 @@ const {
 
 onMounted(async () => {
     await nextTick();
-    await initMediaStream()
+    console.log(window.socket);
     document.getElementById('local-audio').srcObject = localStream.value;
 });
-
-// onUnmounted(()=>{
-//     window.socket.close()
-//     window.socket = null
-//     // curUserState.leaveRoom()
-// })
 
 </script>
 

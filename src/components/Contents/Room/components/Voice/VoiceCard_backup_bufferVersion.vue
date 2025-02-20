@@ -17,90 +17,114 @@
 
 <script setup lang="ts">
 import { useCurUserState } from "../../../../../pinia/curUserState.ts";
-import { nextTick, onMounted, onUnmounted, ref } from "vue";
-import { UserInVoiceRoom } from "../../../../../interface&enum/userInVoiceRoom.ts";
-import UserCard from "./UserCard.vue";
+import { nextTick, onMounted, onUnmounted } from "vue";
 import { useChannelState } from "../../../../../pinia/ChannelState.ts";
 import { useDevicesStore } from "../../../../../pinia/deviceStore.ts";
+import UserCard from "./UserCard.vue";
 
 const curUserState = useCurUserState();
 const channelState = useChannelState();
 const devicesStore = useDevicesStore();
 
 let mediaRecorder: MediaRecorder | null = null;
-let audioContext: AudioContext | null = null;
+let audioChunks: Blob[] = [];
+let play = false; // 控制播放状态
+let audioCtx: AudioContext | null = null;
 
 onMounted(async () => {
     await nextTick();
-    console.log(window.socket);
-    window.socket.emit('startVoiceChat', 'testword');
     await startAudioStream();
-    receiveAudioStream(); // 注意：这里不需要等待 receiveAudioStream 完成，因为它设置了一个监听器
+    receiveAudioStream();
 });
+
+let source: MediaStreamAudioSourceNode | null = null;
+let workletNode: AudioWorkletNode | null = null;
 
 const startAudioStream = async () => {
     try {
-        devicesStore.logDevices();
         const constraints = {
             audio: devicesStore.audioInput?.deviceId ? { deviceId: { exact: devicesStore.audioInput.deviceId } } : true,
         };
 
+        if (!audioCtx) {
+            audioCtx = new AudioContext();
+        }
+
         devicesStore.mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
         console.log('成功获取到音频流:', devicesStore.mediaStream);
 
-        if (devicesStore.mediaStream) {
-            mediaRecorder = new MediaRecorder(devicesStore.mediaStream, {
-                mimeType: 'audio/webm; codecs=opus',
-                audioBitsPerSecond: 128000, // 初始比特率，可根据网络状况动态调整
-            });
+        await audioCtx.audioWorklet.addModule('/src/assets/js/audio-processor.js');
+        workletNode = new AudioWorkletNode(audioCtx, 'audio-processor');
 
-            mediaRecorder.addEventListener("dataavailable", (event) => {
-                if (event.data && event.data.size > 0) {
-                    window.socket.emit("startAudioStream", event.data, (ack) => {
-                        if (!ack) {
-                            console.warn("音频块未确认，尝试重传...");
-                            window.socket.emit("startAudioStream", event.data); // 简单重传逻辑
-                        }
-                    });
+        if (devicesStore.mediaStream && workletNode) {
+            source = audioCtx.createMediaStreamSource(devicesStore.mediaStream);
+            source.connect(workletNode);
+            workletNode.connect(audioCtx.destination);
+
+            workletNode.port.onmessage = async (event) => {
+                const inputData = event.data;
+                let jsonData = JSON.stringify(inputData);
+                if (window.socket && window.socket.connected) {
+                    window.socket.emit('startAudioStream', jsonData);
+                } else {
+                    console.error("Socket is not connected");
                 }
-            });
-
-            mediaRecorder.start(100); // 每 100ms 触发一次 dataavailable 事件
-
-            // 初始化 AudioContext
-            audioContext = new AudioContext();
+            };
         }
     } catch (err) {
         console.error("访问麦克风失败:", err);
     }
 };
+const receiveAudioStream = async () => {
 
-// 接收音频流并播放
-const receiveAudioStream = () => {
-    window.socket.on('receiveAudioStream', async (audioChunk: Blob | ArrayBuffer) => {
-        let arrayBuffer: ArrayBuffer;
-        if (audioChunk instanceof Blob) {
-            arrayBuffer = await audioChunk.arrayBuffer();
-        } else {
-            arrayBuffer = audioChunk;
+    window.socket.on('receiveAudioStream', async (audioData: Blob | ArrayBuffer) => {
+        console.log('接收到的音频数据:', audioData);
+
+        if (!audioCtx) {
+            console.error("AudioContext is not initialized");
+            return;
         }
 
-        // 直接播放每一个接收到的音频数据块
-        await playAudio(arrayBuffer);
+        try {
+            let arrayBuffer: ArrayBuffer;
+            if (audioData instanceof Blob) {
+                arrayBuffer = await audioData.arrayBuffer();
+            } else {
+                arrayBuffer = audioData;
+            }
+
+            // 检查arrayBuffer是否为空
+            if (arrayBuffer.byteLength === 0) {
+                console.warn("Received empty audio data");
+                return;
+            }
+
+            const float32Array = new Float32Array(arrayBuffer);
+
+            // 动态创建AudioBuffer，根据实际接收到的数据大小
+            const myArrayBuffer = audioCtx.createBuffer(1, float32Array.length, 16000); // 假设采样率为16kHz
+            const nowBuffering = myArrayBuffer.getChannelData(0);
+
+            // 将接收到的数据赋值给AudioBuffer
+            for (let i = 0; i < float32Array.length; i++) {
+                nowBuffering[i] = float32Array[i];
+            }
+
+            const source = audioCtx.createBufferSource();
+            source.buffer = myArrayBuffer;
+            const gainNode = audioCtx.createGain();
+            source.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            const muteValue = play ? 1 : 0;
+            gainNode.gain.setValueAtTime(muteValue, audioCtx.currentTime);
+            source.start();
+        } catch (error) {
+            console.error('音频播放失败:', error);
+        }
     });
 };
 
-// 播放音频
-const playAudio = async (audioData: ArrayBuffer) => {
-    let audioBlob: Blob;
-    audioBlob = new Blob([new Uint8Array(audioData)], { type: 'audio/webm; codecs=opus' });
-    const audioUrl = URL.createObjectURL(audioBlob);
-    const audio = new Audio(audioUrl);
-    audio.addEventListener('error', (e) => console.error('播放失败:', e));
-    await audio.play().catch((error) => console.error('播放音频失败:', error));
-};
-
-// 组件卸载时清理资源
 onUnmounted(() => {
     if (mediaRecorder) {
         mediaRecorder.stop();
@@ -110,9 +134,11 @@ onUnmounted(() => {
         devicesStore.mediaStream.getTracks().forEach(track => track.stop());
         devicesStore.mediaStream = null;
     }
-    if (audioContext) {
-        audioContext.close();
-        audioContext = null;
+    if (source) {
+        source.disconnect();
+    }
+    if (workletNode) {
+        workletNode.disconnect();
     }
 });
 </script>
