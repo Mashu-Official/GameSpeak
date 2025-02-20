@@ -77,8 +77,8 @@ export const useDevicesStore = defineStore('useDevicesStore', {
             };
 
             // // 打印设备列表
-            // logKeyValue('inputDevices', this.inputDevices);
-            // logKeyValue('outputDevices', this.outputDevices);
+            logKeyValue('inputDevices', this.inputDevices);
+            logKeyValue('outputDevices', this.outputDevices);
 
             // 打印当前设备
             logKeyValue('audioInput', this.audioInput.label);
@@ -96,7 +96,6 @@ export const useDevicesStore = defineStore('useDevicesStore', {
                 const constraints = {
                     audio: this.audioInput?.deviceId ? { deviceId: { exact: this.audioInput.deviceId } } : true
                 };
-
                 // 获取用户的媒体流（在这里是音频流）
                 this.mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
                 console.log('成功获取到音频流:', this.mediaStream);
@@ -114,6 +113,7 @@ export const useDevicesStore = defineStore('useDevicesStore', {
 
                     // 标记正在测试麦克风
                     this.isTestingMic = true;
+                    return this.source
                 }
             } catch (err) {
                 console.error("Error accessing microphone", err);

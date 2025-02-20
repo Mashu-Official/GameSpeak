@@ -50,10 +50,11 @@
 <script setup lang="ts">
 import {useCurUserState} from "../../../../../pinia/curUserState.ts";
 import {Messages} from "../../../../../interface&enum/Messages.ts";
-import {nextTick, onBeforeUnmount, onMounted, reactive, ref, watch} from "vue";
+import {createApp, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch} from "vue";
 import io from 'socket.io-client';
 import {useChannelState} from "../../../../../pinia/ChannelState.ts";
 import {useRoute} from "vue-router";
+import App from "../../../../../App.vue";
 
 const route = useRoute()
 const curUserState = useCurUserState();
@@ -107,6 +108,7 @@ const joinRoom = () => {
     })
 }
 
+
 const sendMessage = () => {
     if (!message.value.trim()) return; // 确保消息不为空
     const msgFrame = {
@@ -132,9 +134,17 @@ socket.on('memberChange', (users)=>{
     channelState.roomMember = users
 })
 
+
+onMounted(()=>{
+    const globalSocket = reactive(socket);
+    // 将响应式对象挂载到全局属性
+    window.socket = globalSocket;
+})
+
 onBeforeUnmount(() => {
     if (socket) {
         socket.close(); // 关闭socket连接
+        curUserState.SocketRoom = null
         channelState.memberChangeFlag = true
     }
 });
@@ -145,6 +155,7 @@ watch(() => curUserState.leaveRoomFlag,()=>{
         if (socket){
             curUserState.leaveRoomFlag = !curUserState.leaveRoomFlag
             curUserState.room = {}
+            curUserState.SocketRoom = null
             socket.close()
         }
     }
@@ -152,6 +163,7 @@ watch(() => curUserState.leaveRoomFlag,()=>{
     immediate:true,
     deep:true
 })
+
 </script>
 
 <style scoped>

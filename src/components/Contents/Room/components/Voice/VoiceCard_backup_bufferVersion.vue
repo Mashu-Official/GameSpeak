@@ -17,39 +17,30 @@
 
 <script setup lang="ts">
 import { useCurUserState } from "../../../../../pinia/curUserState.ts";
-import { nextTick, onMounted, onUnmounted } from "vue";
+import { nextTick, onMounted, onUnmounted, ref } from "vue";
+import { UserInVoiceRoom } from "../../../../../interface&enum/userInVoiceRoom.ts";
+import UserCard from "./UserCard.vue";
 import { useChannelState } from "../../../../../pinia/ChannelState.ts";
 import { useDevicesStore } from "../../../../../pinia/deviceStore.ts";
-import UserCard from "./UserCard.vue";
 
 const curUserState = useCurUserState();
 const channelState = useChannelState();
 const devicesStore = useDevicesStore();
 
 let mediaRecorder: MediaRecorder | null = null;
-let audioChunks: Blob[] = [];
-
-// 获取支持的 MIME 类型
-const getSupportedMimeType = () => {
-    const types = [
-        'audio/webm;codecs=opus', // Chrome/Firefox
-        // 'audio/mp4', // Safari
-        // 'audio/aac', // 备用
-        'audio/ogg;codecs=opus' // 旧版浏览器
-    ];
-    return types.find(type => MediaRecorder.isTypeSupported(type)) || 'audio/wav';
-};
+let audioContext: AudioContext | null = null;
 
 onMounted(async () => {
     await nextTick();
     console.log(window.socket);
     window.socket.emit('startVoiceChat', 'testword');
     await startAudioStream();
-    receiveAudioStream();
+    receiveAudioStream(); // 注意：这里不需要等待 receiveAudioStream 完成，因为它设置了一个监听器
 });
 
 const startAudioStream = async () => {
     try {
+        devicesStore.logDevices();
         const constraints = {
             audio: devicesStore.audioInput?.deviceId ? { deviceId: { exact: devicesStore.audioInput.deviceId } } : true,
         };
@@ -58,67 +49,58 @@ const startAudioStream = async () => {
         console.log('成功获取到音频流:', devicesStore.mediaStream);
 
         if (devicesStore.mediaStream) {
-            const mimeType = getSupportedMimeType();
-            console.log('Selected MIME type:', mimeType);
-
             mediaRecorder = new MediaRecorder(devicesStore.mediaStream, {
-                mimeType,
-                audioBitsPerSecond: 64000,
+                mimeType: 'audio/webm; codecs=opus',
+                audioBitsPerSecond: 128000, // 初始比特率，可根据网络状况动态调整
             });
-
 
             mediaRecorder.addEventListener("dataavailable", (event) => {
-                // if (event.data && event.data.size > 0) {
-                    audioChunks.push(event.data);
-                // }
-            });
-            //
-            mediaRecorder.addEventListener("stop", function () {
-                let audioBlob = new Blob(audioChunks);
-                audioChunks = [];
-                let fileReader = new FileReader();
-                fileReader.readAsDataURL(audioBlob);
-                fileReader.onloadend = function () {
-                    let base64String = fileReader.result;
-                    window.socket.emit("startAudioStream", base64String);
-                };
-
-                mediaRecorder.start();
-                setTimeout(function () {
-                    mediaRecorder.stop();
-                }, 1000);
+                if (event.data && event.data.size > 0) {
+                    window.socket.emit("startAudioStream", event.data, (ack) => {
+                        if (!ack) {
+                            console.warn("音频块未确认，尝试重传...");
+                            window.socket.emit("startAudioStream", event.data); // 简单重传逻辑
+                        }
+                    });
+                }
             });
 
-            mediaRecorder.start();
-            // 初始触发一次 stop 事件以开始循环
-            setTimeout(() => {
-                mediaRecorder.stop();
-            }, 1000);
+            mediaRecorder.start(100); // 每 100ms 触发一次 dataavailable 事件
+
+            // 初始化 AudioContext
+            audioContext = new AudioContext();
         }
     } catch (err) {
         console.error("访问麦克风失败:", err);
     }
 };
 
+// 接收音频流并播放
 const receiveAudioStream = () => {
-    window.socket.on('receiveAudioStream', (audioData: Blob | ArrayBuffer) => {
-        console.log('接收到的音频数据:', audioData);
-        try {
-            let newData = audioData.split(";");
-            newData[0] = "data:audio/ogg;";
-            newData = newData[0] + newData[1];
-
-            let audio = new Audio(newData);
-            if (!audio) {
-                return;
-            }
-            audio.play();
-        } catch (error) {
-            console.error('音频播放失败:', error);
+    window.socket.on('receiveAudioStream', async (audioChunk: Blob | ArrayBuffer) => {
+        let arrayBuffer: ArrayBuffer;
+        if (audioChunk instanceof Blob) {
+            arrayBuffer = await audioChunk.arrayBuffer();
+        } else {
+            arrayBuffer = audioChunk;
         }
+
+        // 直接播放每一个接收到的音频数据块
+        await playAudio(arrayBuffer);
     });
 };
 
+// 播放音频
+const playAudio = async (audioData: ArrayBuffer) => {
+    let audioBlob: Blob;
+    audioBlob = new Blob([new Uint8Array(audioData)], { type: 'audio/webm; codecs=opus' });
+    const audioUrl = URL.createObjectURL(audioBlob);
+    const audio = new Audio(audioUrl);
+    audio.addEventListener('error', (e) => console.error('播放失败:', e));
+    await audio.play().catch((error) => console.error('播放音频失败:', error));
+};
+
+// 组件卸载时清理资源
 onUnmounted(() => {
     if (mediaRecorder) {
         mediaRecorder.stop();
@@ -128,9 +110,9 @@ onUnmounted(() => {
         devicesStore.mediaStream.getTracks().forEach(track => track.stop());
         devicesStore.mediaStream = null;
     }
-    if (window.socket) {
-        window.socket.close();
-        window.socket = null;
+    if (audioContext) {
+        audioContext.close();
+        audioContext = null;
     }
 });
 </script>

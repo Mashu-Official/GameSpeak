@@ -49,15 +49,13 @@ const curUserState = useCurUserState()
 const channelState = useChannelState()
 const route = useRoute()
 
-onMounted(()=>{
-    curUserState.room = {}
-})
+// onMounted(()=>{
+//     curUserState.room = {}
+// })
 
 const socket = io('http://127.0.0.1:42224/ws', {
     path: '/ws/'
 });
-
-curUserState.socketRoom = socket
 
 // 加入频道 进入监听
 socket.emit('joinChannel',curUserState.channel.hashID)

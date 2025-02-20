@@ -25,8 +25,9 @@ export const useCurUserState = defineStore('useCurUserState', {
         token: null as string | null,
         isElectronEnv: !!window.ipcRenderer, // 判断是否在Electron环境中
         leaveRoomFlag: false as boolean,
+
         // SocketChannel: null as object | null, // 当前socket实例
-        // SocketRoom: null as object | null, // 当前socket实例
+        SocketRoom: null as object | null, // 当前socket实例
     }),
     actions: {
         initSelect(){
@@ -44,6 +45,7 @@ export const useCurUserState = defineStore('useCurUserState', {
             // this.curConnectedRoom = room;
         },
         leaveRoom(){
+            console.log(this.SocketRoom)
             this.leaveRoomFlag = !this.leaveRoomFlag
             useChannelState().memberChangeFlag = !useChannelState().memberChangeFlag
         }
