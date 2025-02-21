@@ -1,15 +1,16 @@
 <template>
-    <div class="flex-shrink-0 select-none box-content VoiceRoomMembers">
+    <div class="flex-shrink-0 select-none box-content VoiceRoomMembers" :key="curUserState.room">
         <div class="relative flex flex-wrap text-sm flex-shrink-0" ref="scrollRef">
             <!-- 这个是当前用户 -->
             <UserCard v-if="curUserState.userInfo.name" :user="curUserState.userInfo" />
             <audio :src="devicesStore.mediaStream" />
             <template v-for="user in channelState.roomMember" :key="user.id">
                 <UserCard :user="user" v-if="curUserState.userInfo.id !== user.id" />
+                <!--                TODO socket id 和userid 不是一个-->
                 <audio :id="`remote-audio-${user.id}`" autoplay style="display:none;"></audio>
             </template>
         </div>
-        <!--        <audio id="local-audio" autoplay></audio>-->
+        <audio id="local-audio" autoplay></audio>
 
         <!-- 这里添加显示连接的部分 -->
         <div>
@@ -26,7 +27,7 @@
 
 <script setup lang="ts">
 import {useCurUserState} from "../../../../../pinia/curUserState.ts";
-import {nextTick, onMounted, ref} from "vue";
+import {nextTick, onMounted, onUnmounted, ref} from "vue";
 import UserCard from "./UserCard.vue";
 import {useChannelState} from "../../../../../pinia/ChannelState.ts";
 import {useDevicesStore} from "../../../../../pinia/deviceStore.ts";
@@ -42,13 +43,19 @@ const {
     startAudioStream,
     receiveAudioStream,
     initMediaStream,
+    closeMediaStream
 } = useAudioWebRTC();
 
 onMounted(async () => {
     await nextTick();
-    console.log(window.socket);
+    await initMediaStream()
     document.getElementById('local-audio').srcObject = localStream.value;
 });
+
+onUnmounted(()=>{
+    closeMediaStream()
+    // curUserState.leaveRoom()
+})
 
 </script>
 

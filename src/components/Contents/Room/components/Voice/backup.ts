@@ -4,139 +4,6 @@ import { useChannelState } from "../../../../../pinia/ChannelState.ts";
 import { useDevicesStore } from "../../../../../pinia/deviceStore.ts";
 
 // 音频 WebRTC 相关功能
-// 音频 WebRTC 相关功能
-export class PcmRecorder {
-    private config: any;
-    private context: AudioContext;
-    private analyser: AnalyserNode;
-    private recorder: ScriptProcessorNode;
-    private audioBufferQueue: Float32Array[] = [];
-    private previousBuffer: AudioBuffer | null = null;
-    private audioInput: MediaStreamAudioSourceNode | null = null;
-
-    constructor() {
-        this.config = {
-            constraints:{
-                audio: {
-                    deviceId: true,
-                    channelCount: 2,
-                    // volume: 0.05,
-                    sampleRate: 9600000,  // 采样率
-                    sampleSize: 24,
-                    // latency: 0.5,
-                },
-            },
-            fftSize: 512,
-            numberChannels: 2,
-        }
-        this.context = new (window.AudioContext || window.webkitAudioContext)();
-        this.analyser = this.context.createAnalyser();
-        this.analyser.fftSize = this.config.fftSize;
-
-        // 创建一个ScriptProcessorNode连接到AudioContext
-        this.recorder = this.context.createScriptProcessor(this.config.fftSize, this.config.numberChannels, this.config.numberChannels);
-        this.recorder.onaudioprocess = this.onaudioprocess.bind(this);
-    }
-
-    // 初始化音频流并关联到AudioContext
-    async init(): Promise<void> {
-        try {
-            // 使用 await 获取用户媒体流
-            const stream = await navigator.mediaDevices.getUserMedia(this.config.constraints);
-
-            // 处理音频流
-            this.audioInput = this.context.createMediaStreamSource(stream);
-            this.audioInput.connect(this.analyser);
-            this.analyser.connect(this.recorder);
-            this.recorder.connect(this.context.destination);
-
-            // 将流传递到audioPlayer进行实时播放
-            const audioPlayer = document.getElementById('audioPlayer') as HTMLAudioElement;
-            audioPlayer.srcObject = stream;
-        } catch (error) {
-            console.error('获取麦克风音频失败', error);
-        }
-    }
-
-
-    // 处理音频数据
-    private onaudioprocess(e: AudioProcessingEvent): void {
-        const data = e.inputBuffer.getChannelData(0); // 采集单通道音频数据
-
-        // 将音频数据加入缓冲区
-        this.audioBufferQueue.push(new Float32Array(data));
-
-        // 如果缓冲区数据大于一定大小，则处理并播放音频
-        if (this.audioBufferQueue.length * this.config.fftSize >= this.config.fftSize) {
-            this.handlePcm();
-        }
-    }
-
-    // 实时播放处理过的音频数据
-    private handlePcm(): void {
-        const totalLength = this.audioBufferQueue.reduce((sum, buffer) => sum + buffer.length, 0);
-        const audioBuffer = this.context.createBuffer(1, totalLength, this.context.sampleRate);
-
-        let offset = 0;
-        for (const buffer of this.audioBufferQueue) {
-            audioBuffer.getChannelData(0).set(buffer, offset);
-            offset += buffer.length;
-        }
-
-        // 清空缓冲区
-        this.audioBufferQueue = [];
-
-        // 如果存在上一个音频缓冲区，进行交叉淡入淡出
-        if (this.previousBuffer) {
-            this.applyCrossfade(this.previousBuffer, audioBuffer);
-        }
-
-        // 保存当前音频缓冲区作为下次交叉淡入淡出的基准
-        this.previousBuffer = audioBuffer;
-
-        // 创建一个AudioBufferSourceNode来播放音频
-        const source = this.context.createBufferSource();
-        source.buffer = audioBuffer;
-
-        // 在当前时间稍微延迟播放（减少延迟带来的影响）
-        const currentTime = this.context.currentTime;
-        source.start(currentTime + 0.05); // 延迟播放0.05秒（根据需要调整）
-
-        source.connect(this.context.destination); // 连接到输出
-    }
-
-    // 交叉淡入/淡出处理
-    private applyCrossfade(previousBuffer: AudioBuffer, currentBuffer: AudioBuffer): void {
-        const fadeDuration = 0.1; // 交叉淡入淡出的时间（秒）
-        const fadeSampleCount = Math.floor(fadeDuration * this.context.sampleRate);
-        const prevData = previousBuffer.getChannelData(0);
-        const currData = currentBuffer.getChannelData(0);
-
-        // 淡入：逐渐增加当前音频的音量
-        this.fadeIn(currData, fadeSampleCount);
-
-        // 淡出：逐渐减少上一个音频的音量
-        this.fadeOut(prevData, fadeSampleCount);
-    }
-
-    // 淡入处理
-    private fadeIn(data: Float32Array, fadeSampleCount: number): void {
-        for (let i = 0; i < fadeSampleCount; i++) {
-            const fadeInFactor = i / fadeSampleCount;
-            data[i] *= fadeInFactor;
-        }
-    }
-
-    // 淡出处理
-    private fadeOut(data: Float32Array, fadeSampleCount: number): void {
-        for (let i = 0; i < fadeSampleCount; i++) {
-            const fadeOutFactor = 1 - (i / fadeSampleCount);
-            data[data.length - fadeSampleCount + i] *= fadeOutFactor;
-        }
-    }
-}
-
-
 export const useAudioWebRTC = () => {
     const curUserState = useCurUserState();
     const channelState = useChannelState();
@@ -144,6 +11,22 @@ export const useAudioWebRTC = () => {
 
     const peerConnections = ref<{ [key: string]: RTCPeerConnection }>({}); // 存储每个用户的 peer connection
     const localStream = ref<MediaStream | null>(null); // 本地音频流
+
+    // 音频设备约束
+    const constraints: MediaStreamConstraints = {
+        audio: {
+            deviceId: devicesStore.audioInput?.deviceId ? { exact: devicesStore.audioInput.deviceId } : true,
+            channelCount: 2,
+            volume: devicesStore.inputVolume * 0.01,
+            sampleRate: 48000,  // 采样率
+            autoGainControl: true, // 启用自动增益控制
+            // echoCancellation: true, // 启用回声消除
+            // noiseSuppression: true, // 启用噪声抑制
+            // highpassFilter: true,  // 高通滤波器
+        },
+    };
+
+    const audioByteRate: number = devicesStore.audioByteRate   // 音频流的上传码率
 
     // WebRTC 配置，包括多个 STUN 服务器
     const configuration = {
@@ -155,6 +38,16 @@ export const useAudioWebRTC = () => {
         ],
         iceCandidatePoolSize: 10, // 提高候选池大小
         rtcpMuxPolicy: 'require',  // 强制使用 RTP 多路复用，减少 RTP 流的延迟
+    };
+
+    // 初始化本地媒体流
+    const initMediaStream = async () => {
+        try {
+            devicesStore.mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
+            localStream.value = devicesStore.mediaStream; // 保留本地流的引用
+        } catch (error) {
+            console.error('无法访问麦克风', error);
+        }
     };
 
     // 创建 WebRTC offer 并发送音频流
@@ -273,8 +166,3 @@ export const useAudioWebRTC = () => {
         closeMediaStream, // 关闭流和 WebRTC 连接
     };
 };
-
-
-export const useAudioWebSocket = ()=>{
-
-}

@@ -25,6 +25,7 @@ export const useDevicesStore = defineStore('useDevicesStore', {
         mediaStream: null as MediaStream | null, // 当前音频流
         audioContext: null as AudioContext | null, // 当前音频上下文
         source: null as MediaStreamAudioSourceNode | null, // 当前音频源
+        audioByteRate: 128000 as number, // 音频流码率
         isTestingMic: false, // 是否正在测试麦克风
         // 快捷键 ↓
         micToggleKey: '' as string | null,  // 开闭麦快捷键

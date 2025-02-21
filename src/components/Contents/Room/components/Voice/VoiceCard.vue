@@ -1,12 +1,13 @@
 <template>
-    <div class="flex-shrink-0 select-none box-content VoiceRoomMembers">
+    <div class="flex-shrink-0 select-none box-content VoiceRoomMembers" :key="curUserState.room">
         <div class="relative flex flex-wrap text-sm flex-shrink-0" ref="scrollRef">
             <!-- 这个是当前用户 -->
             <UserCard v-if="curUserState.userInfo.name" :user="curUserState.userInfo" />
             <audio :src="devicesStore.mediaStream" />
             <template v-for="user in channelState.roomMember" :key="user.id">
                 <UserCard :user="user" v-if="curUserState.userInfo.id !== user.id" />
-                <audio :id="`remote-audio-${user.id}`" autoplay style="display:none;"></audio>
+<!--                TODO socket id 和userid 不是一个-->
+                <audio id='audioPlayer' autoplay style="display:none;"></audio>
             </template>
         </div>
             <audio id="local-audio" autoplay></audio>
@@ -30,31 +31,25 @@ import {nextTick, onMounted, onUnmounted, ref} from "vue";
 import UserCard from "./UserCard.vue";
 import {useChannelState} from "../../../../../pinia/ChannelState.ts";
 import {useDevicesStore} from "../../../../../pinia/deviceStore.ts";
-import {useAudioWebRTC} from "./VoiceCardWebRTC.ts";
+import {PcmRecorder, useAudioWebRTC} from "./VoiceCardWebRTC.ts";
 
 const curUserState = useCurUserState();
 const channelState = useChannelState();
 const devicesStore = useDevicesStore();
 
-const {
-    peerConnections,
-    localStream,
-    startAudioStream,
-    receiveAudioStream,
-    initMediaStream,
-} = useAudioWebRTC();
+const recorder = new PcmRecorder();
 
 onMounted(async () => {
     await nextTick();
-    await initMediaStream()
-    document.getElementById('local-audio').srcObject = localStream.value;
+
+    await recorder.init();
+    // document.getElementById('local-audio').srcObject = localStream.value;
 });
 
-// onUnmounted(()=>{
-//     window.socket.close()
-//     window.socket = null
-//     // curUserState.leaveRoom()
-// })
+onUnmounted(()=>{
+    // closeMediaStream()
+    // curUserState.leaveRoom()
+})
 
 </script>
 

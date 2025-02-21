@@ -3,6 +3,7 @@ import router from "../router";
 import {channelAttribute} from "../interface&enum/ChannelAttribute.ts";
 import {Room} from "../interface&enum/Room.ts";
 import {useChannelState} from "./ChannelState.ts";
+import {useDevicesStore} from "./deviceStore.ts";
 
 
 interface UserInfo {
@@ -45,9 +46,14 @@ export const useCurUserState = defineStore('useCurUserState', {
             // this.curConnectedRoom = room;
         },
         leaveRoom(){
-            console.log(this.SocketRoom)
+
             this.leaveRoomFlag = !this.leaveRoomFlag
             useChannelState().memberChangeFlag = !useChannelState().memberChangeFlag
+            // 如果在语音房间 存在媒体流
+            if (useDevicesStore().mediaStream){
+                useDevicesStore().mediaStream = null
+            }
+
         }
     },
     persist: {
