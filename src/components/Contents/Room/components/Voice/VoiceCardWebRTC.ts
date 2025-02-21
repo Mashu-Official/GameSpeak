@@ -1,29 +1,44 @@
-import { ref } from 'vue';
-import { useCurUserState } from "../../../../../pinia/curUserState.ts";
-import { useChannelState } from "../../../../../pinia/ChannelState.ts";
-import { useDevicesStore } from "../../../../../pinia/deviceStore.ts";
-
-// 音频 WebRTC 相关功能
-// 音频 WebRTC 相关功能
+import {ref} from 'vue';
+import {useDevicesStore} from "../../../../../pinia/deviceStore.ts";
+import { Socket } from "socket.io-client";
+export enum audioConnectType {
+    websocket = 'websocket',
+    webrtc = 'webrtc'
+}
+// 音频处理类
 export class PcmRecorder {
+    // 配置对象，用于存储录音的相关参数
     private config: any;
+    // 创建音频上下文（AudioContext）对象，用于管理音频资源的处理与控制
     private context: AudioContext;
-    private analyser: AnalyserNode;
-    private recorder: ScriptProcessorNode;
+    // 创建音频分析器（AnalyserNode），用于实时分析音频数据的频率等信息
+    private readonly analyser: AnalyserNode;
+    // 创建脚本处理节点（是ScriptProcessorNode AudioWorklet实在不搞不明白），用于通过JavaScript实时处理音频流数据
+    private readonly recorder: ScriptProcessorNode;
+    // 用于存储录制的音频数据，以便后续处理
     private audioBufferQueue: Float32Array[] = [];
+    // 保存上一个音频缓冲区，用于交叉淡入淡出
     private previousBuffer: AudioBuffer | null = null;
-    private audioInput: MediaStreamAudioSourceNode | null = null;
+    // 音频输入节点，将MediaStream连接到AudioContext以便进行音频处理
+    public audioInput: MediaStreamAudioSourceNode | null = null;
 
-    constructor() {
+    protected audioStream: MediaStream;
+    private audioWebSocket: AudioWebSocket;
+
+    public isWebsocketOrWebRTC_mode: audioConnectType;
+
+    constructor(isWebsocketOrWebRTC_mode= audioConnectType['websocket']) {
         this.config = {
-            constraints:{
+            constraints: {
                 audio: {
-                    deviceId: true,
-                    channelCount: 2,
-                    // volume: 0.05,
-                    sampleRate: 9600000,  // 采样率
-                    sampleSize: 24,
-                    // latency: 0.5,
+                    deviceId: true,     //设备ID
+                    channelCount: 2,  // 双声道
+                    // volume: 0.05,       // 输入音量
+                    sampleRate: 9600000,  // 采样率 单位是HZ
+                    sampleSize: 24,   // 音频位数
+                    // echoCancellation: true, // 启用回声消除
+                    // noiseSuppression: true, // 启用噪声抑制
+                    // highpassFilter: true,  // 高通滤波器
                 },
             },
             fftSize: 512,
@@ -36,23 +51,31 @@ export class PcmRecorder {
         // 创建一个ScriptProcessorNode连接到AudioContext
         this.recorder = this.context.createScriptProcessor(this.config.fftSize, this.config.numberChannels, this.config.numberChannels);
         this.recorder.onaudioprocess = this.onaudioprocess.bind(this);
+        this.isWebsocketOrWebRTC_mode = isWebsocketOrWebRTC_mode
+
+        if(this.isWebsocketOrWebRTC_mode){
+            this.audioWebSocket = new AudioWebSocket()
+        }
+        else if(this.isWebsocketOrWebRTC_mode === ""){
+
+        }
     }
 
     // 初始化音频流并关联到AudioContext
     async init(): Promise<void> {
         try {
-            // 使用 await 获取用户媒体流
-            const stream = await navigator.mediaDevices.getUserMedia(this.config.constraints);
-
+            // 获取媒体流
+            this.audioStream = await navigator.mediaDevices.getUserMedia(this.config.constraints);
+            useDevicesStore().mediaStream = this.audioStream
             // 处理音频流
-            this.audioInput = this.context.createMediaStreamSource(stream);
+            this.audioInput = this.context.createMediaStreamSource(this.audioStream);
             this.audioInput.connect(this.analyser);
             this.analyser.connect(this.recorder);
             this.recorder.connect(this.context.destination);
 
-            // 将流传递到audioPlayer进行实时播放
+            // 将流传递到audioPlayer进行实时播放 测试语句
             const audioPlayer = document.getElementById('audioPlayer') as HTMLAudioElement;
-            audioPlayer.srcObject = stream;
+            audioPlayer.srcObject = this.audioStream;
         } catch (error) {
             console.error('获取麦克风音频失败', error);
         }
@@ -68,12 +91,19 @@ export class PcmRecorder {
 
         // 如果缓冲区数据大于一定大小，则处理并播放音频
         if (this.audioBufferQueue.length * this.config.fftSize >= this.config.fftSize) {
-            this.handlePcm();
+            this.handlePcm((audioBuffer)=>{
+
+                // 通过websocket发送
+                this.audioWebSocket.sendAudioBuffer(audioBuffer)
+
+                // 通过webrtc连接发送
+
+            });
         }
     }
 
     // 实时播放处理过的音频数据
-    private handlePcm(): void {
+    private handlePcm(callback): void {
         const totalLength = this.audioBufferQueue.reduce((sum, buffer) => sum + buffer.length, 0);
         const audioBuffer = this.context.createBuffer(1, totalLength, this.context.sampleRate);
 
@@ -85,6 +115,8 @@ export class PcmRecorder {
 
         // 清空缓冲区
         this.audioBufferQueue = [];
+
+        callback(audioBuffer)
 
         // 如果存在上一个音频缓冲区，进行交叉淡入淡出
         if (this.previousBuffer) {
@@ -100,7 +132,7 @@ export class PcmRecorder {
 
         // 在当前时间稍微延迟播放（减少延迟带来的影响）
         const currentTime = this.context.currentTime;
-        source.start(currentTime + 0.05); // 延迟播放0.05秒（根据需要调整）
+        source.start(currentTime + 0.1); // 延迟播放0.05秒（根据需要调整）
 
         source.connect(this.context.destination); // 连接到输出
     }
@@ -136,21 +168,15 @@ export class PcmRecorder {
     }
 }
 
-
-export const useAudioWebRTC = () => {
-    const curUserState = useCurUserState();
-    const channelState = useChannelState();
-    const devicesStore = useDevicesStore();
-
+// webrtc 部分 通过peer连接发送语音
+export const AudioWebRTC = () => {
     const peerConnections = ref<{ [key: string]: RTCPeerConnection }>({}); // 存储每个用户的 peer connection
-    const localStream = ref<MediaStream | null>(null); // 本地音频流
-
     // WebRTC 配置，包括多个 STUN 服务器
     const configuration = {
         iceServers: [
-            { urls: 'stun:stun.l.google.com:19302' },
-            { urls: 'stun:stun2.l.google.com:19302' },
-            { urls: 'stun:stun3.l.google.com:19302' },
+            {urls: 'stun:stun.l.google.com:19302'},
+            {urls: 'stun:stun2.l.google.com:19302'},
+            {urls: 'stun:stun3.l.google.com:19302'},
             // 可以根据需要添加更多 STUN/TURN 服务器
         ],
         iceCandidatePoolSize: 10, // 提高候选池大小
@@ -178,7 +204,7 @@ export const useAudioWebRTC = () => {
         // 创建 offer
         pc.createOffer()
             .then(offer => pc.setLocalDescription(offer))
-            .then(() => window.socket.emit('offer', { offer: pc.localDescription, to: userId }));
+            .then(() => window.socket.emit('offer', {offer: pc.localDescription, to: userId}));
 
         peerConnections.value[userId] = pc;
     };
@@ -208,7 +234,7 @@ export const useAudioWebRTC = () => {
             const answer = await pc.createAnswer();
             await pc.setLocalDescription(answer);
 
-            window.socket.emit("answer", { answer: pc.localDescription, to: data.from });
+            window.socket.emit("answer", {answer: pc.localDescription, to: data.from});
 
             // 处理音频流
             pc.ontrack = (event) => {
@@ -247,21 +273,21 @@ export const useAudioWebRTC = () => {
     };
 
     // 关闭本地流并停止 WebRTC 连接
-    const closeMediaStream = () => {
-        if (localStream.value) {
-            // 停止本地流的所有轨道
-            localStream.value.getTracks().forEach(track => track.stop());
-            devicesStore.mediaStream = null; // 清空媒体流引用
-            localStream.value = null; // 清空本地流
-        }
-
-        // 关闭所有的 peer connection
-        Object.values(peerConnections.value).forEach(pc => {
-            pc.close(); // 关闭 WebRTC 连接
-        });
-
-        peerConnections.value = {}; // 清空 peerConnections 引用
-    };
+    // const closeMediaStream = () => {
+    //     if (localStream.value) {
+    //         // 停止本地流的所有轨道
+    //         localStream.value.getTracks().forEach(track => track.stop());
+    //         useDevicesStore().mediaStream = null; // 清空媒体流引用
+    //
+    //     }
+    //
+    //     // 关闭所有的 peer connection
+    //     Object.values(peerConnections.value).forEach(pc => {
+    //         pc.close(); // 关闭 WebRTC 连接
+    //     });
+    //
+    //     peerConnections.value = {}; // 清空 peerConnections 引用
+    // };
 
     return {
         peerConnections,
@@ -273,8 +299,28 @@ export const useAudioWebRTC = () => {
         closeMediaStream, // 关闭流和 WebRTC 连接
     };
 };
+export class AudioWebSocket {
+    private socket: Socket;
 
+    constructor() {
+        this.socket = window.socket;
+    }
 
-export const useAudioWebSocket = ()=>{
+    // 发送音频缓冲区
+    sendAudioBuffer(audioBuffer: AudioBuffer): void {
+        // 使用 Socket 发送音频缓冲区数据
+        this.socket.emit("startAudioStream", audioBuffer.getChannelData(0));
+    }
 
+    // 接收音频缓冲区并播放
+    receiveAudioBuffer(): void {
+        this.socket.on('receiveAudioStream', (audioBuffer: Float32Array) => {
+            console.log(audioBuffer);
+
+            // 将接收到的音频数据转为 Blob 并播放
+            const audioUrl = URL.createObjectURL(new Blob([audioBuffer], { type: 'audio/webm' }));
+            const audio = new Audio(audioUrl);
+            audio.play().catch(error => console.error('Error playing audio:', error));
+        });
+    }
 }
