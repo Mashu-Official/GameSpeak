@@ -166,3 +166,135 @@ export const useAudioWebRTC = () => {
         closeMediaStream, // 关闭流和 WebRTC 连接
     };
 };
+
+// webrtc 部分 通过peer连接发送语音
+export const AudioWebRTC = () => {
+    const peerConnections = ref<{ [key: string]: RTCPeerConnection }>({}); // 存储每个用户的 peer connection
+    // WebRTC 配置，包括多个 STUN 服务器
+    const configuration = {
+        iceServers: [
+            {urls: 'stun:stun.l.google.com:19302'},
+            {urls: 'stun:stun2.l.google.com:19302'},
+            {urls: 'stun:stun3.l.google.com:19302'},
+            // 可以根据需要添加更多 STUN/TURN 服务器
+        ],
+        iceCandidatePoolSize: 10, // 提高候选池大小
+        rtcpMuxPolicy: 'require',  // 强制使用 RTP 多路复用，减少 RTP 流的延迟
+    };
+
+    // 创建 WebRTC offer 并发送音频流
+    const createOffer = (userId: string) => {
+        const pc = new RTCPeerConnection(configuration);
+
+        // 添加本地音频流到 WebRTC 连接
+        if (devicesStore.mediaStream) {
+            devicesStore.mediaStream.getTracks().forEach(track => pc.addTrack(track, devicesStore.mediaStream));
+        }
+
+        // 调整音频轨道的比特率（例如设置最大比特率）
+        pc.getSenders().forEach(sender => {
+            if (sender.track && sender.track.kind === 'audio') {
+                const params = sender.getParameters();
+                params.encodings[0].maxBitrate = audioByteRate; // 设置音频比特率
+                sender.setParameters(params);
+            }
+        });
+
+        // 创建 offer
+        pc.createOffer()
+            .then(offer => pc.setLocalDescription(offer))
+            .then(() => window.socket.emit('offer', {offer: pc.localDescription, to: userId}));
+
+        peerConnections.value[userId] = pc;
+    };
+
+    // 向其他房间成员发送音频流（发起音频流）
+    const startAudioStream = () => {
+        for (const user of channelState.roomMember) {
+            if (user.id !== curUserState.userInfo.id) {
+                createOffer(user.id);
+            }
+        }
+    };
+
+    // 接收音频流
+    const receiveAudioStream = () => {
+        // 监听从其他用户发来的 offer
+        window.socket.on('offer', async (data) => {
+            const pc = new RTCPeerConnection(configuration);
+
+            // 添加本地音频流到 WebRTC 连接
+            if (devicesStore.mediaStream) {
+                devicesStore.mediaStream.getTracks().forEach(track => pc.addTrack(track, devicesStore.mediaStream));
+            }
+
+            // 设置远程描述并创建 answer
+            await pc.setRemoteDescription(new RTCSessionDescription(data.offer));
+            const answer = await pc.createAnswer();
+            await pc.setLocalDescription(answer);
+
+            window.socket.emit("answer", {answer: pc.localDescription, to: data.from});
+
+            // 处理音频流
+            pc.ontrack = (event) => {
+                const remoteAudio = document.getElementById(`remote-audio-${data.from}`) as HTMLAudioElement;
+                if (remoteAudio.srcObject !== event.streams[0]) {
+                    remoteAudio.srcObject = event.streams[0];
+                }
+            };
+
+            peerConnections.value[data.from] = pc;
+        });
+
+        // 监听来自其他用户的 answer
+        window.socket.on('answer', (data) => {
+            const pc = peerConnections.value[data.from];
+            pc.setRemoteDescription(new RTCSessionDescription(data.answer));
+        });
+
+        // 监听 ICE 候选信息
+        window.socket.on('candidate', (data) => {
+            const pc = peerConnections.value[data.from];
+            pc.addIceCandidate(new RTCIceCandidate(data.candidate));
+        });
+    };
+
+    // 监听 ICE 连接状态变化（网络连接质量监控）
+    const onIceConnectionStateChange = () => {
+        for (const pc of Object.values(peerConnections.value)) {
+            pc.oniceconnectionstatechange = () => {
+                const state = pc.iceConnectionState;
+                if (state === 'failed' || state === 'disconnected') {
+                    console.error(`ICE 连接失败：${state}`);
+                }
+            };
+        }
+    };
+
+    // 关闭本地流并停止 WebRTC 连接
+    // const closeMediaStream = () => {
+    //     if (localStream.value) {
+    //         // 停止本地流的所有轨道
+    //         localStream.value.getTracks().forEach(track => track.stop());
+    //         useDevicesStore().mediaStream = null; // 清空媒体流引用
+    //
+    //     }
+    //
+    //     // 关闭所有的 peer connection
+    //     Object.values(peerConnections.value).forEach(pc => {
+    //         pc.close(); // 关闭 WebRTC 连接
+    //     });
+    //
+    //     peerConnections.value = {}; // 清空 peerConnections 引用
+    // };
+
+    return {
+        peerConnections,
+        localStream,
+        startAudioStream,  // 启动音频流发送
+        receiveAudioStream,  // 启动音频流接收
+        initMediaStream, // 初始化本地音频流
+        onIceConnectionStateChange, // 监听 ICE 状态变化
+        closeMediaStream, // 关闭流和 WebRTC 连接
+    };
+};

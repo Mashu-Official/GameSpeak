@@ -7,20 +7,20 @@
             <template v-for="user in channelState.roomMember" :key="user.id">
                 <UserCard :user="user" v-if="curUserState.userInfo.id !== user.id" />
 <!--                TODO socket id 和userid 不是一个-->
-                <audio id='audioPlayer' autoplay style="display:none;"></audio>
+<!--                <audio id='audioPlayer' autoplay style="display:none;"></audio>--><!---->
             </template>
         </div>
             <audio id="local-audio" autoplay></audio>
 
         <!-- 这里添加显示连接的部分 -->
-        <div>
-            <h3>已建立连接的用户:</h3>
-            <ul>
-                <li v-for="(pc, userId) in peerConnections" :key="userId">
-                    用户 ID: {{ userId }} 已连接
-                </li>
-            </ul>
-        </div>
+<!--        <div>-->
+<!--            <h3>已建立连接的用户:</h3>-->
+<!--            <ul>-->
+<!--                <li v-for="(pc, userId) in peerConnections" :key="userId">-->
+<!--                    用户 ID: {{ userId }} 已连接-->
+<!--                </li>-->
+<!--            </ul>-->
+<!--        </div>-->
     </div>
 </template>
 
@@ -31,23 +31,27 @@ import {nextTick, onMounted, onUnmounted, ref} from "vue";
 import UserCard from "./UserCard.vue";
 import {useChannelState} from "../../../../../pinia/ChannelState.ts";
 import {useDevicesStore} from "../../../../../pinia/deviceStore.ts";
-import {PcmRecorder, useAudioWebRTC} from "./VoiceCardWebRTC.ts";
+import {AudioWebSocket, PcmRecorder, useAudioWebRTC} from "./VoiceCardWebRTC.ts";
 
 const curUserState = useCurUserState();
 const channelState = useChannelState();
 const devicesStore = useDevicesStore();
 
 const recorder = new PcmRecorder();
+const audioWebSocket = new AudioWebSocket()
 
 onMounted(async () => {
     await nextTick();
 
     await recorder.init();
+    recorder.onReceiveAudioBuffer()
+    // audioWebSocket.receiveAudioBuffer()
     // document.getElementById('local-audio').srcObject = localStream.value;
 });
 
 onUnmounted(()=>{
     // closeMediaStream()
+    window.socket = null
     // curUserState.leaveRoom()
 })
 
