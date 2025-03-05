@@ -16,6 +16,7 @@
     "lamejs": "^1.2.1",
     "ldrs": "^1.0.2",
     "nodemon": "^3.1.9",
+    "pcm-player": "^0.0.18",
     "pinia": "^2.2.6",
     "pinia-plugin-persistedstate": "^4.2.0",
     "sequelize": "^6.37.5",

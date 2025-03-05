@@ -41,7 +41,17 @@ const startAudioStream = async () => {
     try {
         devicesStore.logDevices();
         const constraints = {
-            audio: devicesStore.audioInput?.deviceId ? {deviceId: {exact: devicesStore.audioInput.deviceId}} : true
+            audio: devicesStore.audioInput?.deviceId ? {
+                deviceId: {exact: devicesStore.audioInput.deviceId},
+                channelCount: 2,  // 双声道
+                // volume: 0.05,       // 输入音量
+                sampleRate: 960000,  // 采样率 单位是HZ
+                sampleSize: 24,   // 音频位数
+                // echoCancellation: true, // 启用回声消除
+                // noiseSuppression: true, // 启用噪声抑制
+                // highpassFilter: true,  // 高通滤波器
+            } : true
+
         };
 
         devicesStore.mediaStream = await navigator.mediaDevices.getUserMedia(constraints);

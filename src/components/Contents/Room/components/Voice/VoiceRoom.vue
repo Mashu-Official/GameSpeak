@@ -2,7 +2,8 @@
 
     <div class="flex flex-1 flex-col items-start h-full pl-8 pt-6 relative ">
         <div class="h-1/3 flex-shrink-0 w-full">
-            <VoiceCard class="h-full"/>
+<!--            <VoiceCard class="h-full"/>-->
+            <VoiceCard_Blob_Base64Version />
         </div>
 
 
@@ -32,6 +33,7 @@ import UserCard from "./UserCard.vue";
 import VoiceCard from "./VoiceCard.vue";
 import MessageCard from "../Message/MessageCard.vue";
 import RoomSidebar from "../../RoomSidebar.vue";
+import VoiceCard_Blob_Base64Version from "./VoiceCard_Blob_Base64Version.vue";
 
 const curUserState = useCurUserState()
 

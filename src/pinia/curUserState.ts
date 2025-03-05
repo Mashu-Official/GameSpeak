@@ -31,6 +31,9 @@ export const useCurUserState = defineStore('useCurUserState', {
         SocketRoom: null as object | null, // 当前socket实例
     }),
     actions: {
+        verifyToken(){
+
+        },
         initSelect(){
             // this.channel = {}
             // this.room = {}

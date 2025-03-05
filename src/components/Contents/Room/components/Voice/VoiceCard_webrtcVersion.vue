@@ -31,7 +31,7 @@ import {nextTick, onMounted, onUnmounted, ref} from "vue";
 import UserCard from "./UserCard.vue";
 import {useChannelState} from "../../../../../pinia/ChannelState.ts";
 import {useDevicesStore} from "../../../../../pinia/deviceStore.ts";
-import {useAudioWebRTC} from "./VoiceCardWebRTC.ts";
+import {useAudioWebRTC} from "./VoiceCardWebsocket.ts";
 
 const curUserState = useCurUserState();
 const channelState = useChannelState();

@@ -6,8 +6,8 @@
             <audio :src="devicesStore.mediaStream" />
             <template v-for="user in channelState.roomMember" :key="user.id">
                 <UserCard :user="user" v-if="curUserState.userInfo.id !== user.id" />
-<!--                TODO socket id 和userid 不是一个-->
-<!--                <audio id='audioPlayer' autoplay style="display:none;"></audio>--><!---->
+<!--                TODO socket id 和userid 不是一个 下边这个是本地流-->
+                <audio id='audioPlayer' autoplay style="display:none;"></audio>
             </template>
         </div>
             <audio id="local-audio" autoplay></audio>
@@ -31,13 +31,15 @@ import {nextTick, onMounted, onUnmounted, ref} from "vue";
 import UserCard from "./UserCard.vue";
 import {useChannelState} from "../../../../../pinia/ChannelState.ts";
 import {useDevicesStore} from "../../../../../pinia/deviceStore.ts";
-import {AudioWebSocket, PcmRecorder, useAudioWebRTC} from "./VoiceCardWebRTC.ts";
+import {audioConnectType, AudioWebSocket, PcmRecorder, useAudioWebRTC} from "./VoiceCardWebsocket.ts";
 
 const curUserState = useCurUserState();
 const channelState = useChannelState();
 const devicesStore = useDevicesStore();
 
-const recorder = new PcmRecorder();
+const recorder = new PcmRecorder(audioConnectType['websocket']);
+// const recorder = new PcmRecorder(audioConnectType['webrtc']);
+
 const audioWebSocket = new AudioWebSocket()
 
 onMounted(async () => {
