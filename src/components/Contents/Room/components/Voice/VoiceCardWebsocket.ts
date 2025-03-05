@@ -40,7 +40,7 @@ export class PcmRecorder {
                     channelCount: 2,  // 双声道
                     // volume: 0.05,       // 输入音量
                     sampleRate: SAMPLERATE,  // 采样率 单位是HZ
-                    sampleSize: 24,   // 音频位数
+                    sampleSize: 16,   // 音频位数
                     // echoCancellation: true, // 启用回声消除
                     // noiseSuppression: true, // 启用噪声抑制
                     // highpassFilter: true,  // 高通滤波器
@@ -95,8 +95,10 @@ export class PcmRecorder {
     // 处理音频数据
     private onaudioprocess(e: AudioProcessingEvent): void {
         const pcmData = e.inputBuffer.getChannelData(0); // 采集单通道音频数据
+        console.log(pcmData)
+        this.player.feed(pcmData)
 
-        this.audioWebSocket.sendAudioBuffer(pcmData)
+        // this.audioWebSocket.sendAudioBuffer(pcmData)
     }
 
     public onReceiveAudioBuffer() {

@@ -2,8 +2,8 @@
 
     <div class="flex flex-1 flex-col items-start h-full pl-8 pt-6 relative ">
         <div class="h-1/3 flex-shrink-0 w-full">
-<!--            <VoiceCard class="h-full"/>-->
-            <VoiceCard_Blob_Base64Version />
+            <VoiceCard class="h-full"/>
+<!--            <VoiceCard_Blob_Base64Version />-->
         </div>
 
 
