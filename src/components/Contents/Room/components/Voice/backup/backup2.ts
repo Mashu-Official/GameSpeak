@@ -1,7 +1,7 @@
 import { ref } from 'vue';
-import { useCurUserState } from "../../../../../pinia/curUserState.ts";
-import { useChannelState } from "../../../../../pinia/ChannelState.ts";
-import { useDevicesStore } from "../../../../../pinia/deviceStore.ts";
+import { useCurUserState } from "../../../../../../pinia/curUserState.ts";
+import { useChannelState } from "../../../../../../pinia/ChannelState.ts";
+import { useDevicesStore } from "../../../../../../pinia/deviceStore.ts";
 
 // 音频 WebRTC 相关功能
 export const useAudioWebRTC = () => {
@@ -213,9 +213,9 @@ export const useAudioWebRTC = () => {
 
 
 import {reactive, ref} from 'vue';
-import {useDevicesStore} from "../../../../../pinia/deviceStore.ts";
+import {useDevicesStore} from "../../../../../../pinia/deviceStore.ts";
 import { Socket } from "socket.io-client";
-import {useCurUserState} from "../../../../../pinia/curUserState.ts";
+import {useCurUserState} from "../../../../../../pinia/curUserState.ts";
 export enum audioConnectType {
     websocket = 'websocket',
     webrtc = 'webrtc'

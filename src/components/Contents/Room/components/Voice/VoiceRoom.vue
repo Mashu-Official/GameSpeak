@@ -33,7 +33,7 @@ import UserCard from "./UserCard.vue";
 import VoiceCard from "./VoiceCard.vue";
 import MessageCard from "../Message/MessageCard.vue";
 import RoomSidebar from "../../RoomSidebar.vue";
-import VoiceCard_Blob_Base64Version from "./VoiceCard_Blob_Base64Version.vue";
+import VoiceCard_Blob_Base64Version from "./backup/VoiceCard_Blob_Base64Version.vue";
 
 const curUserState = useCurUserState()
 

@@ -1,152 +1,135 @@
-import {useDevicesStore} from "../../../../../pinia/deviceStore.ts";
-import {useCurUserState} from "../../../../../pinia/curUserState.ts";
-import PCMPlayer from 'pcm-player'
+import { useCurUserState } from "../../../../../pinia/curUserState.ts";
+import { useChannelState } from "../../../../../pinia/ChannelState.ts";
+import { useDevicesStore } from "../../../../../pinia/deviceStore.ts";
 
+const SAMPLERATE = 384000;
+const SAMPLESIZE = 16;
+const BUFFER_SIZE = 4096;
+const CHANNELCOUNT = 2;
+const InputQuality = {
+    // echoCancellation: true, // 启用回声消除
+    // noiseSuppression: true, // 启用噪声抑制
+    // highpassFilter: true,  // 高通滤波器
+};
 
-const SAMPLERATE = 768000
-
-export enum audioConnectType {
-    websocket = 'websocket',
-    webrtc = 'webrtc'
-}
-
-// 音频处理类
-export class PcmRecorder {
-    // 配置对象，用于存储录音的相关参数
+export class AudioWebRTC {
     private config: any;
-    // 创建音频上下文（AudioContext）对象，用于管理音频资源的处理与控制
     private context: AudioContext;
-    // 创建音频分析器（AnalyserNode），用于实时分析音频数据的频率等信息
-    private readonly analyser: AnalyserNode;
-    // 创建脚本处理节点（是ScriptProcessorNode AudioWorklet实在不搞不明白），用于通过JavaScript实时处理音频流数据
-    private readonly recorder: ScriptProcessorNode;
+    private analyser: AnalyserNode;
+    private recorder: ScriptProcessorNode;
+    private peerConnections: { [key: string]: RTCPeerConnection } = {};
+    private localStream: MediaStream | null = null;
+    private audioInput: MediaStreamAudioSourceNode | null = null;
+    private devicesStore = useDevicesStore();
+    private curUserState = useCurUserState();
+    private channelState = useChannelState();
+    private configuration: any = {
+        iceServers: [
+            { urls: 'stun:stun.l.google.com:19302' },
+            { urls: 'stun:stun2.l.google.com:19302' },
+            { urls: 'stun:stun3.l.google.com:19302' }
+        ],
+        iceCandidatePoolSize: 10,
+        rtcpMuxPolicy: 'require',
+    };
 
-    // 音频输入节点，将MediaStream连接到AudioContext以便进行音频处理
-    public audioInput: MediaStreamAudioSourceNode | null = null;
-
-    protected audioStream: MediaStream | null = null;
-    private audioWebSocket: AudioWebSocket | null = null;
-
-    public isWebsocketOrWebRTC_mode: audioConnectType;
-
-    public player: PCMPlayer
-
-    // private audioMap = new Map()
-    constructor(isWebsocketOrWebRTC_mode = audioConnectType['websocket']) {
+    constructor() {
         this.config = {
             constraints: {
                 audio: {
-                    deviceId: true,     //设备ID
-                    channelCount: 2,  // 双声道
-                    // volume: 0.05,       // 输入音量
-                    sampleRate: SAMPLERATE,  // 采样率 单位是HZ
-                    sampleSize: 24,   // 音频位数
-                    // echoCancellation: true, // 启用回声消除
-                    // noiseSuppression: true, // 启用噪声抑制
-                    // highpassFilter: true,  // 高通滤波器
-                },
+                    deviceId: true,
+                    channelCount: CHANNELCOUNT,
+                    sampleRate: SAMPLERATE,
+                    sampleSize: SAMPLESIZE,
+                    volume: this.devicesStore.inputVolume,
+                    ...InputQuality
+                }
             },
-            fftSize: 512,
-            numberChannels: 2,
-        }
-        this.context = new (window.AudioContext || window.webkitAudioContext)();
+            fftSize: BUFFER_SIZE,
+            numberChannels: CHANNELCOUNT,
+        };
+
+        this.context = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: SAMPLERATE });
         this.analyser = this.context.createAnalyser();
         this.analyser.fftSize = this.config.fftSize;
-        // @ts-ignore
-        this.player = new PCMPlayer({
-            inputCodec: 'Float32',
-            channels: 2,
-            sampleRate: SAMPLERATE,
-            flushTime: 200
-        })
 
-        // 创建一个ScriptProcessorNode连接到AudioContext
-        this.recorder = this.context.createScriptProcessor(this.config.fftSize, this.config.numberChannels, this.config.numberChannels);
+        this.recorder = this.context.createScriptProcessor(BUFFER_SIZE, CHANNELCOUNT, CHANNELCOUNT);
+
         this.recorder.onaudioprocess = this.onaudioprocess.bind(this);
-        this.isWebsocketOrWebRTC_mode = isWebsocketOrWebRTC_mode
-
-        if (this.isWebsocketOrWebRTC_mode === audioConnectType["websocket"]) {
-            // 实例化 ws发送器
-            this.audioWebSocket = new AudioWebSocket()
-        } else if (this.isWebsocketOrWebRTC_mode === audioConnectType["webrtc"]) {
-        }
     }
 
-    // 初始化音频流并关联到AudioContext
-    async init(): Promise<void> {
+    async initMediaStream(): Promise<void> {
         try {
-            // 获取媒体流
-            this.audioStream = await navigator.mediaDevices.getUserMedia(this.config.constraints);
-            useDevicesStore().mediaStream = this.audioStream
-            // 处理音频流
-            this.audioInput = this.context.createMediaStreamSource(this.audioStream);
+            this.localStream = await navigator.mediaDevices.getUserMedia(this.config.constraints);
+            this.devicesStore.mediaStream = this.localStream;
+
+            this.audioInput = this.context.createMediaStreamSource(this.localStream);
             this.audioInput.connect(this.analyser);
             this.analyser.connect(this.recorder);
             this.recorder.connect(this.context.destination);
 
-            // 直接播放
             // this.audioInput.connect(this.context.destination);
         } catch (error) {
-            console.error('获取麦克风音频失败', error);
+            console.error("获取麦克风音频失败", error);
         }
     }
 
-    // 处理音频数据
     private onaudioprocess(e: AudioProcessingEvent): void {
-        const pcmData = e.inputBuffer.getChannelData(0); // 采集单通道音频数据
+        const inputBuffer = e.inputBuffer;
+        const pcmData = new Float32Array(inputBuffer.length * CHANNELCOUNT);
 
-        this.audioWebSocket.sendAudioBuffer(pcmData)
+        for (let channel = 0; channel < CHANNELCOUNT; channel++) {
+            inputBuffer.copyFromChannel(pcmData.subarray(channel * inputBuffer.length), channel);
+        }
     }
 
-    public onReceiveAudioBuffer() {
-        this.audioWebSocket.receiveAudioBuffer(async (userID: string, pcmData: ArrayBuffer) => {
-            this.playAudioForUser(userID, pcmData); // 播放音频
-            // 直接播放该音频，不等待其他音频
-            console.log("数据:", pcmData)
-        })
+    createOffer(userId: string): void {
+        const pc = new RTCPeerConnection(this.configuration);
+        this.localStream?.getTracks().forEach(track => pc.addTrack(track, this.localStream!));
+        console.log('createOffer')
+        pc.createOffer()
+            .then(offer => pc.setLocalDescription(offer))
+            .then(() => window.socket.emit('offer', { offer: pc.localDescription, to: userId }));
+
+        this.peerConnections[userId] = pc;
     }
-    playAudioForUser(userID: string, audioBuffer: AudioBuffer): void {
-        // @ts-ignore
-        this.player.feed(audioBuffer)
-    }
 
-}
-
-
-export class AudioWebSocket {
-    // private audioPackageList: Map<string, AudioBuffer[]> = new Map(); // 使用 Map 存储每个用户的音频数据
-    // 创建音频上下文（AudioContext）对象，用于管理音频资源的处理与控制
-    private context: AudioContext;
-
-    constructor() {
-        this.context = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    // 发送音频
-    sendAudioBuffer(pcmData: ArrayBuffer): void {
-        const pcmArrayBuffer = pcmData.buffer; // 转换为 ArrayBuffer
-
-        // 使用 Socket 发送音频缓冲区数据
-        window.socket.emit("startAudioStream", {
-            userID: useCurUserState().userInfo.id,
-            audioBuffer: pcmArrayBuffer,
+    startAudioStream(): void {
+        this.channelState.roomMember.forEach(user => {
+            if (user.id !== this.curUserState.userInfo.id) {
+                this.createOffer(user.id);
+            }
         });
     }
 
+    receiveAudioStream(): void {
+        window.socket.on('offer', async (data) => {
+            const pc = new RTCPeerConnection(this.configuration);
+            this.localStream?.getTracks().forEach(track => pc.addTrack(track, this.localStream!));
 
-    // 接收音频并播放
-    receiveAudioBuffer(handleAudioBuffer: Function): void {
-        const audioContext = new AudioContext();
+            await pc.setRemoteDescription(new RTCSessionDescription(data.offer));
+            const answer = await pc.createAnswer();
+            await pc.setLocalDescription(answer);
+            window.socket.emit("answer", { answer: pc.localDescription, to: data.from });
 
-        window.socket.on('receiveAudioStream', async (audioPackage: audioPackage) => {
-            const userID = audioPackage.userID;
-            const pcmData = audioPackage.audioBuffer; // 这里假设接收到的是 PCM 数据
-            handleAudioBuffer(userID, pcmData)
+            pc.ontrack = (event) => {
+                if (!event.streams[0]) return;
+                const source = this.context.createMediaStreamSource(event.streams[0]);
+                const gainNode = this.context.createGain();
+                gainNode.gain.value = 8;
+                source.connect(gainNode);
+                gainNode.connect(this.context.destination);
+            };
+
+            this.peerConnections[data.from] = pc;
         });
     }
 
-}
-
-interface audioPackage {
-    userID: string,
-    audioBuffer: AudioBuffer,
+    closeMediaStream(): void {
+        this.localStream?.getTracks().forEach(track => track.stop());
+        this.devicesStore.mediaStream = null;
+        this.localStream = null;
+        Object.values(this.peerConnections).forEach(pc => pc.close());
+        this.peerConnections = {};
+    }
 }

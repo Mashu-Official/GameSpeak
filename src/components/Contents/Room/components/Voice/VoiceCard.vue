@@ -31,23 +31,36 @@ import {nextTick, onMounted, onUnmounted, ref} from "vue";
 import UserCard from "./UserCard.vue";
 import {useChannelState} from "../../../../../pinia/ChannelState.ts";
 import {useDevicesStore} from "../../../../../pinia/deviceStore.ts";
-import {audioConnectType, AudioWebSocket, PcmRecorder, useAudioWebRTC} from "./VoiceCardWebsocket.ts";
+import {audioConnectType, PcmRecorder} from "./VoiceCardWebsocket.ts";
+import {AudioWebRTC} from "./VoiceCardWebrtc.ts";
 
 const curUserState = useCurUserState();
 const channelState = useChannelState();
 const devicesStore = useDevicesStore();
 
-const recorder = new PcmRecorder(audioConnectType['websocket']);
+
 // const recorder = new PcmRecorder(audioConnectType['webrtc']);
+const audioWebRTC = new AudioWebRTC()
+const startWebRTC = async () => {
+    await audioWebRTC.initMediaStream()
+    // 2. 监听 WebRTC 音频流
+    await audioWebRTC.receiveAudioStream();
+    // 3. 开始向其他用户推流
+    await audioWebRTC.startAudioStream();
+}
+const startWebSocket = async ()=>{
+    const audioWebSocket = new PcmRecorder(audioConnectType['websocket']);
+    await audioWebSocket.init_WebSocketMode();
+    await audioWebSocket.onReceiveAudioBuffer()
 
-const audioWebSocket = new AudioWebSocket()
-
+}
 onMounted(async () => {
-    await nextTick();
+    await nextTick()
 
-    await recorder.init();
-    recorder.onReceiveAudioBuffer()
-    // audioWebSocket.receiveAudioBuffer()
+    // await startWebRTC()
+    await startWebSocket()
+
+
     // document.getElementById('local-audio').srcObject = localStream.value;
 });
 

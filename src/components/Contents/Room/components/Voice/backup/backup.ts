@@ -1,5 +1,5 @@
-import {useDevicesStore} from "../../../../../pinia/deviceStore.ts";
-import {useCurUserState} from "../../../../../pinia/curUserState.ts";
+import {useDevicesStore} from "../../../../../../pinia/deviceStore.ts";
+import {useCurUserState} from "../../../../../../pinia/curUserState.ts";
 
 export enum audioConnectType {
     websocket = 'websocket',

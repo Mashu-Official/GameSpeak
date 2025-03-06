@@ -25,11 +25,11 @@
 
 
 <script setup lang="ts">
-import {useCurUserState} from "../../../../../pinia/curUserState.ts";
+import {useCurUserState} from "../../../../../../pinia/curUserState.ts";
 import {nextTick, onMounted, ref} from "vue";
-import UserCard from "./UserCard.vue";
-import {useChannelState} from "../../../../../pinia/ChannelState.ts";
-import {useDevicesStore} from "../../../../../pinia/deviceStore.ts";
+import UserCard from "../UserCard.vue";
+import {useChannelState} from "../../../../../../pinia/ChannelState.ts";
+import {useDevicesStore} from "../../../../../../pinia/deviceStore.ts";
 
 const curUserState = useCurUserState();
 const channelState = useChannelState();

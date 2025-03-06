@@ -16,12 +16,12 @@
 </template>
 
 <script setup lang="ts">
-import {useCurUserState} from "../../../../../pinia/curUserState.ts";
+import {useCurUserState} from "../../../../../../pinia/curUserState.ts";
 import {nextTick, onMounted, onUnmounted, reactive, ref} from "vue";
-import {UserInVoiceRoom} from "../../../../../interface&enum/userInVoiceRoom.ts";
-import UserCard from "./UserCard.vue";
-import {useChannelState} from "../../../../../pinia/ChannelState.ts";
-import {useDevicesStore} from "../../../../../pinia/deviceStore.ts";
+import {UserInVoiceRoom} from "../../../../../../interface&enum/userInVoiceRoom.ts";
+import UserCard from "../UserCard.vue";
+import {useChannelState} from "../../../../../../pinia/ChannelState.ts";
+import {useDevicesStore} from "../../../../../../pinia/deviceStore.ts";
 
 const curUserState = useCurUserState()
 const channelState = useChannelState()
