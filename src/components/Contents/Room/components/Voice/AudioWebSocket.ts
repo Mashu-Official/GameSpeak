@@ -7,6 +7,7 @@ export class AudioWebSocket {
         this.context = new (window.AudioContext || window.webkitAudioContext)();
     }
 
+
     // ✅ 修正音频发送
     sendAudioBuffer(pcmData: Float32Array): void {
         const pcmArrayBuffer = pcmData.buffer;
