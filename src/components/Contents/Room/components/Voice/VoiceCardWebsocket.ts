@@ -13,17 +13,37 @@ const InputQuality = {
 }
 console.log()
 
-
 export class PcmRecorder {
     private readonly context: AudioContext;
     private readonly analyser: AnalyserNode;
-    private workletNode: AudioWorkletNode | null =null;
+    private workletNode: AudioWorkletNode | null = null;
     private audioInput: MediaStreamAudioSourceNode | null = null;
     protected audioStream: MediaStream | null = null;
     private audioWebSocket: AudioWebSocket | null = null;
     public isWebsocketOrWebRTC_mode: audioConnectType;
+    // @ts-ignore
+    public player: PCMPlayer = new PCMPlayer({
+        inputCodec: "Float32",
+        channels: CHANNELCOUNT,
+        sampleRate: SAMPLERATE,
+        flushTime: 10,
+    });
+    private config: object = {
+        constraints: {
+            audio: {
+                deviceId: true,
+                channelCount: CHANNELCOUNT,
+                sampleRate: SAMPLERATE,
+                sampleSize: SAMPLESIZE,
+                volume: useDevicesStore().inputVolume,
+                ...InputQuality  // 降噪相关
+            },
+        },
+        numberChannels: CHANNELCOUNT,
+    };
 
     constructor(isWebsocketOrWebRTC_mode = audioConnectType.websocket) {
+        // 只在构造函数中初始化 AudioContext
         this.context = new (window.AudioContext || window.webkitAudioContext)({
             sampleRate: SAMPLERATE,
         });
@@ -38,36 +58,32 @@ export class PcmRecorder {
     // ✅ 只用 AudioWorklet 处理音频
     async init_WebSocketMode(): Promise<void> {
         try {
+            // 加载 AudioWorkletProcessor 模块
             await this.context.audioWorklet.addModule("/pcm-processor.js");
 
-            this.audioStream = await navigator.mediaDevices.getUserMedia({
-                audio: {
-                    deviceId: true,
-                    channelCount: CHANNELCOUNT,
-                    sampleRate: SAMPLERATE,
-                    sampleSize: SAMPLESIZE,
-                    volume: useDevicesStore().inputVolume,
-                    ...InputQuality
-                }
-            });
-
+            // 获取用户的音频流
+            this.audioStream = await navigator.mediaDevices.getUserMedia(this.config.constraints);
+            // 创建音频输入节点
             this.audioInput = this.context.createMediaStreamSource(this.audioStream);
+            // 创建 AudioWorkletNode
             this.workletNode = new AudioWorkletNode(this.context, "pcm-processor");
+
 
             // 监听 Worklet 发送的数据
             this.workletNode.port.onmessage = (event) => {
                 const stereoChannelData = event.data;
-                // console.log(stereoChannelData)
-                this.playPCM({...stereoChannelData})
-                // this.audioWebSocket?.sendAudioBuffer(stereoChannelData);
+                this.playPCM(stereoChannelData)
+                // 将接收到的 PCM 数据传递到 AudioWorkletProcessor 中
+                // this.workletNode?.port.postMessage(stereoChannelData);
+                // this.player.feed(stereoChannelData.leftChannel, stereoChannelData.rightChannel);
             };
 
-            // 连接音频流
+            // 连接音频流到 AudioWorkletNode
             this.audioInput.connect(this.analyser);
             this.analyser.connect(this.workletNode);
 
-            // 播放
-            // this.workletNode.connect(this.context.destination);
+            // 连接 AudioWorkletNode 到音频输出设备
+            this.workletNode.connect(this.context.destination);
 
         } catch (error) {
             console.error("获取麦克风音频失败", error);
@@ -77,44 +93,50 @@ export class PcmRecorder {
     // ✅ 接收并用 AudioWorklet 播放 PCM 音频
     public onReceiveAudioBuffer() {
         this.audioWebSocket?.receiveAudioBuffer((userID: string, pcmData: ArrayBuffer) => {
-            // this.playPCM(pcmData);
+            // 在这里你可以处理接收到的 PCM 数据
+            const stereoChannelData = this.convertToStereoChannels(pcmData);
+            this.playPCM(stereoChannelData);
         });
     }
 
-    private playPCM(stereoChannelData: { leftChannel: Float32Array, rightChannel: Float32Array }) {
-        const frameCount = stereoChannelData.leftChannel.length;
+    playPCM(stereoChannelData: {leftChannel: Float32Array, rightChannel: Float32Array; }): void {
+        const { leftChannel, rightChannel } = stereoChannelData;
 
-        // 创建一个 AudioBuffer，用于播放双声道音频
-        const audioBuffer = this.context.createBuffer(CHANNELCOUNT, frameCount, this.context.sampleRate);
+        const frameCount = leftChannel.length;
+        const audioBuffer = this.context.createBuffer(2, frameCount, SAMPLERATE);
 
-        // 将左声道数据和右声道数据分别填充到 AudioBuffer 中
-        audioBuffer.copyToChannel(stereoChannelData.leftChannel, 0); // 左声道
-        audioBuffer.copyToChannel(stereoChannelData.rightChannel, 1); // 右声道
+        // 将左右声道数据写入 AudioBuffer
+        audioBuffer.copyToChannel(leftChannel, 0); // 左声道
+        audioBuffer.copyToChannel(rightChannel, 1); // 右声道
 
-        // 创建 AudioBufferSourceNode 作为音频源
+        // 创建 AudioBufferSourceNode 播放音频
         const bufferSource = this.context.createBufferSource();
         bufferSource.buffer = audioBuffer;
 
-        // 创建 GainNode 控制音量，避免过高增益导致失真
-        const gainNode = this.context.createGain();
-        gainNode.gain.setValueAtTime(0.5, this.context.currentTime); // 调低增益值
-        gainNode.gain.linearRampToValueAtTime(1.0, this.context.currentTime + 0.1); // 渐增至正常音量
-
-        // 连接音频节点
-        bufferSource.connect(gainNode);
-        gainNode.connect(this.context.destination);
+        // 连接到音频上下文输出
+        bufferSource.connect(this.context.destination);
 
         // 播放音频
         bufferSource.start();
 
-        // 确保播放完成后释放资源
+        // 释放资源
         bufferSource.onended = () => {
             bufferSource.disconnect();
-            gainNode.disconnect();
         };
     }
+
+    // 将接收到的 PCM 数据转换为立体声数据
+    private convertToStereoChannels(pcmData: ArrayBuffer): { leftChannel: Float32Array, rightChannel: Float32Array } {
+        const pcmArray = new Float32Array(pcmData);
+        const leftChannel = pcmArray.subarray(0, pcmArray.length / 2);
+        const rightChannel = pcmArray.subarray(pcmArray.length / 2);
+
+        return { leftChannel, rightChannel };
+    }
 }
+
 export enum audioConnectType {
     websocket = "websocket",
     webrtc = "webrtc",
 }
+

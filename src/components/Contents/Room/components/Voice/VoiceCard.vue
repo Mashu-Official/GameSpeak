@@ -32,6 +32,7 @@ import UserCard from "./UserCard.vue";
 import {useChannelState} from "../../../../../pinia/ChannelState.ts";
 import {useDevicesStore} from "../../../../../pinia/deviceStore.ts";
 import {audioConnectType, PcmRecorder} from "./VoiceCardWebsocket.ts";
+
 import {AudioWebRTC} from "./VoiceCardWebrtc.ts";
 
 const curUserState = useCurUserState();
@@ -39,15 +40,15 @@ const channelState = useChannelState();
 const devicesStore = useDevicesStore();
 
 
-// const recorder = new PcmRecorder(audioConnectType['webrtc']);
-const audioWebRTC = new AudioWebRTC()
-const startWebRTC = async () => {
-    await audioWebRTC.initMediaStream()
-    // 2. 监听 WebRTC 音频流
-    await audioWebRTC.receiveAudioStream();
-    // 3. 开始向其他用户推流
-    await audioWebRTC.startAudioStream();
-}
+// // const recorder = new PcmRecorder(audioConnectType['webrtc']);
+// const audioWebRTC = new AudioWebRTC()
+// const startWebRTC = async () => {
+//     await audioWebRTC.initMediaStream()
+//     // 2. 监听 WebRTC 音频流
+//     await audioWebRTC.receiveAudioStream();
+//     // 3. 开始向其他用户推流
+//     await audioWebRTC.startAudioStream();
+// }
 const startWebSocket = async ()=>{
     const audioWebSocket = new PcmRecorder(audioConnectType['websocket']);
     await audioWebSocket.init_WebSocketMode();
