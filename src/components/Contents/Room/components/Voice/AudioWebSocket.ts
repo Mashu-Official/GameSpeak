@@ -10,8 +10,8 @@ export class AudioWebSocket {
 
     // ✅ 修正音频发送
     sendAudioBuffer(pcmData: Float32Array): void {
-        const pcmArrayBuffer = pcmData.buffer;
-
+        const pcmArrayBuffer = pcmData.buffer || pcmData;
+        // console.log(pcmArrayBuffer)
         window.socket.emit("startAudioStream", {
             userID: useCurUserState().userInfo.id,
             audioBuffer: pcmArrayBuffer,

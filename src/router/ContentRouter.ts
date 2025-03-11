@@ -21,8 +21,8 @@ export const ContentRoute: Array<RouteRecordRaw> = [
             {
                 path: '/demo',
                 name: 'demo',
-                // component: webrtc,
-                component: demo2,
+                component: webrtc,
+                // component: demo2,
             },
             {
                 path: '/login',

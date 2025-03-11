@@ -1,5 +1,5 @@
 export interface UserInVoiceRoom {
-    uid: number,
+    id: number,
     volume: number | boolean,
     username: string,
     avatar: string

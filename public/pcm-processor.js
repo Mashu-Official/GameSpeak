@@ -1,10 +1,12 @@
 class AudioProcessor extends AudioWorkletProcessor {
     constructor() {
         super();
-        this.bufferQueue = []; // 🔹 存储待播放的 PCM 数据
+        this.bufferQueue = []; // 存储待播放的 PCM 数据
+        this.sampleRate = 192000; // 指定采样率，如果需要可以修改
+        this.bitDepth = 32; // 指定位深
         this.port.onmessage = (event) => {
             if (event.data.leftChannel && event.data.rightChannel) {
-                this.bufferQueue.push(event.data); // 🔹 存入缓冲队列
+                this.bufferQueue.push(event.data); // 存入缓冲队列
             }
         };
     }
@@ -24,7 +26,8 @@ class AudioProcessor extends AudioWorkletProcessor {
             }
 
             this.port.postMessage({ leftChannel, rightChannel });
-        } else if (input.length === 1) {
+        }
+        else if (input.length === 1) {
             const monoChannel = input[0];
 
             for (let i = 0; i < monoChannel.length; i++) {
@@ -37,18 +40,23 @@ class AudioProcessor extends AudioWorkletProcessor {
 
         // ✅ 播放主线程发送的 PCM 数据
         if (this.bufferQueue.length > 0) {
+            // console.log(this.bufferQueue)
             const pcmData = this.bufferQueue.shift(); // 取出一帧 PCM 数据
             const leftData = pcmData.leftChannel;
             const rightData = pcmData.rightChannel;
-            // console.log(pcmData)
 
             // 确保数据长度匹配
-            const bufferSize = output[0].length;
-            for (let i = 0; i < bufferSize; i++) {
-                output[0][i] = leftData[i % leftData.length];  // 防止索引超出范围
-                output[1][i] = rightData[i % rightData.length];
-            }
+            const bufferSize = output[0].length ;
 
+            // 如果数据长度小于输出缓冲区，平滑填充
+            const leftDataLength = leftData.length;
+            const rightDataLength = rightData.length;
+
+            for (let i = 0; i < bufferSize; i++) {
+                // 避免索引越界的同时，防止音频数据重复产生杂音
+                output[0][i] = leftData[i % leftDataLength];
+                output[1][i] = rightData[i % rightDataLength];
+            }
         }
 
         return true; // 继续处理

@@ -4,6 +4,7 @@ import {channelAttribute} from "../interface&enum/ChannelAttribute.ts";
 import {Room} from "../interface&enum/Room.ts";
 import {useChannelState} from "./ChannelState.ts";
 import {useDevicesStore} from "./deviceStore.ts";
+import {Socket} from "socket.io-client";
 
 
 interface UserInfo {
@@ -28,7 +29,7 @@ export const useCurUserState = defineStore('useCurUserState', {
         leaveRoomFlag: false as boolean,
 
         // SocketChannel: null as object | null, // 当前socket实例
-        SocketRoom: null as object | null, // 当前socket实例
+        Socket: null as Socket | null, // 当前socket实例
     }),
     actions: {
         verifyToken(){
@@ -49,7 +50,6 @@ export const useCurUserState = defineStore('useCurUserState', {
             // this.curConnectedRoom = room;
         },
         leaveRoom(){
-
             this.leaveRoomFlag = !this.leaveRoomFlag
             useChannelState().memberChangeFlag = !useChannelState().memberChangeFlag
             // 如果在语音房间 存在媒体流

@@ -1,105 +1,127 @@
 <template>
-    <div class="flex flex-col justify-center items-center w-full h-full flex-1">
-<!--        <h2>音频输入设备</h2>-->
-<!--        <ul>-->
-<!--            <li v-for="device in audioInputDevices" :key="device.deviceId">{{ device.label || '未命名' }}</li>-->
-<!--        </ul>-->
-
-<!--        <h2>音频输出设备</h2>-->
-<!--        <ul>-->
-<!--            <li v-for="device in audioOutputDevices" :key="device.deviceId">{{ device.label || '未命名' }}</li>-->
-<!--        </ul>-->
-
-            <h2>选择音频输入设备</h2>
-            <select v-model="selectedAudioInput" @change="setAudioInputDevice">
-                <option v-for="device in audioInputDevices" :key="device.deviceId" :value="device.deviceId">
-                    {{ device.label || '未命名' }}
-                </option>
-            </select>
-
-            <h2>选择音频输出设备</h2>
-            <select v-model="selectedAudioOutput" @change="setAudioOutputDevice">
-                <option v-for="device in audioOutputDevices" :key="device.deviceId" :value="device.deviceId">
-                    {{ device.label || '未命名' }}
-                </option>
-            </select>
-
+    <div>
+        <h2>WebRTC Direct Signaling Audio Demo</h2>
+        <audio ref="localAudio" autoplay controls></audio>
+        <audio ref="remoteAudio" autoplay controls></audio>
     </div>
-
-
 </template>
-<script setup>
+
+<script>
 import { ref, onMounted } from 'vue';
-import {useCurUserState} from "@/pinia/curUserState.ts";
-import {useDevicesStore} from "@/pinia/deviceStore.ts";
 
-const deviceStore = useDevicesStore()
-// deviceStore.getDevices()
-// deviceStore.audioInputTest()
+export default {
+    setup() {
+        // 定义变量
+        const localAudio = ref(null);
+        const remoteAudio = ref(null);
 
+        const localStream = ref(null);
+        const localPeerConnection = ref(null);
+        const remotePeerConnection = ref(null);
 
-const devices = ref([]);
-const audioInputDevices = ref([]);
-const audioOutputDevices = ref([]);
-const selectedAudioInput = ref('');
-const selectedAudioOutput = ref('');
+        const SAMPLERATE = 384000;
+        const SAMPLESIZE = 24;
+        const CHANNELCOUNT = 2;
+        const InputQuality = {
+            // echoCancellation: true, // 启用回声消除
+            // noiseSuppression: true, // 启用噪声抑制
+            // highpassFilter: true,  // 高通滤波器
+        };
 
-let mediaStream = null;
+        const constraints = {
+            audio: {
+                deviceId: true,
+                channelCount: CHANNELCOUNT,
+                sampleRate: SAMPLERATE,
+                sampleSize: SAMPLESIZE,
+                volume: 1.0, // 你可以根据需要调整音量
+                ...InputQuality
+            }
+        };
 
-async function fetchDevices() {
-    try {
-        const deviceList = await navigator.mediaDevices.enumerateDevices();
-        devices.value = deviceList;
-        console.log('设备列表:', devices.value);
-        audioInputDevices.value = deviceList.filter(device => device.kind === 'audioinput');
-        audioOutputDevices.value = deviceList.filter(device => device.kind === 'audiooutput');
+        // 启动 WebRTC
+        const startWebRTC = async () => {
+            try {
+                // 获取用户音频
+                localStream.value = await navigator.mediaDevices.getUserMedia(constraints);
+                localAudio.value.srcObject = localStream.value;
 
-        // 如果有默认设备，可以预先选择它们
-        if (audioInputDevices.value.length > 0) {
-            selectedAudioInput.value = audioInputDevices.value[0].deviceId;
-        }
-        if (audioOutputDevices.value.length > 0) {
-            selectedAudioOutput.value = audioOutputDevices.value[0].deviceId;
-        }
+                // 配置 STUN 服务器
+                const configuration = {
+                    iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+                };
 
-        // 请求访问音频输入设备以获取标签信息
-        await navigator.mediaDevices.getUserMedia({ audio: true });
-    } catch (err) {
-        console.error('获取设备列表失败：', err);
+                // 创建本地 PeerConnection
+                localPeerConnection.value = new RTCPeerConnection(configuration);
+
+                // 将本地音频流添加到 PeerConnection
+                localStream.value.getTracks().forEach(track =>
+                    localPeerConnection.value.addTrack(track, localStream.value)
+                );
+
+                // 当有 ICE 候选项时，发送给远程端
+                localPeerConnection.value.onicecandidate = ({ candidate }) => {
+                    if (candidate) {
+                        remotePeerConnection.value.addIceCandidate(candidate);
+                    }
+                };
+
+                // 接收到远程音频流时，显示在远程音频标签上
+                localPeerConnection.value.ontrack = ({ streams: [stream] }) => {
+                    remoteAudio.value.srcObject = stream;
+                };
+
+                // 创建远程 PeerConnection
+                remotePeerConnection.value = new RTCPeerConnection(configuration);
+
+                // 当有 ICE 候选项时，发送给本地端
+                remotePeerConnection.value.onicecandidate = ({ candidate }) => {
+                    if (candidate) {
+                        localPeerConnection.value.addIceCandidate(candidate);
+                    }
+                };
+
+                // 接收到本地音频流时，显示在本地音频标签上
+                remotePeerConnection.value.ontrack = ({ streams: [stream] }) => {
+                    localAudio.value.srcObject = stream;
+                };
+
+                // 创建并发送 offer
+                const offer = await localPeerConnection.value.createOffer();
+                await localPeerConnection.value.setLocalDescription(offer);
+
+                // 接收并设置远端的 offer
+                await remotePeerConnection.value.setRemoteDescription(offer);
+
+                // 创建并发送 answer
+                const answer = await remotePeerConnection.value.createAnswer();
+                await remotePeerConnection.value.setLocalDescription(answer);
+
+                // 设置本地端的 answer
+                await localPeerConnection.value.setRemoteDescription(answer);
+            } catch (error) {
+                console.error('Error starting WebRTC:', error);
+            }
+        };
+
+        // 在组件挂载时启动 WebRTC
+        onMounted(() => {
+            startWebRTC();
+        });
+
+        // 返回变量和方法
+        return {
+            localAudio,
+            remoteAudio,
+        };
     }
-}
-
-async function setAudioInputDevice() {
-    if (mediaStream) {
-        mediaStream.getTracks().forEach(track => track.stop());
-    }
-    const constraints = {
-        audio: { deviceId: { exact: selectedAudioInput.value } }
-    };
-    mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
-    console.log('已切换到音频输入设备:', selectedAudioInput.value);
-}
-
-// 对于音频输出设备的选择，Web API 目前不支持直接选择输出设备。
-// 可以考虑使用 Web Audio API 和 `setSinkId` 方法（如果浏览器支持）
-async function setAudioOutputDevice() {
-    const audioElement = new Audio();
-    try {
-        await audioElement.setSinkId(selectedAudioOutput.value);
-        console.log('已切换到音频输出设备:', selectedAudioOutput.value);
-    } catch (err) {
-        console.error('设置音频输出设备失败：', err);
-    }
-}
-
-const temp = navigator.mediaDevices.getUserMedia
-console.log(temp)
-
-onMounted(() => {
-    fetchDevices();
-});
+};
 </script>
 
 <style scoped>
-/* 添加一些样式 */
+audio {
+    width: 45%;
+    margin: 10px;
+    border: 1px solid #ccc;
+}
 </style>

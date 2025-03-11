@@ -53,20 +53,20 @@ const route = useRoute()
 //     curUserState.room = {}
 // })
 
-const socket = io('http://127.0.0.1:42224/ws', {
+curUserState.Socket = io('http://127.0.0.1:42224/ws', {
     path: '/ws/'
 });
 
 // 加入频道 进入监听
-socket.emit('joinChannel',curUserState.channel.hashID)
-socket.on('joinedChannel',(r)=>{
+curUserState.Socket.emit('joinChannel',curUserState.channel.hashID)
+curUserState.Socket.on('joinedChannel',(r)=>{
     // console.log(r)
 })
 
 // 监听频道人数变化
 watch(() => channelState.memberChangeFlag,()=>{
     if (channelState.memberChangeFlag){
-        socket.emit('refresh')
+        curUserState.Socket.emit('refresh')
         channelState.memberChangeFlag = !channelState.memberChangeFlag
     }
 },{
@@ -77,14 +77,12 @@ watch(() => channelState.memberChangeFlag,()=>{
 
 
 onMounted(()=>{
-    socket.on('refreshed',(roomsMember)=>{
+    // memberChange
+    curUserState.Socket.on('refreshed',(roomsMember)=>{
         // console.log(roomsMember)
         channelState.roomsMember = roomsMember
         channelState.getRoomList(`/api/channel/${route.params.hashID}`)
     })
-    // axiosReq.get("/api/demo").then(r=>{
-    //     console.log(r)
-    // })
 })
 
 

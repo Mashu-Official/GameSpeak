@@ -5,7 +5,7 @@
 
             <div class="rounded-lg  min-h-[128px] max-h-[128px] h-[128px] w-[242px] overflow-hidden object-center">
                 <img class="rounded-lg inline-block object-cover object-center w-full h-full"
-                     :src="user.avatar"
+                     :src="user.avatar || 'https://cdn.jsdelivr.net/gh/Mashu-Official/Blog_IMG-Cabin/img/%E5%90%A7%E5%94%A72.png'"
                      :alt="`[${user.name}]${user.avatar}`">
             </div>
 

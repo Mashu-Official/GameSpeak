@@ -131,7 +131,9 @@ receiveMessage()
 
 socket.on('memberChange', (users)=>{
     // console.log(users)
-    channelState.roomMember = users
+    channelState.InRoomMember = users.filter((user)=>{
+        return user.id !== curUserState.userInfo.id
+    })
 })
 
 

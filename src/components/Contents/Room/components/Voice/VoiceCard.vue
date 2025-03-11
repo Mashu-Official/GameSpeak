@@ -6,21 +6,11 @@
             <audio :src="devicesStore.mediaStream" />
             <template v-for="user in channelState.roomMember" :key="user.id">
                 <UserCard :user="user" v-if="curUserState.userInfo.id !== user.id" />
-<!--                TODO socket id 和userid 不是一个 下边这个是本地流-->
-                <audio id='audioPlayer' autoplay style="display:none;"></audio>
+                <!--                TODO socket id 和userid 不是一个 下边这个是本地流-->
+
             </template>
         </div>
-            <audio id="local-audio" autoplay></audio>
-
-        <!-- 这里添加显示连接的部分 -->
-<!--        <div>-->
-<!--            <h3>已建立连接的用户:</h3>-->
-<!--            <ul>-->
-<!--                <li v-for="(pc, userId) in peerConnections" :key="userId">-->
-<!--                    用户 ID: {{ userId }} 已连接-->
-<!--                </li>-->
-<!--            </ul>-->
-<!--        </div>-->
+        <audio id='audioPlayer' autoplay style="display:none;"></audio>
     </div>
 </template>
 
@@ -33,33 +23,29 @@ import {useChannelState} from "../../../../../pinia/ChannelState.ts";
 import {useDevicesStore} from "../../../../../pinia/deviceStore.ts";
 import {audioConnectType, PcmRecorder} from "./VoiceCardWebsocket.ts";
 
-import {AudioWebRTC} from "./VoiceCardWebrtc.ts";
+import {AudioWebRTC} from "./VoiceCardWebRTC.ts";
 
 const curUserState = useCurUserState();
 const channelState = useChannelState();
 const devicesStore = useDevicesStore();
 
 
-// // const recorder = new PcmRecorder(audioConnectType['webrtc']);
-// const audioWebRTC = new AudioWebRTC()
-// const startWebRTC = async () => {
-//     await audioWebRTC.initMediaStream()
-//     // 2. 监听 WebRTC 音频流
-//     await audioWebRTC.receiveAudioStream();
-//     // 3. 开始向其他用户推流
-//     await audioWebRTC.startAudioStream();
-// }
-const startWebSocket = async ()=>{
-    const audioWebSocket = new PcmRecorder(audioConnectType['websocket']);
-    await audioWebSocket.init_WebSocketMode();
-    await audioWebSocket.onReceiveAudioBuffer()
+// const recorder = new PcmRecorder(audioConnectType['webrtc']);
+setTimeout(()=>{
+    console.log(useChannelState().InRoomMember)
+},1000)
+const startWebRTC = async () => {
+    const audioWebRTC = new AudioWebRTC()
 
+    await audioWebRTC.initMediaStream()
+    await audioWebRTC.startCall()
 }
+
 onMounted(async () => {
     await nextTick()
 
-    // await startWebRTC()
-    await startWebSocket()
+    await startWebRTC()
+    // await startWebSocket()
 
 
     // document.getElementById('local-audio').srcObject = localStream.value;

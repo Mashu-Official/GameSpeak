@@ -3,10 +3,10 @@ import PCMPlayer from "pcm-player";
 import {AudioWebSocket, audioPackage} from "./AudioWebSocket.ts";
 
 const SAMPLERATE = 192000; // 采样率 768000
-const SAMPLESIZE = 24 // 音频位数
+const SAMPLESIZE = 32 // 音频位数
 const CHANNELCOUNT = 2  // 声道数
 const InputQuality = {
-    autoGainControl:false,
+    autoGainControl:false,  // 自动xxx
     // echoCancellation: true, // 启用回声消除
     // noiseSuppression: true, // 启用噪声抑制
     // highpassFilter: true,  // 高通滤波器
@@ -72,9 +72,11 @@ export class PcmRecorder {
             // 监听 Worklet 发送的数据
             this.workletNode.port.onmessage = (event) => {
                 const stereoChannelData = event.data;
+
                 this.playPCM(stereoChannelData)
                 // 将接收到的 PCM 数据传递到 AudioWorkletProcessor 中
                 // this.workletNode?.port.postMessage(stereoChannelData);
+                this.audioWebSocket?.sendAudioBuffer(event.data)
                 // this.player.feed(stereoChannelData.leftChannel, stereoChannelData.rightChannel);
             };
 
@@ -83,7 +85,7 @@ export class PcmRecorder {
             this.analyser.connect(this.workletNode);
 
             // 连接 AudioWorkletNode 到音频输出设备
-            this.workletNode.connect(this.context.destination);
+            // this.workletNode.connect(this.context.destination);
 
         } catch (error) {
             console.error("获取麦克风音频失败", error);
@@ -95,12 +97,17 @@ export class PcmRecorder {
         this.audioWebSocket?.receiveAudioBuffer((userID: string, pcmData: ArrayBuffer) => {
             // 在这里你可以处理接收到的 PCM 数据
             const stereoChannelData = this.convertToStereoChannels(pcmData);
-            this.playPCM(stereoChannelData);
+            // this.playPCM(stereoChannelData);
         });
     }
 
-    playPCM(stereoChannelData: {leftChannel: Float32Array, rightChannel: Float32Array; }): void {
+    playPCM(stereoChannelData: { leftChannel: Float32Array, rightChannel: Float32Array }): void {
+        this.workletNode.port.postMessage(stereoChannelData);
+        //
         const { leftChannel, rightChannel } = stereoChannelData;
+
+        // const leftFloat32Array = this.convertBufferToFloat32Array(leftChannel);
+        // const rightFloat32Array = this.convertBufferToFloat32Array(rightChannel);
 
         const frameCount = leftChannel.length;
         const audioBuffer = this.context.createBuffer(2, frameCount, SAMPLERATE);
@@ -109,12 +116,20 @@ export class PcmRecorder {
         audioBuffer.copyToChannel(leftChannel, 0); // 左声道
         audioBuffer.copyToChannel(rightChannel, 1); // 右声道
 
+        // audioBuffer.copyToChannel(leftFloat32Array, 0); // 左声道
+        // audioBuffer.copyToChannel(rightFloat32Array, 1); // 右声道
+
         // 创建 AudioBufferSourceNode 播放音频
         const bufferSource = this.context.createBufferSource();
         bufferSource.buffer = audioBuffer;
 
-        // 连接到音频上下文输出
-        bufferSource.connect(this.context.destination);
+        // 创建 GainNode 控制音量
+        const gainNode = this.context.createGain();
+        gainNode.gain.value = 1.0; // 可调节音量（这里设置为 1.0，表示正常音量）
+
+        // 连接音频节点
+        bufferSource.connect(gainNode); // 连接源节点到增益节点
+        gainNode.connect(this.context.destination); // 连接增益节点到输出设备
 
         // 播放音频
         bufferSource.start();
@@ -122,7 +137,22 @@ export class PcmRecorder {
         // 释放资源
         bufferSource.onended = () => {
             bufferSource.disconnect();
+            gainNode.disconnect(); // 确保音频播放结束后断开连接
         };
+    }
+
+    convertBufferToFloat32Array(buffer, bitDepth = 16) {
+        const length = buffer.length / (bitDepth / 8); // 计算每个样本的数量
+        const float32Array = new Float32Array(length);
+
+        for (let i = 0; i < length; i++) {
+            const sample = buffer.readInt16LE(i * (bitDepth / 8)); // 使用 little-endian 格式读取 16 位数据
+
+            // 将 16 位的整数样本归一化到 -1.0 到 1.0 范围
+            float32Array[i] = sample / 32768.0;
+        }
+
+        return float32Array;
     }
 
     // 将接收到的 PCM 数据转换为立体声数据
