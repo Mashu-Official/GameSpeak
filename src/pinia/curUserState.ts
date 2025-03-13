@@ -24,6 +24,7 @@ export const useCurUserState = defineStore('useCurUserState', {
             name: null as string | null,
             avatar: null as string | null,
         } as UserInfo,
+
         token: null as string | null,
         isElectronEnv: !!window.ipcRenderer, // 判断是否在Electron环境中
         leaveRoomFlag: false as boolean,

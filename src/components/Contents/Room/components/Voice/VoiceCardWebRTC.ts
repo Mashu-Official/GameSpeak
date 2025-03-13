@@ -31,7 +31,8 @@ export class AudioWebRTC {
     private devicesStore = useDevicesStore();
     private curUserState = useCurUserState();
     private channelState = useChannelState();
-    private userAudioNodeMap = new Map()
+
+    public userAudioNodeMap = new Map()
 
     private configuration: any = {
         iceServers: [
@@ -109,13 +110,6 @@ export class AudioWebRTC {
             if (!this.localStream) {
                 await this.initMediaStream(); // 确保本地流已经初始化
             }
-
-            // // 创建本地音频元素并播放
-            // const localAudio = document.createElement("audio");
-            // localAudio.srcObject = this.localStream;
-            // localAudio.autoplay = true;
-            // localAudio.muted = true; // 防止自己听到自己的声音
-            // document.body.appendChild(localAudio);
 
             // 监听远程用户的音频流
             this.channelState.InRoomMember.forEach((user)=>{

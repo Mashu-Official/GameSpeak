@@ -58,21 +58,30 @@
 
 <script setup lang="ts">
 import {UserInVoiceRoom} from "../../../../../interface&enum/userInVoiceRoom.ts";
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import {useCurUserState} from "../../../../../pinia/curUserState.ts";
 import InputBTN from "../../ListComponets/InputBTN.vue";
 import OutputBTN from "../../ListComponets/OutputBTN.vue";
 import {useChannelState} from "../../../../../pinia/ChannelState.ts";
 
 const user = ref<UserInVoiceRoom | any>()
-const props = defineProps<{ user: UserInVoiceRoom }>();
+const props = defineProps<{ 
+    user: UserInVoiceRoom
+    userAudioNodeMap: Map<any, any>
+}>();
 // console.log(props)
+const userAudioNodeMap = ref<Map<any,any>>()
 if (props) {
     user.value = props.user
+    userAudioNodeMap.value = props.userAudioNodeMap
 } else {
     user.value = null
 }
-
+// onMounted(()=>{
+//     setTimeout(()=>{
+//         console.log(userAudioNodeMap.value)
+//     },300)
+// })
 // 如果需要对 props 进行日志记录或其他操作，可以在此进行
 // console.log(props.user);
 </script>

@@ -77,7 +77,7 @@
 
         <div class="divide" style="width: 60%;"></div>
 
-        <div v-if="true"
+        <div v-if="useCurUserState().token"
              class="flex justify-center items-center overflow-hidden w-[52px] h-[52px] mt-2 mb-4 circle cursor-pointer select-none relative"
              @click.stop="toggleSubMenu">
             <img class="object-cover w-full h-full"

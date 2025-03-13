@@ -1,5 +1,5 @@
-import { Socket } from "socket.io-client";
-import { useCurUserState } from "../../../../../pinia/curUserState.ts";
+import {Socket} from "socket.io-client";
+import {useCurUserState} from "../../../../../pinia/curUserState.ts";
 
 export class MessageWebSocket {
     private socket: Socket;
@@ -7,8 +7,9 @@ export class MessageWebSocket {
     private localStream: MediaStream | null = null;
     private peerConnections: Map<string, RTCPeerConnection> = new Map();
     private remoteStreams: Map<string, MediaStream> = new Map();
-    private iceServers = [{ urls: "stun:stun.l.google.com:19302" }];
-    public callback: Function = ()=>{}
+    private iceServers = [{urls: "stun:stun.l.google.com:19302"}];
+    public callback: Function = () => {
+    }
 
     constructor() {
         if (window.socket) {
@@ -44,13 +45,13 @@ export class MessageWebSocket {
         if (this.peerConnections.has(userId)) return;
 
         // 创建一个新的 RTCPeerConnection 实例，配置包含 ICE 服务器（用于 NAT 穿越）
-        const peerConnection = new RTCPeerConnection({ iceServers: this.iceServers });
+        const peerConnection = new RTCPeerConnection({iceServers: this.iceServers});
 
         // 设置 onicecandidate 事件监听器，当新的 ICE 候选被收集到时触发
         peerConnection.onicecandidate = (event) => {
             if (event.candidate) {
                 // 发送 ICE 候选到服务器，以便其他用户使用
-                this.socket.emit("candidate", { candidate: event.candidate, room: this.roomID, sender: this.socket.id });
+                this.socket.emit("candidate", {candidate: event.candidate, room: this.roomID, sender: this.socket.id});
             }
         };
 
@@ -76,23 +77,19 @@ export class MessageWebSocket {
             // 将接收到的音频/视频轨道添加到该远程流中
             remoteStream.addTrack(event.track);
 
-
-
-
             // 如果有回调函数，则将远程流传递给回调
 
-               if (this.callback) {
-                   this.callback(userId, remoteStream);
-               }
-               else {
-                   throw new Error("callback 传参错误")
-               }
+            if (this.callback) {
+                this.callback(userId, remoteStream);
+            } else {
+                throw new Error("callback 传参错误")
+            }
 
         };
 
         // 将创建的 peerConnection 保存到 peerConnections 中，以便后续管理
         this.peerConnections.set(userId, peerConnection);
-        console.log(`✅ 已为用户 ${userId} 创建 WebRTC 连接`);
+        // console.log(`✅ 已为用户 ${userId} 创建 WebRTC 连接`);
     }
 
 
@@ -112,7 +109,7 @@ export class MessageWebSocket {
             await peerConnection.setLocalDescription(offer);
 
 
-            this.socket.emit("offer", { sdp: offer, room: this.roomID, sender: this.socket.id });
+            this.socket.emit("offer", {sdp: offer, room: this.roomID, sender: this.socket.id});
             console.log(`发送 Offer 给 ${userId}`);
         }
     }
@@ -128,13 +125,20 @@ export class MessageWebSocket {
         }
         const peerConnection = this.peerConnections.get(data.sender)!;
 
+        // ✅ 确保本地流被添加
+        if (this.localStream) {
+            this.localStream.getTracks().forEach(track => peerConnection.addTrack(track, this.localStream!));
+        } else {
+            console.warn("🚨 localStream 为空，无法正确传输本地音频流");
+        }
+
         await peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp));
 
         const answer = await peerConnection.createAnswer();
         await peerConnection.setLocalDescription(answer);
 
-        this.socket.emit("answer", { sdp: answer, room: this.roomID, sender: this.socket.id });
-        console.log(`发送 Answer 给 ${data.sender}`);
+        this.socket.emit("answer", {sdp: answer, room: this.roomID, sender: this.socket.id});
+        // console.log(`发送 Answer 给 ${data.sender}`);
     }
 
     /**

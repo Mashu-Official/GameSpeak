@@ -31,10 +31,12 @@ axiosReq.interceptors.response.use((response) => {
     return response;
 }, (error) => {
     // 对响应错误做点什么
-    if (error.response && error.response.status === 401) {
+    if (error.response && (error.response.status === 401) || (error.response.status === 403)) {
+        // useCurUserState().userInfo
         // 如果是未授权错误，可以执行登出操作或重定向到登录页面
         console.error('用户未授权，请重新登录');
         // 清除本地存储中的 token
+        useCurUserState().token = null
         localStorage.removeItem('token');
         // 可以在此处重定向到登录页面
         router.push('/login')

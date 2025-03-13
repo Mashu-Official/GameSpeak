@@ -1,16 +1,14 @@
 <template>
-    <div class="flex-shrink-0 select-none box-content VoiceRoomMembers" :key="curUserState.room">
+    <div class="flex-shrink-0 select-none box-content VoiceRoomMembers" :key="curUserState.room.id">
         <div class="relative flex flex-wrap text-sm flex-shrink-0" ref="scrollRef">
             <!-- 这个是当前用户 -->
             <UserCard v-if="curUserState.userInfo.name" :user="curUserState.userInfo" />
-            <audio :src="devicesStore.mediaStream" />
-            <template v-for="user in channelState.roomMember" :key="user.id">
-                <UserCard :user="user" v-if="curUserState.userInfo.id !== user.id" />
+            <template v-for="user in channelState.InRoomMember" :key="user.id">
+                <UserCard v-if="isUserCardVisible && curUserState.userInfo.id !== user.id" :user="user" :userAudioNodeMap="audioWebRTC.userAudioNodeMap"/>
                 <!--                TODO socket id 和userid 不是一个 下边这个是本地流-->
 
             </template>
         </div>
-        <audio id='audioPlayer' autoplay style="display:none;"></audio>
     </div>
 </template>
 
@@ -34,17 +32,24 @@ const devicesStore = useDevicesStore();
 setTimeout(()=>{
     console.log(useChannelState().InRoomMember)
 },1000)
+let audioWebRTC
 const startWebRTC = async () => {
-    const audioWebRTC = new AudioWebRTC()
-
+    audioWebRTC = new AudioWebRTC()
     await audioWebRTC.initMediaStream()
     await audioWebRTC.startCall()
-}
 
+    setTimeout(()=>{
+        console.log(audioWebRTC.userAudioNodeMap)
+    },2000)
+
+}
+// 控制 UserCard 是否显示
+const isUserCardVisible = ref(false);
 onMounted(async () => {
     await nextTick()
 
     await startWebRTC()
+    isUserCardVisible.value = true;  // 在 DOM 更新后显示 UserCard 组件
     // await startWebSocket()
 
 
@@ -52,11 +57,9 @@ onMounted(async () => {
 });
 
 onUnmounted(()=>{
-    // closeMediaStream()
     window.socket = null
-    // curUserState.leaveRoom()
+    audioWebRTC.WebSocketSender.closeAllConnections()
 })
-
 </script>
 
 <style scoped>
