@@ -4,8 +4,9 @@
 
 # GameSpeak
 
-electron + vue3 + ts + tailwind + arco-design 的游戏语音服务 开发中
+electron + vue3 + ts + tailwind + arco-design 的游戏语音服务 重构中
 
+目前重构使用 Livekit + Gin + Protobuf + React19 + fluent v9 + arco-design 
 
 
 开发环境是Electron⚡️Vite
